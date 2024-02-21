@@ -1,8 +1,11 @@
 import {AddCustomerInfo} from '../models/customerModel.js'
 import User from '../models/userModel.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { errorHandler } from '../utils/error.js';
+import passwordValidator from 'password-validator';
+
+
+const schema = new passwordValidator();
 
 
 export const addCustomer = async (req, res, next) => {
@@ -68,6 +71,59 @@ export const getCustomer = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+
+export const updateCustomer = async (req, res, next) => {
+    const { customerName, customerEmail, customerPassword, customerPhone } = req.body;
+
+    const customer = await AddCustomerInfo.findById(req.params._id);
+    
+    if (req.user.id === req.params._id || req.user.id === customer.userId) {
+        if (!customer) {
+            return next(errorHandler(404, 'User not found'));
+        }
+
+        if (req.body.customerPassword) {
+            schema.is().min(8)
+                    .is().max(100)
+                    .has().uppercase()
+                    .has().lowercase();
+
+                    if (!schema.validate(customerPassword)) {
+                        return next(errorHandler(400, 'Password must be at least 8 characters long and contain at least one uppercase letter and one lowercase letter'));
+                    }
+            req.body.customerPassword = bcrypt.hashSync(req.body.customerPassword, 10);
+          }
+          
+         
+          
+          try {
+            const updatedUser = await AddCustomerInfo.findByIdAndUpdate({
+              _id: req.params._id,
+            },
+              {
+                $set: {
+                    customerName: customerName,
+                    customerEmail: customerEmail,
+                    customerPhone: customerPhone,
+                    customerPassword: req.body.customerPassword,
+                },
+              },
+              { new: true }
+            );
+            const { customerPassword, ...rest } = updatedUser._doc;
+            res.status(200).json(rest);
+          } catch (error) {
+            next(error);
+          }
+
+    } else {
+        return next(errorHandler(403, 'You are not allowed to update this user'));
+
+    }
+        
+      
 }
 
 

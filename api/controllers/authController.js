@@ -3,8 +3,10 @@ import {AddCustomerInfo} from '../models/customerModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { errorHandler } from '../utils/error.js';
+import passwordValidator from 'password-validator';
 
 
+const schema = new passwordValidator();
 
 export const signup = async (req, res, next) => {
     const { fullName, email, password } = req.body;
@@ -20,6 +22,14 @@ export const signup = async (req, res, next) => {
         next(errorHandler(400, 'All fields are required'));
       }
 
+      schema.is().min(8)
+      .is().max(100)
+      .has().uppercase()
+      .has().lowercase();
+
+      if (!schema.validate(password)) {
+        return next(errorHandler(400, 'Password must be at least 8 characters long and contain at least one uppercase letter and one lowercase letter'));
+      }
 
     const user = await User.findOne({ email });
     if (user) {
@@ -42,8 +52,57 @@ export const signup = async (req, res, next) => {
         });
     } catch(err){
         next(error);
-    }
-   
+    } 
+}
+
+
+export const updateUser = async (req, res, next) => {
+    const { fullName, email, password, profilePicture } = req.body;
+    const user = await User.findById(req.params._id);
+
+    if (req.user.id === req.params._id) {
+      if (!user) {
+          return next(errorHandler(404, 'User not found'));
+      }
+
+      if (req.body.password) {
+          schema.is().min(8)
+                  .is().max(100)
+                  .has().uppercase()
+                  .has().lowercase();
+
+                  if (!schema.validate(password)) {
+                      return next(errorHandler(400, 'Password must be at least 8 characters long and contain at least one uppercase letter and one lowercase letter'));
+                  }
+          req.body.password = bcrypt.hashSync(req.body.password, 10);
+        }
+        
+       
+        
+        try {
+          const updatedUser = await AddCustomerInfo.findByIdAndUpdate({
+            _id: req.params._id,
+          },
+            {
+              $set: {
+                fullName: fullName,
+                email: email,
+                password: password,
+                profilePicture: profilePicture,
+              },
+            },
+            { new: true }
+          );
+          const { password, ...rest } = updatedUser._doc;
+          res.status(200).json(rest);
+        } catch (error) {
+          next(error);
+        }
+
+  } else {
+      return next(errorHandler(403, 'You are not allowed to update this user'));
+
+  }
 }
 
 
