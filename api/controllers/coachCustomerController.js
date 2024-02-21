@@ -104,9 +104,9 @@ export const updateCustomer = async (req, res, next) => {
             },
               {
                 $set: {
-                    customerName: customerName,
-                    customerEmail: customerEmail,
-                    customerPhone: customerPhone,
+                    customerName: req.body.customerName,
+                    customerEmail: req.body.customerEmail,
+                    customerPhone: req.body.customerPhone,
                     customerPassword: req.body.customerPassword,
                 },
               },
