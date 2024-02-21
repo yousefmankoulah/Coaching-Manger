@@ -20,9 +20,6 @@ export const signup = async (req, res, next) => {
         next(errorHandler(400, 'All fields are required'));
       }
 
-    if (password.length < 6) {
-        next(errorHandler(400, 'Password must be at least 6 characters'));
-    }
 
     const user = await User.findOne({ email });
     if (user) {
@@ -119,3 +116,16 @@ export const customerSignin = async (req, res, next) => {
       next(error);
     }
 }
+
+
+
+export const signout = (req, res, next) => {
+  try {
+    res
+      .clearCookie('access_token')
+      .status(200)
+      .json('User has been signed out');
+  } catch (error) {
+    next(error);
+  }
+};
