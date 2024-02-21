@@ -59,3 +59,23 @@ export const getAllCustomers = async (req, res, next) => {
         next(error);
     }
 }
+
+
+export const getCustomer = async (req, res, next) => {
+    try {
+        const customer = await AddCustomerInfo.findOne({ userId: req.params.userId, customerId: req.params.customerId });
+        res.status(200).json(customer);
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+export const deleteCustomer = async (req, res, next) => {
+    try {
+        const customer = await AddCustomerInfo.findOneAndDelete({ userId: req.params.userId, customerId: req.params.customerId });
+        res.status(200).json(customer);
+    } catch (error) {
+        next(error);
+    }
+}
