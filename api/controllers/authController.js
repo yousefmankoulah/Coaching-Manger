@@ -1,4 +1,5 @@
 import User from '../models/userModel.js';
+import {AddCustomerInfo} from '../models/customerModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { errorHandler } from '../utils/error.js';
@@ -81,4 +82,40 @@ export const signin = async (req, res, next) => {
       } catch (error) {
         next(error);
       }
+}
+
+
+
+export const customerSignin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+      next(errorHandler(400, 'All fields are required'));
+  }
+
+  try {
+      const validUser = await AddCustomerInfo.findOne({ customerEmail: email });
+      if (!validUser) {
+        return next(errorHandler(404, 'User not found'));
+      }
+      const validPassword = bcrypt.compareSync(password, validUser.customerPassword);
+      if (!validPassword) {
+        return next(errorHandler(400, 'Invalid password'));
+      }
+      const token = jwt.sign(
+        { id: validUser._id },
+        process.env.JWT_SECRET
+      );
+  
+      const { password: pass, ...rest } = validUser._doc;
+      
+      res
+        .status(200)
+        .cookie('access_token', token, {
+          httpOnly: true,
+        })
+        .json(rest);
+    } catch (error) {
+      next(error);
+    }
 }

@@ -19,7 +19,7 @@ export const addCustomer = async (req, res, next) => {
         next(errorHandler(400, 'Customer already exists'));
     }
 
-    const generateCustomerId = Math.random().toString(36).slice(-8)
+    const generateCustomerId = Math.random().toString(36).slice(-4)
     const customerId = req.params.userId + "_" + generateCustomerId
     
     const hashedPassword = await bcrypt.hash(customerPassword, 10);

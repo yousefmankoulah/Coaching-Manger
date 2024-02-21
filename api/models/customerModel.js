@@ -8,7 +8,8 @@ const addCustomerInfoSchema = new mongoose.Schema({
     },
     customerId: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
  
     customerName: { 
@@ -17,7 +18,8 @@ const addCustomerInfoSchema = new mongoose.Schema({
     },
     customerEmail: { 
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     customerPassword: { 
         type: String,
