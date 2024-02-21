@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
+import authRoute from './routes/authRoute.js'
 
 dotenv.config()
 
@@ -31,6 +32,7 @@ app.listen(3000, () => {
 
 
 //Routes
+app.use('/api/auth', authRoute)
 
 
 //ERROR HANDLING
