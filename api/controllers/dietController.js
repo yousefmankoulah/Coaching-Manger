@@ -50,4 +50,4 @@ export const getAllDietCoachSide = async (req, res, next) => {
     }
 }
 
-
+get a diet by id
