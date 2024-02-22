@@ -53,16 +53,6 @@ const customerSchema = new mongoose.Schema({
     customerCurrentAge: {
         type: Number,
     },
-
-    customerCarringWeight:{
-        type: Number,
-        default: [{
-            exerciseId: {type: String},
-            exerciesBeginWeight: {type: String},
-            exerciesEndWeight: {type: String},
-            date: {type: Date},
-    }],
-    },
     
 
 }, { timestamps: true })
