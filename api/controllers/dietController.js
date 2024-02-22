@@ -66,3 +66,44 @@ export const getADietCoachSide = async (req, res, next) => {
         next(error);
     }
 }
+
+
+export const updateDiet = async (req, res, next) => {
+    const { date, day, time, meal, foodDescription, calorie } = req.body;
+    const diet = await Diet.findById(req.params._id);
+    
+    if (req.user.id !== req.params.userId) {
+        next(errorHandler(401, 'Unauthorized'));
+    }
+
+    if (!diet) {
+        return next(errorHandler(404, 'Diet not found'));
+    }
+
+    try {
+        const updatedDiet = await Diet.findByIdAndUpdate(
+            req.params._id,
+            {
+                $set: { date, day, time, meal, foodDescription, calorie },
+            },
+            { new: true }
+        );
+        res.status(200).json(updatedDiet);
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+export const deleteDiet = async (req, res, next) => {
+    try {
+        const diet = await Diet.findByIdAndDelete(req.params._id);
+        
+        if (req.params.userId !== req.user.id) {
+            next(errorHandler(401, 'Unauthorized'));
+        }
+        res.status(200).json(diet);
+    } catch (error) {
+        next(error);
+    }
+}
