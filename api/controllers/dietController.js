@@ -98,11 +98,12 @@ export const updateDiet = async (req, res, next) => {
 export const deleteDiet = async (req, res, next) => {
     try {
         const diet = await Diet.findByIdAndDelete(req.params._id);
-        
+
         if (req.params.userId !== req.user.id) {
             next(errorHandler(401, 'Unauthorized'));
         }
-        res.status(200).json(diet);
+
+        res.status(200).json("Diet has been deleted");
     } catch (error) {
         next(error);
     }
