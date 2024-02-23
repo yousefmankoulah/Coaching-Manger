@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/addCustomer/:userId', verifyToken, addCustomer);
 router.get('/getAllCustomer/:userId', verifyToken, getAllCustomers);
-router.get('/getACustomer/:userId/:customerId', verifyToken, getCustomer);
+router.get('/getACustomer/:userId/:_id', verifyToken, getCustomer);
 router.delete('/deleteCustomer/:userId/:customerId', verifyToken, deleteCustomer);
 router.put('/updateCustomer/:_id', verifyToken, updateCustomer);
 

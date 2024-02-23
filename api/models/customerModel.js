@@ -1,15 +1,12 @@
 import mongoose from "mongoose";
+import User from "./userModel.js";
 
 
 const addCustomerInfoSchema = new mongoose.Schema({
     userId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User,
         required: true
-    },
-    customerId: {
-        type: String,
-        required: true,
-        unique: true
     },
  
     customerName: { 

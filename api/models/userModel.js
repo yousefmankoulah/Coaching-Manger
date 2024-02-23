@@ -24,37 +24,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
-
-    
-//   customersWeeklyInfo: {
-//     type: Array,
-//     default: [
-//       {
-//         customerId: { type: String },
-//         customerWeeklyDiet: {type: Array, default: [{
-//                 mealId: {type: String},
-//                 mealName: {type: String},
-//                 mealType: {type: String},
-//                 mealCalories: {type: String},
-//                 mealProtein: {type: String},
-//                 mealCarbs: {type: String},
-//                 mealFat: {type: String},
-//                 date: {type: Date},
-//         }]},
-        
-//         customerWeeklyExerciese: {type: Array, default: [{
-//             exerciseId: {type: String},
-//             exerciseName: {type: String},
-//             exercisePhoto: {type: String},
-//             date: {type: Date},
-              
-//         }]
-//         }
-    
-//   }]},
-
-
   },
 
   { timestamps: true }

@@ -21,9 +21,6 @@ export const addCustomer = async (req, res, next) => {
     if (checkCustomer) {
         next(errorHandler(400, 'Customer already exists'));
     }
-
-    const generateCustomerId = Math.random().toString(36).slice(-4)
-    const customerId = req.params.userId + "_" + generateCustomerId
     
     const hashedPassword = await bcrypt.hash(customerPassword, 10);
 
@@ -31,12 +28,10 @@ export const addCustomer = async (req, res, next) => {
 
     const newCustomer = new AddCustomerInfo({
             userId: userId,
-            customerId: customerId,
             customerName,
             customerEmail,
             customerPassword: hashedPassword,
             customerPhone
-       
     });
     
     try{
@@ -66,7 +61,7 @@ export const getAllCustomers = async (req, res, next) => {
 
 export const getCustomer = async (req, res, next) => {
     try {
-        const customer = await AddCustomerInfo.findOne({ userId: req.params.userId, customerId: req.params.customerId });
+        const customer = await AddCustomerInfo.findOne({ userId: req.params.userId, _id: req.params._id });
         res.status(200).json(customer);
     } catch (error) {
         next(error);
