@@ -7,6 +7,7 @@ import authRoute from './routes/authRoute.js'
 import addCustomer from './routes/customerRoute.js'
 import dietRoute from './routes/dietRoute.js'
 import Diet from './models/dietModel.js'
+import exerciesRoute from './routes/exerciesRoute.js'
 
 dotenv.config()
 
@@ -51,6 +52,7 @@ app.listen(3000, () => {
 app.use('/api/auth', authRoute)
 app.use('/api/userCustomer', addCustomer)
 app.use('/api/diet', dietRoute)
+app.use('/api/exercies', exerciesRoute)
 
 
 //ERROR HANDLING

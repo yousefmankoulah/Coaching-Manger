@@ -13,10 +13,6 @@ const dietSchema = new mongoose.Schema({
     date: {
         type: Date,
     },
-    day: {
-        type: String,
-        required: true
-    },
     time: {
         type: String,
     },
