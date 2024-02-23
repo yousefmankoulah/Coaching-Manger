@@ -185,6 +185,38 @@ export const getSetExerciesCoachSideForACustomer = async (req, res, next) => {
 }
 
 
+export const getASetForCoach = async (req, res, next) => {
+    try {
+        if (req.user.id === req.params.userId || req.user.isAdmin === true) {
+            const setExercies = await SetExerciesToCustomer.findById(req.params._id);
+            const exerciesById = await Exercies.findById({_id: setExercies.exerciseId});
+            res.status(200).json({setExercies, exerciesById});
+        } else {
+            next(errorHandler(401, 'You are not allowed to perform this action'));
+        }
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+export const getASetForCustomer = async (req, res, next) => {
+    try {
+        if (req.user.id === req.params.customerId || req.user.isAdmin === true) {
+            const setExercies = await SetExerciesToCustomer.findById(req.params._id);
+            const exerciesById = await Exercies.findById({_id: setExercies.exerciseId});
+            res.status(200).json({setExercies, exerciesById});
+        } else {
+            next(errorHandler(401, 'You are not allowed to perform this action'));
+        }
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 export const updateSetExercies = async (req, res, next) => {
     const { date, time, setNumbers } = req.body;
     try {
