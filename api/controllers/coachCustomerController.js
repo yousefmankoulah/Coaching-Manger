@@ -21,13 +21,17 @@ export const addCustomer = async (req, res, next) => {
     if (checkCustomer) {
         next(errorHandler(400, 'Customer already exists'));
     }
-    
+
+    const generateCustomerId = Math.floor(Math.random() * 100000000000);
+    const customerId = req.user.id + "_" + generateCustomerId
+
     const hashedPassword = await bcrypt.hash(customerPassword, 10);
 
     const userId = req.params.userId
 
     const newCustomer = new AddCustomerInfo({
             userId: userId,
+            customerId: customerId,
             customerName,
             customerEmail,
             customerPassword: hashedPassword,
@@ -41,7 +45,7 @@ export const addCustomer = async (req, res, next) => {
             message: 'Customer created successfully',
             newCustomer
         });
-    } catch(err){
+    } catch(error){
         next(error);
     }
 
@@ -68,13 +72,13 @@ export const getCustomer = async (req, res, next) => {
     }
 }
 
-
+//Didn't complet it
 export const updateCustomer = async (req, res, next) => {
     const { customerName, customerEmail, customerPassword, customerPhone } = req.body;
 
     const customer = await AddCustomerInfo.findById(req.params._id);
     
-    if (req.user.id === req.params._id || req.user.id === customer.userId) {
+    if (req.user.id === req.params._id || req.user.id === req.params.userId) {
         if (!customer) {
             return next(errorHandler(404, 'User not found'));
         }
@@ -123,10 +127,14 @@ export const updateCustomer = async (req, res, next) => {
 
 
 export const deleteCustomer = async (req, res, next) => {
+    if (req.user.id === req.params._id || req.user.id === req.params.userId) {
     try {
-        const customer = await AddCustomerInfo.findOneAndDelete({ userId: req.params.userId, customerId: req.params.customerId });
+        const customer = await AddCustomerInfo.findOneAndDelete({ userId: req.params.userId, _id: req.params._id });
         res.status(200).json(customer);
     } catch (error) {
         next(error);
+    }
+    } else {
+        next(errorHandler(401, 'You are not allowed to perform this action'));
     }
 }

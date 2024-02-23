@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
-import User from "./userModel.js";
 
 
 const addCustomerInfoSchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: User,
+        type: String,
+        required: true
+    },
+    customerId: {
+        type: String,
         required: true
     },
  
@@ -16,7 +18,6 @@ const addCustomerInfoSchema = new mongoose.Schema({
     customerEmail: { 
         type: String,
         required: true,
-        unique: true
     },
     customerPassword: { 
         type: String,
