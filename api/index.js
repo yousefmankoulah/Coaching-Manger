@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 import authRoute from './routes/authRoute.js'
 import addCustomer from './routes/customerRoute.js'
 import dietRoute from './routes/dietRoute.js'
+import Diet from './models/dietModel.js'
 
 dotenv.config()
 
@@ -20,6 +21,18 @@ mongoose.connect(process.env.MONGO_URL)
   });
 
 
+  //Delete Data after 45 days
+  const deleteData = async () => {
+    const diet = await Diet.find();
+    for (let i = 0; i < diet.length; i++) {
+      const date = new Date(diet[i].createdAt);
+      if (date.getDate() === new Date().getDate() - 50) {
+        await Diet.findByIdAndDelete(diet[i]._id);
+      }
+    }
+  };
+  
+
   //API
 const app = express()
 app.use(cors())
@@ -30,6 +43,7 @@ app.use(cookieParser())
 //start server
 app.listen(3000, () => {
     console.log(`Server running at 3000`)
+    deleteData();
 })
 
 
