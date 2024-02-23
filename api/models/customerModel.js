@@ -36,11 +36,11 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+ 
     customerId: {
         type: String,
         required: true
     },
-
     customerCurrentWeight: {
         type: Number,
     },
@@ -58,8 +58,41 @@ const customerSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
+const customerExerciesSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        required: true
+    },
+    customerId: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+    },
+    time: {
+        type: String,
+    },
+    setExerciesToCustomerId: {
+        type: String,
+        required: true
+    },
+    maxCarringWeight: {
+        type: Number,
+    },
+    minCarringWeight: {
+        type: Number,
+    },
+    timeSpend: {
+        type: Number,
+    },
+
+}, { timestamps: true })
+
+
 const Customer = mongoose.model('Customer', customerSchema);
 const AddCustomerInfo = mongoose.model('addCustomerInfo', addCustomerInfoSchema)
+const CustomerExercies = mongoose.model('CustomerExercies', customerExerciesSchema)
 
 
-export { Customer, AddCustomerInfo }
+export { Customer, AddCustomerInfo, CustomerExercies }
