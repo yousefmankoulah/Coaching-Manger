@@ -34,6 +34,7 @@ mongoose.connect(process.env.MONGO_URL)
         await Diet.findByIdAndDelete(diet[i]._id);
       }
     }
+    
     const customerExercies = await CustomerExercies.find();
     for (let i = 0; i < customerExercies.length; i++) {
       const date = new Date(customerExercies[i].createdAt);
@@ -41,7 +42,6 @@ mongoose.connect(process.env.MONGO_URL)
         await CustomerExercies.findByIdAndDelete(customerExercies[i]._id);
       }
     }
-
 
     const setExerciesToCustomer = await SetExerciesToCustomer.find();
     for (let i = 0; i < setExerciesToCustomer.length; i++) {
