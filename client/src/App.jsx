@@ -1,16 +1,3 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ScrollToTop from './components/ScrollToTop';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import PrivateRoute from './components/PrivateRoute';
-import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
-import { Home } from './pages/Home';
-import { SignIn } from './pages/SignIn';
-import { SignUp } from './pages/SignUp';
-import { Dashboard } from "./pages/Dashboard";
-import { AddCustomers } from "./pages/AddCustomers.jsx";
-
-=======
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import Header from "./components/Header";
@@ -22,7 +9,6 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { Dashboard } from "./pages/Dashboard";
 import { AddCustomers } from "./pages/AddCustomers.jsx";
->>>>>>> c88dc77 (u)
 
 export default function App() {
   return (
@@ -30,10 +16,9 @@ export default function App() {
       <ScrollToTop />
       <Header />
       <Routes>
-<<<<<<< HEAD
-        <Route path='/' element={<Home />} />
-        <Route path='/sign-in' element={<SignIn />} />
-        <Route path='/sign-up' element={<SignUp />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/add-customer" element={<AddCustomers />} />
         <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path='/about' element={<About />} />
