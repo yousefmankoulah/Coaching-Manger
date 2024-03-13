@@ -3,32 +3,17 @@ import mongoose from "mongoose";
 const addCustomerInfoSchema = new mongoose.Schema(
   {
     userId: {
-<<<<<<< HEAD
-        type: String,
-        required: true
-    },
-    customerId: {
-        type: String,
-        required: true
-=======
       type: String,
       required: true,
->>>>>>> c88dc77 (u)
     },
     customerId: {
       type: String,
       required: true,
     },
-<<<<<<< HEAD
-    customerEmail: { 
-        type: String,
-        required: true,
-=======
 
     customerName: {
       type: String,
       required: true,
->>>>>>> c88dc77 (u)
     },
     customerEmail: {
       type: String,
@@ -39,6 +24,10 @@ const addCustomerInfoSchema = new mongoose.Schema(
       required: true,
     },
     customerPhone: { type: String },
+    role: {
+      type: String,
+      default: "customer",
+    },
   },
   { timestamps: true }
 );

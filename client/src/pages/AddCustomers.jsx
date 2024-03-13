@@ -16,16 +16,26 @@ export function AddCustomers() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
+  const { currentUser } = useSelector((state) => state.user);
+
+  const userId = currentUser && currentUser.userId;
+
+  // Check if userId is valid
+  if (!userId) {
+    console.error("User ID is not available.");
+    // Handle the error or return from the function
+    return;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.email || !formData.password) {
+    if (!formData.name || !formData.email || !formData.password) {
       return dispatch(signInFailure("Please fill out all fields"));
     }
     try {
       dispatch(signInStart());
       const res = await fetch(
-        "https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/auth/signup",
+        `https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/userCustomer/addCustomer/${userId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -34,11 +44,15 @@ export function AddCustomers() {
       );
       const data = await res.json();
       if (data.success === false) {
-        return setErrorMessage(data.message);
+        dispatch(signInFailure(data.message));
+      }
+
+      if (res.ok) {
+        dispatch(signInSuccess(data));
+        navigate("/dashboard");
       }
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
 

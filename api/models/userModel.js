@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    role: {
+      type: String,
+      default: "coach",
+    },
   },
 
   { timestamps: true }
