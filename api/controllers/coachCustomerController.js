@@ -1,140 +1,149 @@
-import {AddCustomerInfo} from '../models/customerModel.js'
-import User from '../models/userModel.js';
-import bcrypt from 'bcrypt';
-import { errorHandler } from '../utils/error.js';
-import passwordValidator from 'password-validator';
-
+import { AddCustomerInfo } from "../models/customerModel.js";
+import User from "../models/userModel.js";
+import bcrypt from "bcrypt";
+import { errorHandler } from "../utils/error.js";
+import passwordValidator from "password-validator";
 
 const schema = new passwordValidator();
 
-
 export const addCustomer = async (req, res, next) => {
-    const { customerName, customerEmail, customerPassword, customerPhone } = req.body;
+  const { customerName, customerEmail, customerPassword, customerPhone } =
+    req.body;
 
-    
-    if (!customerName || !customerEmail || !customerPassword) {
-        next(errorHandler(400, 'All fields are required'));
-    }
+  if (!customerName || !customerEmail || !customerPassword) {
+    next(errorHandler(400, "All fields are required"));
+  }
 
+  const coach = await User.findById(req.user.id);
+  if (coach.role !== "coach") {
+    next(errorHandler(400, "You are not allowed to perform this action"));
+  }
 
-    const checkCustomer = await AddCustomerInfo.findOne({ customerEmail });
-    if (checkCustomer) {
-        next(errorHandler(400, 'Customer already exists'));
-    }
+  const checkCustomer = await AddCustomerInfo.findOne({ customerEmail });
+  if (checkCustomer) {
+    next(errorHandler(400, "Customer already exists"));
+  }
 
-    const generateCustomerId = Math.floor(Math.random() * 100000000000);
-    const customerId = req.user.id + "_" + generateCustomerId
+  const generateCustomerId = Math.floor(Math.random() * 100000000000);
+  const customerId = req.user.id + "_" + generateCustomerId;
 
-    const hashedPassword = await bcrypt.hash(customerPassword, 10);
+  const hashedPassword = await bcrypt.hash(customerPassword, 10);
 
-    const userId = req.params.userId
+  const userId = req.params.userId;
 
-    const newCustomer = new AddCustomerInfo({
-            userId: userId,
-            customerId: customerId,
-            customerName,
-            customerEmail,
-            customerPassword: hashedPassword,
-            customerPhone
+  const newCustomer = new AddCustomerInfo({
+    userId: userId,
+    customerId: customerId,
+    customerName,
+    customerEmail,
+    customerPassword: hashedPassword,
+    customerPhone,
+  });
+
+  try {
+    await newCustomer.save();
+    res.status(201).json({
+      success: true,
+      message: "Customer created successfully",
+      newCustomer,
     });
-    
-    try{
-        await newCustomer.save();
-        res.status(201).json({
-            success: true,
-            message: 'Customer created successfully',
-            newCustomer
-        });
-    } catch(error){
-        next(error);
-    }
-
-}
-
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getAllCustomers = async (req, res, next) => {
-
-    try {
-        const customers = await AddCustomerInfo.find({ userId: req.params.userId });
-        res.status(200).json(customers);
-    } catch (error) {
-        next(error);
-    }
-}
-
+  try {
+    const customers = await AddCustomerInfo.find({ userId: req.params.userId });
+    res.status(200).json(customers);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getCustomer = async (req, res, next) => {
-    try {
-        const customer = await AddCustomerInfo.findOne({ userId: req.params.userId, _id: req.params._id });
-        res.status(200).json(customer);
-    } catch (error) {
-        next(error);
-    }
-}
+  try {
+    const customer = await AddCustomerInfo.findOne({
+      userId: req.params.userId,
+      _id: req.params._id,
+    });
+    res.status(200).json(customer);
+  } catch (error) {
+    next(error);
+  }
+};
 
 //Didn't complet it
 export const updateCustomer = async (req, res, next) => {
-    const { customerName, customerEmail, customerPassword, customerPhone } = req.body;
+  const { customerName, customerEmail, customerPassword, customerPhone } =
+    req.body;
 
-    const customer = await AddCustomerInfo.findById(req.params._id);
-    
-    if (req.user.id === req.params._id || req.user.id === req.params.userId) {
-        if (!customer) {
-            return next(errorHandler(404, 'User not found'));
-        }
+  const customer = await AddCustomerInfo.findById(req.params._id);
 
-        if (req.body.customerPassword) {
-            schema.is().min(8)
-                    .is().max(100)
-                    .has().uppercase()
-                    .has().lowercase();
-
-                    if (!schema.validate(customerPassword)) {
-                        return next(errorHandler(400, 'Password must be at least 8 characters long and contain at least one uppercase letter and one lowercase letter'));
-                    }
-            req.body.customerPassword = bcrypt.hashSync(req.body.customerPassword, 10);
-          }
-          
-         
-          
-          try {
-            const updatedUser = await AddCustomerInfo.findByIdAndUpdate({
-              _id: req.params._id,
-            },
-              {
-                $set: {
-                    customerName: req.body.customerName,
-                    customerEmail: req.body.customerEmail,
-                    customerPhone: req.body.customerPhone,
-                    customerPassword: req.body.customerPassword,
-                },
-              },
-              { new: true }
-            );
-            const { customerPassword, ...rest } = updatedUser._doc;
-            res.status(200).json(rest);
-          } catch (error) {
-            next(error);
-          }
-
-    } else {
-        return next(errorHandler(403, 'You are not allowed to update this user'));
-
+  if (req.user.id === req.params._id || req.user.id === req.params.userId) {
+    if (!customer) {
+      return next(errorHandler(404, "User not found"));
     }
-        
-      
-}
 
+    if (req.body.customerPassword) {
+      schema.is().min(8).is().max(100).has().uppercase().has().lowercase();
+
+      if (!schema.validate(customerPassword)) {
+        return next(
+          errorHandler(
+            400,
+            "Password must be at least 8 characters long and contain at least one uppercase letter and one lowercase letter"
+          )
+        );
+      }
+      req.body.customerPassword = bcrypt.hashSync(
+        req.body.customerPassword,
+        10
+      );
+    }
+
+    try {
+      const updatedUser = await AddCustomerInfo.findByIdAndUpdate(
+        {
+          _id: req.params._id,
+        },
+        {
+          $set: {
+            customerName: req.body.customerName,
+            customerEmail: req.body.customerEmail,
+            customerPhone: req.body.customerPhone,
+            customerPassword: req.body.customerPassword,
+          },
+        },
+        { new: true }
+      );
+      const { customerPassword, ...rest } = updatedUser._doc;
+      res.status(200).json(rest);
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    return next(errorHandler(403, "You are not allowed to update this user"));
+  }
+};
 
 export const deleteCustomer = async (req, res, next) => {
-    if (req.user.id === req.params._id || req.user.id === req.params.userId) {
+  if (req.user.id === req.params._id || req.user.id === req.params.userId) {
     try {
-        const customer = await AddCustomerInfo.findOneAndDelete({ userId: req.params.userId, _id: req.params._id });
-        res.status(200).json(customer);
+      const customer = await AddCustomerInfo.findOneAndDelete({
+        userId: req.params.userId,
+        _id: req.params._id,
+      });
+
+      const coach = await User.findById(req.user.id);
+      if (coach.role !== "coach") {
+        next(errorHandler(400, "You are not allowed to perform this action"));
+      }
+      res.status(200).json(customer);
     } catch (error) {
-        next(error);
+      next(error);
     }
-    } else {
-        next(errorHandler(401, 'You are not allowed to perform this action'));
-    }
-}
+  } else {
+    next(errorHandler(401, "You are not allowed to perform this action"));
+  }
+};
