@@ -7,6 +7,8 @@ import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
 import { Home } from './pages/Home';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
+import { Dashboard } from "./pages/Dashboard";
+import { AddCustomers } from "./pages/AddCustomers.jsx";
 
 
 export default function App() {
@@ -18,6 +20,8 @@ export default function App() {
         <Route path='/' element={<Home />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
+        <Route path="/add-customer" element={<AddCustomers />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path='/about' element={<About />} />
         
         <Route path='/search' element={<Search />} />
