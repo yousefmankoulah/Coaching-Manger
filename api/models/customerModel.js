@@ -1,96 +1,116 @@
 import mongoose from "mongoose";
 
-
-const addCustomerInfoSchema = new mongoose.Schema({
+const addCustomerInfoSchema = new mongoose.Schema(
+  {
     userId: {
+<<<<<<< HEAD
         type: String,
         required: true
     },
     customerId: {
         type: String,
         required: true
+=======
+      type: String,
+      required: true,
+>>>>>>> c88dc77 (u)
     },
- 
-    customerName: { 
-        type: String,
-        required: true
+    customerId: {
+      type: String,
+      required: true,
     },
+<<<<<<< HEAD
     customerEmail: { 
         type: String,
         required: true,
+=======
+
+    customerName: {
+      type: String,
+      required: true,
+>>>>>>> c88dc77 (u)
     },
-    customerPassword: { 
-        type: String,
-        required: true
+    customerEmail: {
+      type: String,
+      required: true,
+    },
+    customerPassword: {
+      type: String,
+      required: true,
     },
     customerPhone: { type: String },
+  },
+  { timestamps: true }
+);
 
-}, { timestamps: true })
-
-
-
-const customerSchema = new mongoose.Schema({
+const customerSchema = new mongoose.Schema(
+  {
     userId: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
- 
+
     customerId: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     customerCurrentWeight: {
-        type: Number,
+      type: Number,
     },
     customerTargetWeight: {
-        type: Number,
+      type: Number,
     },
     customerCurrentHeight: {
-        type: Number,
+      type: Number,
     },
     customerCurrentAge: {
-        type: Number,
+      type: Number,
     },
-    
+  },
+  { timestamps: true }
+);
 
-}, { timestamps: true })
-
-
-const customerExerciesSchema = new mongoose.Schema({
+const customerExerciesSchema = new mongoose.Schema(
+  {
     userId: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     customerId: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     date: {
-        type: Date,
+      type: Date,
     },
     time: {
-        type: String,
+      type: String,
     },
     setExerciesToCustomerId: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     maxCarringWeight: {
-        type: Number,
+      type: Number,
     },
     minCarringWeight: {
-        type: Number,
+      type: Number,
     },
     timeSpend: {
-        type: Number,
+      type: Number,
     },
+  },
+  { timestamps: true }
+);
 
-}, { timestamps: true })
+const Customer = mongoose.model("Customer", customerSchema);
+const AddCustomerInfo = mongoose.model(
+  "addCustomerInfo",
+  addCustomerInfoSchema
+);
+const CustomerExercies = mongoose.model(
+  "CustomerExercies",
+  customerExerciesSchema
+);
 
-
-const Customer = mongoose.model('Customer', customerSchema);
-const AddCustomerInfo = mongoose.model('addCustomerInfo', addCustomerInfoSchema)
-const CustomerExercies = mongoose.model('CustomerExercies', customerExerciesSchema)
-
-
-export { Customer, AddCustomerInfo, CustomerExercies }
+export { Customer, AddCustomerInfo, CustomerExercies };
