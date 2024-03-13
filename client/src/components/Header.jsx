@@ -15,6 +15,8 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
 
+  const userId = currentUser && currentUser.id;
+
   const handleSignout = async () => {
     try {
       const res = await fetch(
@@ -91,8 +93,14 @@ export default function Header() {
         <Navbar.Link active={path === "/"} as={"div"}>
           <Link to="/">Plans</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/dashboard"} as={"div"}>
-          <Link to="/dashboard">Dashboard</Link>
+        {/* {userId && (
+          <Navbar.Link active={path === `/dashboard/${userId}`} as={"div"}>
+            <Link to={`/dashboard/${userId}`}>Dashboard</Link>
+          </Navbar.Link>
+        )} */}
+
+        <Navbar.Link active={path === `/dashboard/${userId}`} as={"div"}>
+          <Link to={`/dashboard/${userId}`}>Dashboard</Link>
         </Navbar.Link>
         <Navbar.Link active={path === "/add-customer"} as={"div"}>
           <Link to="/add-customer">Add a Client</Link>
