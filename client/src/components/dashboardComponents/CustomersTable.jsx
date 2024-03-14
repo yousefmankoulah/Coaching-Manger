@@ -13,12 +13,17 @@ export default function CustomersTable() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const res = await fetch(
-          `https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}`
-        );
-        const data = await res.json();
-        if (res.ok) {
-          setCustomers(data.customers);
+        if (currentUser && currentUser._id) {
+          const res = await fetch(
+            `https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}`
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setCustomers(data.customers);
+          } else {
+            // Handle unauthorized access or other errors
+            console.error("Error fetching customers:", data.message);
+          }
         }
       } catch (error) {
         console.log(error.message);

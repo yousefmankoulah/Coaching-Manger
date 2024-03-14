@@ -6,6 +6,7 @@ import { errorHandler } from '../utils/error.js';
 export const addCustomerInfo = async (req, res, next) => {
     const { customerCurrentWeight, customerTargetWeight, customerCurrentHeight, customerCurrentAge } = req.body;
     if (req.user.id === req.params.customerId) {
+        
         const newCustomerInfo = new Customer({
             userId: req.params.userId,
             customerId: req.params.customerId,
