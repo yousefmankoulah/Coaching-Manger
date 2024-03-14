@@ -15,7 +15,7 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
 
-  const userId = currentUser && currentUser.id;
+  const userId = currentUser && currentUser._id;
 
   const handleSignout = async () => {
     try {
