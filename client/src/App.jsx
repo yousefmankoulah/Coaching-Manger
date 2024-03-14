@@ -19,7 +19,10 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/add-customer" element={<AddCustomers />} />
+        <Route element={<OnlyAdminPrivateRoute />}>
+          <Route path="/add-customer" element={<AddCustomers />} />
+
+        </Route>
         <Route path="/dashboard/:id" element={<Dashboard />} />
         {/* <Route path='/about' element={<About />} />
         
@@ -31,15 +34,15 @@ export default function App() {
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/update-post/:postId' element={<UpdatePost />} />
         </Route>
-=======
+
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/add-customer" element={<AddCustomers />} />
         <Route path="/dashboard" element={<Dashboard />} />
->>>>>>> c88dc77 (u)
 
-        {/* // <Route path='/about' element={<About />} />
+
+       
         
       //   <Route path='/search' element={<Search />} />
       //   <Route element={<PrivateRoute />}>

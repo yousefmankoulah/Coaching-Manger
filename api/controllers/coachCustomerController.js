@@ -29,7 +29,7 @@ export const addCustomer = async (req, res, next) => {
 
   const hashedPassword = await bcrypt.hash(customerPassword, 10);
 
-  const userId = req.params.userId;
+  const userId = req.user.id;
 
   const newCustomer = new AddCustomerInfo({
     userId: userId,
@@ -54,7 +54,7 @@ export const addCustomer = async (req, res, next) => {
 
 export const getAllCustomers = async (req, res, next) => {
   try {
-    const customers = await AddCustomerInfo.find({ userId: req.params.userId });
+    const customers = await AddCustomerInfo.find({ userId: req.user.id });
     res.status(200).json(customers);
   } catch (error) {
     next(error);

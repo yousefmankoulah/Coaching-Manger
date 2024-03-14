@@ -24,12 +24,8 @@ export default function CustomersTable() {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
-      fetchCustomers();
-    }else {
-      // Clear customers if the user is not an admin or is not logged in
-      setCustomers([]);
-    }
+
+    fetchCustomers();
   }, [currentUser._id]);
 
   return (

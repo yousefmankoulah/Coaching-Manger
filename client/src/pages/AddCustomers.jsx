@@ -18,8 +18,8 @@ export function AddCustomers() {
   };
   const { currentUser } = useSelector((state) => state.user);
 
-  const userId = currentUser && currentUser.userId;
-
+  const userId = currentUser._id;
+  
   // Check if userId is valid
   if (!userId) {
     console.error("User ID is not available.");
@@ -49,7 +49,7 @@ export function AddCustomers() {
 
       if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate("/dashboard");
+        navigate(`/dashboard/${userId}`);
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
