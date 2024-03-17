@@ -17,6 +17,7 @@ export function SignIn() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
@@ -33,6 +34,7 @@ export function SignIn() {
         }
       );
       const data = await res.json();
+
       if (data.success === false) {
         dispatch(signInFailure(data.message));
       }

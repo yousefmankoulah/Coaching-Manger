@@ -10,22 +10,16 @@ import {
 
 export function AddCustomers() {
   const [formData, setFormData] = useState({});
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const {
+    loading,
+    error: errorMessage,
+    currentUser,
+  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
-  const { currentUser } = useSelector((state) => state.user);
-
-  const userId = currentUser._id;
-  
-  // Check if userId is valid
-  if (!userId) {
-    console.error("User ID is not available.");
-    // Handle the error or return from the function
-    return;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,23 +27,31 @@ export function AddCustomers() {
       return dispatch(signInFailure("Please fill out all fields"));
     }
     try {
+      if (!currentUser) {
+        console.error("User not authenticated");
+        return;
+      }
+
       dispatch(signInStart());
       const res = await fetch(
-        `https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/userCustomer/addCustomer/${userId}`,
+        `https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/userCustomer/addCustomer/${currentUser._id}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(formData),
         }
       );
       const data = await res.json();
+
       if (data.success === false) {
         dispatch(signInFailure(data.message));
       }
 
       if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate(`/dashboard/${userId}`);
+        navigate(`/dashboard/${currentUser._id}`);
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
