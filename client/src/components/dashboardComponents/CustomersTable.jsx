@@ -6,16 +6,23 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function CustomersTable() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         if (currentUser && currentUser._id) {
           const res = await fetch(
-            `https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}`
+            `https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: token ? `Bearer ${token}` : null,
+                "Content-Type": "application/json",
+              },
+            }
           );
           const data = await res.json();
           if (res.ok) {

@@ -82,13 +82,11 @@ export const signin = async (req, res, next) => {
 
     const { password: pass, ...rest } = validUser._doc;
 
-    res
-      .status(200)
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
-      .json(rest);
-  
+    res.status(200);
+    res.cookie("access_token", token, {
+      httpOnly: true,
+    });
+    res.json({ token, rest });
   } catch (error) {
     next(error);
   }
@@ -132,7 +130,7 @@ export const signinGoogle = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
         })
-        .json(rest);
+        .json({ token, rest });
     }
   } catch (error) {
     next(error);
@@ -161,13 +159,12 @@ export const customerSignin = async (req, res, next) => {
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
 
     const { password: pass, ...rest } = validUser._doc;
-
     res
       .status(200)
       .cookie("access_token", token, {
         httpOnly: true,
       })
-      .json(rest);
+      .json({ token, rest });
   } catch (error) {
     next(error);
   }

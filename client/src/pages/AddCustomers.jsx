@@ -14,6 +14,7 @@ export function AddCustomers() {
     loading,
     error: errorMessage,
     currentUser,
+    token,
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export function AddCustomers() {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
