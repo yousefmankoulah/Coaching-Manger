@@ -30,7 +30,8 @@ const userSlice = createSlice({
       state.error = null;
     },
     updateSuccess: (state, action) => {
-      state.currentUser = action.payload;
+      state.currentUser = action.payload.rest;
+      state.token = action.payload.token;
       state.loading = false;
       state.error = null;
     },
@@ -44,6 +45,7 @@ const userSlice = createSlice({
     },
     deleteUserSuccess: (state) => {
       state.currentUser = null;
+      state.token = null;
       state.loading = false;
       state.error = null;
     },
@@ -53,6 +55,7 @@ const userSlice = createSlice({
     },
     signoutSuccess: (state) => {
       state.currentUser = null;
+      state.token = null;
       state.error = null;
       state.loading = false;
     },
