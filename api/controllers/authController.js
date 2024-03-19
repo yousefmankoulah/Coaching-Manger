@@ -107,7 +107,7 @@ export const signinGoogle = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
         })
-        .json(rest);
+        .json({ token, rest });
     } else {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
