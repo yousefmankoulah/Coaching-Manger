@@ -20,7 +20,7 @@ export function SignUp() {
       setLoading(true);
       setErrorMessage(null);
       const res = await fetch(
-        "https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/auth/signup",
+        "https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

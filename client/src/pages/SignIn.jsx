@@ -26,7 +26,7 @@ export function SignIn() {
     try {
       dispatch(signInStart());
       const res = await fetch(
-        "https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/auth/signin",
+        "https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/signin",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

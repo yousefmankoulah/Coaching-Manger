@@ -15,7 +15,7 @@ export default function OAuth() {
         provider.setCustomParameters({ prompt: 'select_account' })
         try {
             const resultsFromGoogle = await signInWithPopup(auth, provider)
-            const res = await fetch('https://symmetrical-winner-jqq4666544jhqqq-3000.app.github.dev/api/auth/google', {
+            const res = await fetch('https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/google', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
