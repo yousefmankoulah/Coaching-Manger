@@ -41,7 +41,7 @@ export function SignIn() {
 
       if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate("/dashboard");
+        navigate(`/dashboard/${data.rest._id}`);
       }
     } catch (error) {
       dispatch(signInFailure(error.message));

@@ -1,7 +1,7 @@
-import { Alert, Label, TextInput, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Alert, Label, TextInput, Button, Spinner } from "flowbite-react";
 import {
   signInStart,
   signInSuccess,
@@ -18,22 +18,26 @@ export function AddCustomers() {
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!formData.name || !formData.email || !formData.password) {
       return dispatch(signInFailure("Please fill out all fields"));
     }
+
     try {
       if (!currentUser) {
         console.error("User not authenticated");
         return;
       }
 
-      dispatch(signInStart());
+      dispatch(signInStart()); // Dispatch signInStart action to set loading state
+
       const res = await fetch(
         `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/addCustomer/${currentUser._id}`,
         {
@@ -48,15 +52,15 @@ export function AddCustomers() {
       const data = await res.json();
 
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        dispatch(signInFailure(data.message)); // Dispatch signInFailure on failure
       }
 
       if (res.ok) {
-        dispatch(signInSuccess(data));
+        dispatch(signInSuccess(data)); // Dispatch signInSuccess on success
         navigate(`/dashboard/${currentUser._id}`);
       }
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      dispatch(signInFailure(error.message)); // Dispatch signInFailure on error
     }
   };
 
@@ -89,6 +93,7 @@ export function AddCustomers() {
                 id="name"
                 type="text"
                 placeholder="Customer Name"
+                value={formData.name}
                 onChange={handleChange}
               />
             </div>
@@ -99,6 +104,7 @@ export function AddCustomers() {
                 id="email"
                 type="email"
                 placeholder="Customer Email"
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>
@@ -109,6 +115,7 @@ export function AddCustomers() {
                 id="password"
                 type="password"
                 placeholder="Customer Temporary Password"
+                value={formData.password}
                 onChange={handleChange}
               />
             </div>
@@ -119,6 +126,7 @@ export function AddCustomers() {
                 id="phoneNumber"
                 type="text"
                 placeholder="Customer Phone Number"
+                value={formData.phoneNumber}
                 onChange={handleChange}
               />
             </div>

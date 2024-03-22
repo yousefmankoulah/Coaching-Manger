@@ -11,6 +11,7 @@ import { CustomerExercies } from "./models/customerModel.js";
 import { SetExerciesToCustomer } from "./models/exerciesModel.js";
 import exerciesRoute from "./routes/exerciesRoute.js";
 import customerInfoRoute from "./routes/customerInfoRoute.js";
+import bodyParser from "body-parser";
 
 dotenv.config();
 
@@ -58,6 +59,7 @@ const deleteData = async () => {
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 

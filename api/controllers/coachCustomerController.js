@@ -6,48 +6,102 @@ import passwordValidator from "password-validator";
 
 const schema = new passwordValidator();
 
+// export const addCustomer = async (req, res, next) => {
+//   const { customerName, customerEmail, customerPassword, customerPhone } =
+//     req.body;
+
+//   if (!customerName || !customerEmail || !customerPassword) {
+//     next(errorHandler(400, "All fields are required"));
+//   }
+
+//   const coach = await User.findById(req.user.id);
+//   if (coach.role !== "coach") {
+//     next(errorHandler(400, "You are not allowed to perform this action"));
+//   }
+
+//   const checkCustomer = await AddCustomerInfo.findOne({ customerEmail });
+//   if (checkCustomer) {
+//     next(errorHandler(400, "Customer already exists"));
+//   }
+
+//   const generateCustomerId = Math.floor(Math.random() * 100000000000);
+//   const customerId = req.user.id + "_" + generateCustomerId;
+
+//   const hashedPassword = await bcrypt.hash(customerPassword, 10);
+
+//   const userId = req.user.id;
+
+//   const newCustomer = new AddCustomerInfo({
+//     userId: userId,
+//     customerId: customerId,
+//     customerName,
+//     customerEmail,
+//     customerPassword: hashedPassword,
+//     customerPhone,
+//   });
+
+//   try {
+//     await newCustomer.save();
+//     res.status(201).json({
+//       success: true,
+//       message: "Customer created successfully",
+//       newCustomer,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const addCustomer = async (req, res, next) => {
   const { customerName, customerEmail, customerPassword, customerPhone } =
     req.body;
 
-  if (!customerName || !customerEmail || !customerPassword) {
-    next(errorHandler(400, "All fields are required"));
-  }
-
-  const coach = await User.findById(req.user.id);
-  if (coach.role !== "coach") {
-    next(errorHandler(400, "You are not allowed to perform this action"));
-  }
-
-  const checkCustomer = await AddCustomerInfo.findOne({ customerEmail });
-  if (checkCustomer) {
-    next(errorHandler(400, "Customer already exists"));
-  }
-
-  const generateCustomerId = Math.floor(Math.random() * 100000000000);
-  const customerId = req.user.id + "_" + generateCustomerId;
-
-  const hashedPassword = await bcrypt.hash(customerPassword, 10);
-
-  const userId = req.user.id;
-
-  const newCustomer = new AddCustomerInfo({
-    userId: userId,
-    customerId: customerId,
-    customerName,
-    customerEmail,
-    customerPassword: hashedPassword,
-    customerPhone,
-  });
-
   try {
+    // Check if required fields are provided
+    if (!customerName || !customerEmail || !customerPassword) {
+      throw errorHandler(400, "All fields are required");
+    }
+
+    // Check if the current user is a coach
+    const coach = await User.findById(req.user.id);
+    if (!coach || coach.role !== "coach") {
+      throw errorHandler(400, "You are not allowed to perform this action");
+    }
+
+    // Check if customer already exists
+    const checkCustomer = await AddCustomerInfo.findOne({ customerEmail });
+    if (checkCustomer) {
+      throw errorHandler(400, "Customer already exists");
+    }
+
+    // Generate a unique customer ID
+    const generateCustomerId = Math.floor(Math.random() * 100000000000);
+    const customerId = req.user.id + "_" + generateCustomerId;
+
+    // Hash the password using bcrypt
+    const hashedPassword = await bcrypt.hash(customerPassword, 10);
+
+    // Create a new customer object
+    const newCustomer = new AddCustomerInfo({
+      userId: req.user.id,
+      customerId,
+      customerName,
+      customerEmail,
+      customerPassword: hashedPassword,
+      customerPhone,
+    });
+
+    // Save the new customer to the database
     await newCustomer.save();
+
+    // Send success response
     res.status(201).json({
       success: true,
       message: "Customer created successfully",
       newCustomer,
     });
   } catch (error) {
+    // Handle any errors and pass them to the error handling middleware
     next(error);
   }
 };
