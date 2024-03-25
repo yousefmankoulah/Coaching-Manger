@@ -1,6 +1,8 @@
-import { Card } from "flowbite-react";
+import { Card, Button } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
 
 import CustomersTable from "../components/dashboardComponents/CustomersTable";
 import ExercisesTable from "../components/dashboardComponents/ExercisesTable";
@@ -55,10 +57,14 @@ export function Dashboard() {
             Number of Customers
           </h5>
           <p className="font-normal text-gray-700 dark:text-gray-400">
-            You got {customers && customers.length > 0 ? (
-              customers.length
-            ) : (0)} customers created
+            You got{" "}
+            {customers && customers.length > 0 ? (
+              <>{customers.length} customers created</>
+            ) : (
+              <>0 customers created</>
+            )}
           </p>
+          <Button><Link to="/add-customer"><span className="">Add a Client</span></Link></Button>
         </Card>
 
         <Card className="max-w-sm" onClick={() => handleCardClick("exercises")}>
