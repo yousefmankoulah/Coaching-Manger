@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-
 import CustomersTable from "../components/dashboardComponents/CustomersTable";
 import ExercisesTable from "../components/dashboardComponents/ExercisesTable";
 import DietPlansTable from "../components/dashboardComponents/DietPlansTable";
@@ -59,12 +58,19 @@ export function Dashboard() {
           <p className="font-normal text-gray-700 dark:text-gray-400">
             You got{" "}
             {customers && customers.length > 0 ? (
-              <>{customers.length} customers created</>
+              <>
+                <span className="font-bold">{customers.length}</span> customers
+                created
+              </>
             ) : (
               <>0 customers created</>
             )}
           </p>
-          <Button><Link to="/add-customer"><span className="">Add a Client</span></Link></Button>
+          <Button>
+            <Link to="/add-customer">
+              <span>Add a Client</span>
+            </Link>
+          </Button>
         </Card>
 
         <Card className="max-w-sm" onClick={() => handleCardClick("exercises")}>
