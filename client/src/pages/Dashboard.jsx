@@ -1,11 +1,43 @@
 import { Card } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import CustomersTable from "../components/dashboardComponents/CustomersTable";
 import ExercisesTable from "../components/dashboardComponents/ExercisesTable";
 import DietPlansTable from "../components/dashboardComponents/DietPlansTable";
 
 export function Dashboard() {
   const [selectedCard, setSelectedCard] = useState(null);
+  const { currentUser, token } = useSelector((state) => state.user);
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        if (currentUser && currentUser._id) {
+          const res = await fetch(
+            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setCustomers(data);
+          } else {
+            // Handle unauthorized access or other errors
+            console.error("Error fetching customers:", data.message);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchCustomers();
+  }, [currentUser]);
 
   const handleCardClick = (cardName) => {
     setSelectedCard(cardName);
@@ -23,7 +55,9 @@ export function Dashboard() {
             Number of Customers
           </h5>
           <p className="font-normal text-gray-700 dark:text-gray-400">
-            You got 10 customers created
+            You got {customers && customers.length > 0 ? (
+              customers.length
+            ) : (0)} customers created
           </p>
         </Card>
 

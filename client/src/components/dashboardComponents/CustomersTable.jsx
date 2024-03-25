@@ -83,7 +83,7 @@ export default function CustomersTable() {
                 <Table.Cell>{customer.customerEmail}</Table.Cell>
                 <Table.Cell>{customer.customerPhone}</Table.Cell>
                 <Table.Cell>
-                  <Link to="/" className="text-teal-500 hover:underline">
+                  <Link to={`/detail-customer-login-info/${currentUser._id}/${customer._id}`} className="text-teal-500 hover:underline">
                     <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
                       Details
                     </span>

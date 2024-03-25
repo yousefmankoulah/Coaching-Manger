@@ -1,4 +1,4 @@
-export default function UpdateCustomerLoginInfo() {
+export function UpdateCustomerLoginInfo() {
   return (
     <div>
       <div>Updates</div>
