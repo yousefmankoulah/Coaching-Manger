@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Alert, Label, TextInput, Button, Spinner } from "flowbite-react";
 import {
   signInStart,
-  signInSuccess,
+  createCustomerSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
 
@@ -26,7 +26,11 @@ export function AddCustomers() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.password) {
+    if (
+      !formData.customerName ||
+      !formData.customerEmail ||
+      !formData.customerPassword
+    ) {
       return dispatch(signInFailure("Please fill out all fields"));
     }
 
@@ -36,14 +40,14 @@ export function AddCustomers() {
         return;
       }
 
-      dispatch(signInStart()); // Dispatch signInStart action to set loading state
+      dispatch(signInStart());
 
       const res = await fetch(
         `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/addCustomer/${currentUser._id}`,
         {
           method: "POST",
           headers: {
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
@@ -54,9 +58,8 @@ export function AddCustomers() {
       if (data.success === false) {
         dispatch(signInFailure(data.message)); // Dispatch signInFailure on failure
       }
-
       if (res.ok) {
-        dispatch(signInSuccess(data)); // Dispatch signInSuccess on success
+        dispatch(createCustomerSuccess(data));
         navigate(`/dashboard/${currentUser._id}`);
       }
     } catch (error) {
@@ -90,10 +93,10 @@ export function AddCustomers() {
             <div>
               <Label value="Customer Name" />
               <TextInput
-                id="name"
+                id="customerName"
                 type="text"
                 placeholder="Customer Name"
-                value={formData.name}
+                value={formData.customerName}
                 onChange={handleChange}
               />
             </div>
@@ -101,10 +104,10 @@ export function AddCustomers() {
             <div>
               <Label value="Customer Email" />
               <TextInput
-                id="email"
+                id="customerEmail"
                 type="email"
                 placeholder="Customer Email"
-                value={formData.email}
+                value={formData.customerEmail}
                 onChange={handleChange}
               />
             </div>
@@ -112,10 +115,10 @@ export function AddCustomers() {
             <div>
               <Label value="Customer Temporary Password" />
               <TextInput
-                id="password"
+                id="customerPassword"
                 type="password"
                 placeholder="Customer Temporary Password"
-                value={formData.password}
+                value={formData.customerPassword}
                 onChange={handleChange}
               />
             </div>
@@ -123,10 +126,10 @@ export function AddCustomers() {
             <div>
               <Label value="Customer Phone number" />
               <TextInput
-                id="phoneNumber"
+                id="customerPhone"
                 type="text"
                 placeholder="Customer Phone Number"
-                value={formData.phoneNumber}
+                value={formData.customerPhone}
                 onChange={handleChange}
               />
             </div>

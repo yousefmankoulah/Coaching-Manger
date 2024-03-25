@@ -32,9 +32,13 @@ export const signup = async (req, res, next) => {
     );
   }
 
+  const checkCustomer = await AddCustomerInfo.findOne({ customerEmail: email });
   const user = await User.findOne({ email });
   if (user) {
     next(errorHandler(400, "User already exists"));
+  }
+  if (checkCustomer) {
+    next(errorHandler(400, "This email is used by a customer"));
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -52,7 +56,7 @@ export const signup = async (req, res, next) => {
       newUser,
     });
   } catch (err) {
-    next(error);
+    next(err);
   }
 };
 
@@ -74,7 +78,8 @@ export const signin = async (req, res, next) => {
     }
     const token = jwt.sign(
       { id: validUser._id, email: validUser.email },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: "90d" }
     );
 
     const { password: pass, ...rest } = validUser._doc;
@@ -85,6 +90,7 @@ export const signin = async (req, res, next) => {
       httpOnly: true,
     });
 
+    res.setHeader("Authorization", `Bearer ${token}`);
     res.json({ token, rest });
   } catch (error) {
     next(error);

@@ -15,12 +15,17 @@ export default function CustomersTable() {
       try {
         if (currentUser && currentUser._id) {
           const res = await fetch(
-            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}?token=${token}`
+            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
-
           const data = await res.json();
           if (res.ok) {
-            setCustomers(data.customers);
+            setCustomers(data);
+        
           } else {
             // Handle unauthorized access or other errors
             console.error("Error fetching customers:", data.message);
@@ -53,8 +58,8 @@ export default function CustomersTable() {
                 <Table.Cell>{customer.customerEmail}</Table.Cell>
                 <Table.Cell>{customer.customerPhone}</Table.Cell>
                 <Table.Cell>
-                  <Link to="/">Details</Link>
-                  <Link to="/">Edit</Link>
+                  <Link to="/">Details </Link>
+                  <Link to="/">Edit </Link>
                   <Link to="/">Delete</Link>
                 </Table.Cell>
               </Table.Row>

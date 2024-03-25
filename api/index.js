@@ -12,6 +12,8 @@ import { SetExerciesToCustomer } from "./models/exerciesModel.js";
 import exerciesRoute from "./routes/exerciesRoute.js";
 import customerInfoRoute from "./routes/customerInfoRoute.js";
 import bodyParser from "body-parser";
+import helmet from "helmet";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -60,6 +62,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(helmet());
+app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -75,6 +79,14 @@ app.use("/api/userCustomer", addCustomer);
 app.use("/api/diet", dietRoute);
 app.use("/api/exercies", exerciesRoute);
 app.use("/api/customerInfo", customerInfoRoute);
+
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 
 //ERROR HANDLING
 app.use((err, req, res, next) => {

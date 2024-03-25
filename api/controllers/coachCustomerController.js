@@ -6,52 +6,6 @@ import passwordValidator from "password-validator";
 
 const schema = new passwordValidator();
 
-// export const addCustomer = async (req, res, next) => {
-//   const { customerName, customerEmail, customerPassword, customerPhone } =
-//     req.body;
-
-//   if (!customerName || !customerEmail || !customerPassword) {
-//     next(errorHandler(400, "All fields are required"));
-//   }
-
-//   const coach = await User.findById(req.user.id);
-//   if (coach.role !== "coach") {
-//     next(errorHandler(400, "You are not allowed to perform this action"));
-//   }
-
-//   const checkCustomer = await AddCustomerInfo.findOne({ customerEmail });
-//   if (checkCustomer) {
-//     next(errorHandler(400, "Customer already exists"));
-//   }
-
-//   const generateCustomerId = Math.floor(Math.random() * 100000000000);
-//   const customerId = req.user.id + "_" + generateCustomerId;
-
-//   const hashedPassword = await bcrypt.hash(customerPassword, 10);
-
-//   const userId = req.user.id;
-
-//   const newCustomer = new AddCustomerInfo({
-//     userId: userId,
-//     customerId: customerId,
-//     customerName,
-//     customerEmail,
-//     customerPassword: hashedPassword,
-//     customerPhone,
-//   });
-
-//   try {
-//     await newCustomer.save();
-//     res.status(201).json({
-//       success: true,
-//       message: "Customer created successfully",
-//       newCustomer,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 export const addCustomer = async (req, res, next) => {
   const { customerName, customerEmail, customerPassword, customerPhone } =
     req.body;
@@ -70,8 +24,12 @@ export const addCustomer = async (req, res, next) => {
 
     // Check if customer already exists
     const checkCustomer = await AddCustomerInfo.findOne({ customerEmail });
+    const user = await User.findOne({ email: customerEmail });
     if (checkCustomer) {
       throw errorHandler(400, "Customer already exists");
+    }
+    if (user) {
+      throw errorHandler(400, "This Email used by a Coach account");
     }
 
     // Generate a unique customer ID
@@ -101,7 +59,6 @@ export const addCustomer = async (req, res, next) => {
       newCustomer,
     });
   } catch (error) {
-    // Handle any errors and pass them to the error handling middleware
     next(error);
   }
 };
