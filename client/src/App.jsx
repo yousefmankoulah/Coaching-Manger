@@ -9,6 +9,8 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { Dashboard } from "./pages/Dashboard";
 import { AddCustomers } from "./pages/AddCustomers.jsx";
+import { UpdateCustomerLoginInfo } from "./pages/UpdateCustomerLoginInfo.jsx";
+import { CustomerDetailCoachSide } from "./pages/CustomerDetailCoachSide.jsx";
 
 export default function App() {
   return (
@@ -22,7 +24,12 @@ export default function App() {
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/add-customer" element={<AddCustomers />} />
         </Route>
+        <Route element={<PrivateRoute />}>
         <Route path="/dashboard/:id" element={<Dashboard />} />
+        <Route path="/update-customer/:userId/:id" element={<UpdateCustomerLoginInfo />} />
+        <Route path="/detail-customer-login-info/:userId/:id" element={<CustomerDetailCoachSide />} />
+        </Route>
+       
         {/* <Route path='/about' element={<About />} />
         
         <Route path='/search' element={<Search />} />

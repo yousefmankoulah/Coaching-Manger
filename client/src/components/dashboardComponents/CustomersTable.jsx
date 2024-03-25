@@ -9,6 +9,7 @@ export default function CustomersTable() {
   const { currentUser, token } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState("");
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -25,7 +26,6 @@ export default function CustomersTable() {
           const data = await res.json();
           if (res.ok) {
             setCustomers(data);
-        
           } else {
             // Handle unauthorized access or other errors
             console.error("Error fetching customers:", data.message);
@@ -38,6 +38,31 @@ export default function CustomersTable() {
 
     fetchCustomers();
   }, [currentUser]);
+
+  const handleDeletePost = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/deleteCustomer/${currentUser._id}/${postIdToDelete}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setCustomers((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
@@ -58,9 +83,25 @@ export default function CustomersTable() {
                 <Table.Cell>{customer.customerEmail}</Table.Cell>
                 <Table.Cell>{customer.customerPhone}</Table.Cell>
                 <Table.Cell>
-                  <Link to="/">Details </Link>
-                  <Link to="/">Edit </Link>
-                  <Link to="/">Delete</Link>
+                  <Link to="/" className="text-teal-500 hover:underline">
+                    <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
+                      Details
+                    </span>
+                  </Link>
+                  <Link to={`/update-customer/${currentUser._id}/${customer._id}`} className="text-teal-500 hover:underline">
+                    <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
+                      Edit
+                    </span>
+                  </Link>
+                  <span
+                    onClick={() => {
+                      setShowModal(true);
+                      setPostIdToDelete(customer._id);
+                    }}
+                    className="font-medium text-red-500 hover:underline cursor-pointer"
+                  >
+                    Delete
+                  </span>
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
@@ -75,6 +116,30 @@ export default function CustomersTable() {
           </Table.Body>
         )}
       </Table>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this post?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeletePost}>
+                Yes, I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
