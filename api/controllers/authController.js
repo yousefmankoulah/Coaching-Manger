@@ -201,9 +201,15 @@ export const updateUser = async (req, res, next) => {
       return next(errorHandler(404, "User not found"));
     }
 
-    if (req.body.password) {
-      schema.is().min(8).is().max(100).has().uppercase().has().lowercase();
+    let updateFields = {
+      fullName: req.body.fullName,
+      email: req.body.email,
+      profilePicture: req.body.profilePicture,
+    };
 
+    // Only update the password if a new value is provided
+    if (req.body.password && req.body.password.trim() !== "") {
+      schema.is().min(8).is().max(100).has().uppercase().has().lowercase();
       if (!schema.validate(req.body.password)) {
         return next(
           errorHandler(
@@ -212,24 +218,16 @@ export const updateUser = async (req, res, next) => {
           )
         );
       }
-      req.body.password = bcrypt.hashSync(req.body.password, 10);
+      updateFields.password = bcrypt.hashSync(req.body.password, 10);
     }
 
     try {
       const updatedUser = await User.findByIdAndUpdate(
-        {
-          _id: req.params._id,
-        },
-        {
-          $set: {
-            fullName: req.body.fullName,
-            email: req.body.email,
-            password: req.body.password,
-            profilePicture: req.body.profilePicture,
-          },
-        },
+        req.params._id,
+        { $set: updateFields },
         { new: true }
       );
+
       const { password, ...rest } = updatedUser._doc;
       res.status(200).json(rest);
     } catch (error) {
@@ -240,7 +238,6 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
-
 export const getCoachProfile = async (req, res, next) => {
   try {
     const coach = await User.findOne({
@@ -250,4 +247,4 @@ export const getCoachProfile = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
