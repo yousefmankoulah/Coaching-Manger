@@ -29,33 +29,33 @@ mongoose
   });
 
 //Delete Data after 45 days
-const deleteData = async () => {
-  const diet = await Diet.find();
-  for (let i = 0; i < diet.length; i++) {
-    const date = new Date(diet[i].createdAt);
-    if (date.getDate() === new Date().getDate() - 120) {
-      await Diet.findByIdAndDelete(diet[i]._id);
-    }
-  }
+// const deleteData = async () => {
+//   const diet = await Diet.find();
+//   for (let i = 0; i < diet.length; i++) {
+//     const date = new Date(diet[i].createdAt);
+//     if (date.getDate() === new Date().getDate() - 120) {
+//       await Diet.findByIdAndDelete(diet[i]._id);
+//     }
+//   }
 
-  const customerExercies = await CustomerExercies.find();
-  for (let i = 0; i < customerExercies.length; i++) {
-    const date = new Date(customerExercies[i].createdAt);
-    if (date.getDate() === new Date().getDate() - 120) {
-      await CustomerExercies.findByIdAndDelete(customerExercies[i]._id);
-    }
-  }
+//   const customerExercies = await CustomerExercies.find();
+//   for (let i = 0; i < customerExercies.length; i++) {
+//     const date = new Date(customerExercies[i].createdAt);
+//     if (date.getDate() === new Date().getDate() - 120) {
+//       await CustomerExercies.findByIdAndDelete(customerExercies[i]._id);
+//     }
+//   }
 
-  const setExerciesToCustomer = await SetExerciesToCustomer.find();
-  for (let i = 0; i < setExerciesToCustomer.length; i++) {
-    const date = new Date(setExerciesToCustomer[i].createdAt);
-    if (date.getDate() === new Date().getDate() - 120) {
-      await SetExerciesToCustomer.findByIdAndDelete(
-        setExerciesToCustomer[i]._id
-      );
-    }
-  }
-};
+//   const setExerciesToCustomer = await SetExerciesToCustomer.find();
+//   for (let i = 0; i < setExerciesToCustomer.length; i++) {
+//     const date = new Date(setExerciesToCustomer[i].createdAt);
+//     if (date.getDate() === new Date().getDate() - 120) {
+//       await SetExerciesToCustomer.findByIdAndDelete(
+//         setExerciesToCustomer[i]._id
+//       );
+//     }
+//   }
+// };
 
 //API
 const app = express();
@@ -70,7 +70,7 @@ app.use(cookieParser());
 //start server
 app.listen(3000, () => {
   console.log(`Server running at 3000`);
-  deleteData();
+  // deleteData();
 });
 
 //Routes
@@ -80,11 +80,13 @@ app.use("/api/diet", dietRoute);
 app.use("/api/exercies", exerciesRoute);
 app.use("/api/customerInfo", customerInfoRoute);
 
-
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
   next();
 });
 

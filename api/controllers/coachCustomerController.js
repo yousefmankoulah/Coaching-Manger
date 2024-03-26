@@ -86,8 +86,13 @@ export const getCustomer = async (req, res, next) => {
 
 //Didn't complet it
 export const updateCustomer = async (req, res, next) => {
-  const { customerName, customerEmail, customerPassword, customerPhone } =
-    req.body;
+  const {
+    customerName,
+    customerEmail,
+    customerPassword,
+    customerPhone,
+    profilePicture,
+  } = req.body;
 
   const customer = await AddCustomerInfo.findById(req.params._id);
 
@@ -124,6 +129,7 @@ export const updateCustomer = async (req, res, next) => {
             customerEmail: req.body.customerEmail,
             customerPhone: req.body.customerPhone,
             customerPassword: req.body.customerPassword,
+            profilePicture: req.body.profilePicture,
           },
         },
         { new: true }
