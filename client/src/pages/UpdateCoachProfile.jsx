@@ -12,7 +12,7 @@ import {
 import app from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 
-export function UpdateCustomerLoginInfo() {
+export function UpdateCoachProfile() {
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const { currentUser, token } = useSelector((state) => state.user);
@@ -26,7 +26,6 @@ export function UpdateCustomerLoginInfo() {
   const filePickerRef = useRef();
 
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -80,7 +79,7 @@ export function UpdateCustomerLoginInfo() {
     try {
       const fetchPost = async () => {
         const res = await fetch(
-          `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getACustomer/${currentUser._id}/${id}`,
+          `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/coachProfile/${currentUser._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -103,7 +102,7 @@ export function UpdateCustomerLoginInfo() {
     } catch (error) {
       console.log(error.message);
     }
-  }, [id]);
+  }, [currentUser._id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,7 +123,7 @@ export function UpdateCustomerLoginInfo() {
       }
 
       const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/updateCustomer/${currentUser._id}/${formData._id}`,
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/updateUser/${currentUser._id}`,
         {
           method: "PUT",
           headers: {
@@ -153,9 +152,7 @@ export function UpdateCustomerLoginInfo() {
 
   return (
     <div className="min-h-screen mt-20">
-      <h1 className="text-4xl text-center mt-10 mb-10">
-        Update Customer Profile
-      </h1>
+      <h1 className="text-4xl text-center mt-10 mb-10">Update Your Profile</h1>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         {/* left */}
         <div className="flex-1">
@@ -185,95 +182,79 @@ export function UpdateCustomerLoginInfo() {
               className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full"
               onClick={() => filePickerRef.current.click()}
             >
-              {currentUser.role === "customer" && (
-                <>
-                  {imageFileUploadProgress && (
-                    <CircularProgressbar
-                      value={imageFileUploadProgress || 0}
-                      text={`${imageFileUploadProgress}%`}
-                      strokeWidth={5}
-                      styles={{
-                        root: {
-                          width: "100%",
-                          height: "100%",
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                        },
-                        path: {
-                          stroke: `rgba(62, 152, 199, ${
-                            imageFileUploadProgress / 100
-                          })`,
-                        },
-                      }}
-                    />
-                  )}
-
-                  <img
-                    src={imageFileUrl || currentUser.profilePicture}
-                    alt="user"
-                    className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
-                      imageFileUploadProgress &&
-                      imageFileUploadProgress < 100 &&
-                      "opacity-60"
-                    }`}
-                  />
-                </>
+              {imageFileUploadProgress && (
+                <CircularProgressbar
+                  value={imageFileUploadProgress || 0}
+                  text={`${imageFileUploadProgress}%`}
+                  strokeWidth={5}
+                  styles={{
+                    root: {
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    },
+                    path: {
+                      stroke: `rgba(62, 152, 199, ${
+                        imageFileUploadProgress / 100
+                      })`,
+                    },
+                  }}
+                />
               )}
+
+              <img
+                src={imageFileUrl || currentUser.profilePicture}
+                alt="user"
+                className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
+                  imageFileUploadProgress &&
+                  imageFileUploadProgress < 100 &&
+                  "opacity-60"
+                }`}
+              />
             </div>
             {imageFileUploadError && (
               <Alert color="failure">{imageFileUploadError}</Alert>
             )}
             <div>
-              <Label value="Customer Name" />
+              <Label value="Your Name" />
               <TextInput
-                id="customerName"
+                id="name"
                 type="text"
-                placeholder="Customer Name"
+                placeholder="Your Name"
                 onChange={(e) =>
-                  setFormData({ ...formData, customerName: e.target.value })
+                  setFormData({ ...formData, fullName: e.target.value })
                 }
-                value={formData.customerName}
+                value={formData.fullName}
               />
             </div>
 
             <div>
-              <Label value="Customer Email" />
+              <Label value="Your Email" />
               <TextInput
-                id="customerEmail"
+                id="email"
                 type="email"
-                placeholder="Customer Email"
-                value={formData.customerEmail}
+                placeholder="Your Email"
+                value={formData.email}
                 onChange={(e) =>
-                  setFormData({ ...formData, customerEmail: e.target.value })
+                  setFormData({ ...formData, email: e.target.value })
                 }
               />
             </div>
 
             <div>
-              <Label value="Customer Temporary Password" />
+              <Label value="Your New Password" />
               <TextInput
-                id="customerPassword"
+                id="password"
                 type="password"
-                placeholder="Customer Temporary Password"
+                placeholder="Enter your new Password"
                 onChange={(e) =>
-                  setFormData({ ...formData, customerPassword: e.target.value })
+                  setFormData({ ...formData, password: e.target.value })
                 }
               />
             </div>
 
-            <div>
-              <Label value="Customer Phone number" />
-              <TextInput
-                id="customerPhone"
-                type="text"
-                placeholder="Customer Phone Number"
-                value={formData.customerPhone}
-                onChange={(e) =>
-                  setFormData({ ...formData, customerPhone: e.target.value })
-                }
-              />
-            </div>
             <Button gradientDuoTone="purpleToPink" type="submit">
               Update The Account
             </Button>

@@ -77,7 +77,7 @@ app.listen(3000, () => {
 app.use("/api/auth", authRoute);
 app.use("/api/userCustomer", addCustomer);
 app.use("/api/diet", dietRoute);
-app.use("/api/exercies", exerciesRoute);
+app.use("/api/exercise", exerciesRoute);
 app.use("/api/customerInfo", customerInfoRoute);
 
 app.use(function (req, res, next) {

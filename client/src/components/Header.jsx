@@ -72,9 +72,23 @@ export default function Header() {
                 {currentUser.email}
               </span>
             </Dropdown.Header>
-            {/* <Link to={'/dashboard?tab=profile'}>
-              <Dropdown.Item>Profile</Dropdown.Item>
-            </Link> */}
+            {currentUser.role === "coach" && (
+              <>
+                <Link to={`/update-coach/currentUser._id`}>
+                  <Dropdown.Item>The Coach Profile</Dropdown.Item>
+                </Link>
+              </>
+            )}
+            {currentUser.role === "customer" && (
+              <>
+                <Link
+                  to={`/update-customer/currentUser.userId/currentUser._id`}
+                >
+                  <Dropdown.Item>Profile</Dropdown.Item>
+                </Link>
+              </>
+            )}
+
             <Dropdown.Divider />
             <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
           </Dropdown>

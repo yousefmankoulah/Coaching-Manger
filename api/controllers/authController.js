@@ -239,3 +239,15 @@ export const updateUser = async (req, res, next) => {
     return next(errorHandler(403, "You are not allowed to update this user"));
   }
 };
+
+
+export const getCoachProfile = async (req, res, next) => {
+  try {
+    const coach = await User.findOne({
+      _id: req.params._id,
+    });
+    res.status(200).json(coach);
+  } catch (error) {
+    next(error);
+  }
+}
