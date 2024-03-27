@@ -11,6 +11,7 @@ export function Dashboard() {
   const [selectedCard, setSelectedCard] = useState(null);
   const { currentUser, token } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
+  const [exercise, setExercise] = useState([]);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -37,8 +38,32 @@ export function Dashboard() {
       }
     };
 
+    const fetchExercise = async () => {
+      try {
+        if (currentUser && currentUser._id) {
+          const res = await fetch(
+            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getExercies/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setExercise(data);
+          } else {
+            console.error("Error fetching customers:", data.message);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     if (currentUser?.role === "coach") {
       fetchCustomers();
+      fetchExercise();
     }
   }, [currentUser]);
 
@@ -87,8 +112,21 @@ export function Dashboard() {
                 Number of Exercises
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
-                You got 10 Exercises created
+                You got{" "}
+                {exercise && exercise.length > 0 ? (
+                  <>
+                    <span className="font-bold">{exercise.length}</span>{" "}
+                    Exercises created
+                  </>
+                ) : (
+                  <>0 customers created</>
+                )}
               </p>
+              <Button>
+                <Link to={`/CreateExercise/${currentUser._id}`}>
+                  <span>Add an Exercise</span>
+                </Link>
+              </Button>
             </Card>
 
             <Card className="max-w-sm" onClick={() => handleCardClick("diet")}>

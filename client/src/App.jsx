@@ -12,6 +12,9 @@ import { AddCustomers } from "./pages/AddCustomers.jsx";
 import { UpdateCustomerLoginInfo } from "./pages/UpdateCustomerLoginInfo.jsx";
 import { CustomerDetailCoachSide } from "./pages/CustomerDetailCoachSide.jsx";
 import { UpdateCoachProfile } from "./pages/UpdateCoachProfile.jsx";
+import ExerciseDetail from "./pages/ExerciseDetail.jsx";
+import CreateExercise from "./pages/CreateExercise.jsx";
+import ExerciseUpdate from "./pages/ExerciseUpdate.jsx";
 
 export default function App() {
   return (
@@ -23,8 +26,17 @@ export default function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route element={<OnlyAdminPrivateRoute />}>
-          <Route path="/add-customer" element={<AddCustomers />} />
+          <Route path="/add-customer/:id" element={<AddCustomers />} />
           <Route path="/update-coach/:id" element={<UpdateCoachProfile />} />
+          <Route
+            path="/ExerciseUpdate/:userId/:id"
+            element={<ExerciseUpdate />}
+          />
+          <Route path="/CreateExercise/:id" element={<CreateExercise />} />
+          <Route
+            path="/ExerciseDetail/:userId/:id"
+            element={<ExerciseDetail />}
+          />
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard/:id" element={<Dashboard />} />

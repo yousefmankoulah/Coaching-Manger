@@ -23,7 +23,6 @@ export default function ExercisesTable() {
             }
           );
           const data = await res.json();
-          console.log(data);
           if (res.ok) {
             setExercise(data);
           } else {
@@ -77,10 +76,12 @@ export default function ExercisesTable() {
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {customer.exerciseName}
                 </Table.Cell>
-                <Table.Cell>{customer.exerciseDescription}</Table.Cell>
+                <Table.Cell>
+                  {customer.exerciseDescription.slice(0, 40)}
+                </Table.Cell>
                 <Table.Cell>
                   <Link
-                    to={`/detail-customer-login-info/${currentUser._id}/${customer._id}`}
+                    to={`/ExerciseDetail/${currentUser._id}/${customer._id}`}
                     className="text-teal-500 hover:underline"
                   >
                     <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
@@ -88,7 +89,7 @@ export default function ExercisesTable() {
                     </span>
                   </Link>
                   <Link
-                    to={`/update-customer/${currentUser._id}/${customer._id}`}
+                    to={`/ExerciseUpdate/${currentUser._id}/${customer._id}`}
                     className="text-teal-500 hover:underline"
                   >
                     <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
