@@ -82,7 +82,7 @@ export default function Header() {
             {currentUser.role === "customer" && (
               <>
                 <Link
-                  to={`/update-customer/currentUser.userId/currentUser._id`}
+                  to={`/update-customer/${currentUser.userId}/${currentUser._id}`}
                 >
                   <Dropdown.Item>Profile</Dropdown.Item>
                 </Link>
@@ -105,21 +105,21 @@ export default function Header() {
         <Navbar.Link active={path === "/"} as={"div"}>
           <Link to="/">Home</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/"} as={"div"}>
-          <Link to="/">Plans</Link>
-        </Navbar.Link>
-        {/* {userId && (
-          <Navbar.Link active={path === `/dashboard/${userId}`} as={"div"}>
-            <Link to={`/dashboard/${userId}`}>Dashboard</Link>
+
+        {currentUser.role === "coach" && (
+          <Navbar.Link active={path === "/"} as={"div"}>
+            <Link to="/">Plans</Link>
           </Navbar.Link>
-        )} */}
+        )}
 
         <Navbar.Link active={path === `/dashboard/${userId}`} as={"div"}>
           <Link to={`/dashboard/${userId}`}>Dashboard</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/add-customer"} as={"div"}>
-          <Link to="/add-customer">Add a Client</Link>
-        </Navbar.Link>
+        {currentUser.role === "coach" && (
+          <Navbar.Link active={path === "/add-customer"} as={"div"}>
+            <Link to="/add-customer">Add a Client</Link>
+          </Navbar.Link>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );

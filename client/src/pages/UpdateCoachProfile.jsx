@@ -23,9 +23,14 @@ export function UpdateCoachProfile() {
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
+  const [showPasswordField, setShowPasswordField] = useState(false);
   const filePickerRef = useRef();
 
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -88,13 +93,16 @@ export function UpdateCoachProfile() {
         );
         const data = await res.json();
         if (!res.ok) {
-          console.log(data.message);
           setPublishError(data.message);
           return;
         }
         if (res.ok) {
           setPublishError(null);
-          setFormData(data);
+          setFormData({
+            fullName: data.fullName,
+            email: data.email,
+            profilePicture: data.profilePicture,
+          });
         }
       };
 
@@ -220,12 +228,10 @@ export function UpdateCoachProfile() {
             <div>
               <Label value="Your Name" />
               <TextInput
-                id="name"
+                id="fullName"
                 type="text"
                 placeholder="Your Name"
-                onChange={(e) =>
-                  setFormData({ ...formData, fullName: e.target.value })
-                }
+                onChange={handleChange}
                 value={formData.fullName}
               />
             </div>
@@ -237,21 +243,16 @@ export function UpdateCoachProfile() {
                 type="email"
                 placeholder="Your Email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={handleChange}
               />
             </div>
-
             <div>
               <Label value="Your New Password" />
               <TextInput
                 id="password"
                 type="password"
                 placeholder="Enter your new Password"
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={handleChange}
               />
             </div>
 

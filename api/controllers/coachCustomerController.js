@@ -101,17 +101,10 @@ export const updateCustomer = async (req, res, next) => {
       return next(errorHandler(404, "User not found"));
     }
 
-    let updateFields = {
-      customerName: req.body.customerName,
-      customerEmail: req.body.customerEmail,
-      customerPhone: req.body.customerPhone,
-      profilePicture: req.body.profilePicture,
-    };
-
-    // Only update the password if a new value is provided
-    if (req.body.customerPassword && req.body.customerPassword.trim() !== "") {
+    if (req.body.customerPassword) {
       schema.is().min(8).is().max(100).has().uppercase().has().lowercase();
-      if (!schema.validate(req.body.customerPassword)) {
+
+      if (!schema.validate(customerPassword)) {
         return next(
           errorHandler(
             400,
@@ -119,17 +112,29 @@ export const updateCustomer = async (req, res, next) => {
           )
         );
       }
-      updateFields.customerPassword = bcrypt.hashSync(req.body.customerPassword, 10);
+      req.body.customerPassword = bcrypt.hashSync(
+        req.body.customerPassword,
+        10
+      );
     }
 
     try {
-      const updatedCustomer = await AddCustomerInfo.findByIdAndUpdate(
-        req.params._id,
-        { $set: updateFields },
+      const updatedUser = await AddCustomerInfo.findByIdAndUpdate(
+        {
+          _id: req.params._id,
+        },
+        {
+          $set: {
+            customerName: req.body.customerName,
+            customerEmail: req.body.customerEmail,
+            customerPhone: req.body.customerPhone,
+            customerPassword: req.body.customerPassword,
+            profilePicture: req.body.profilePicture,
+          },
+        },
         { new: true }
       );
-      
-      const { customerPassword, ...rest } = updatedCustomer._doc;
+      const { customerPassword, ...rest } = updatedUser._doc;
       res.status(200).json(rest);
     } catch (error) {
       next(error);

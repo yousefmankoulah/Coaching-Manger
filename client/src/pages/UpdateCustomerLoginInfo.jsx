@@ -4,6 +4,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Alert, Label, TextInput, Button } from "flowbite-react";
 import {
+  connectStorageEmulator,
   getDownloadURL,
   getStorage,
   ref,
@@ -27,6 +28,10 @@ export function UpdateCustomerLoginInfo() {
 
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -80,7 +85,9 @@ export function UpdateCustomerLoginInfo() {
     try {
       const fetchPost = async () => {
         const res = await fetch(
-          `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getACustomer/${currentUser._id}/${id}`,
+          currentUser.role === "coach"
+            ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getACustomer/${currentUser._id}/${id}`
+            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getACustomer/${currentUser.userId}/${currentUser._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -95,7 +102,12 @@ export function UpdateCustomerLoginInfo() {
         }
         if (res.ok) {
           setPublishError(null);
-          setFormData(data);
+          setFormData({
+            customerName: data.customerName,
+            customerEmail: data.customerEmail,
+            profilePicture: data.profilePicture,
+            customerPhone: data.customerPhone,
+          });
         }
       };
 
@@ -230,9 +242,7 @@ export function UpdateCustomerLoginInfo() {
                 id="customerName"
                 type="text"
                 placeholder="Customer Name"
-                onChange={(e) =>
-                  setFormData({ ...formData, customerName: e.target.value })
-                }
+                onChange={handleChange}
                 value={formData.customerName}
               />
             </div>
@@ -244,9 +254,7 @@ export function UpdateCustomerLoginInfo() {
                 type="email"
                 placeholder="Customer Email"
                 value={formData.customerEmail}
-                onChange={(e) =>
-                  setFormData({ ...formData, customerEmail: e.target.value })
-                }
+                onChange={handleChange}
               />
             </div>
 
@@ -256,9 +264,7 @@ export function UpdateCustomerLoginInfo() {
                 id="customerPassword"
                 type="password"
                 placeholder="Customer Temporary Password"
-                onChange={(e) =>
-                  setFormData({ ...formData, customerPassword: e.target.value })
-                }
+                onChange={handleChange}
               />
             </div>
 
@@ -269,9 +275,7 @@ export function UpdateCustomerLoginInfo() {
                 type="text"
                 placeholder="Customer Phone Number"
                 value={formData.customerPhone}
-                onChange={(e) =>
-                  setFormData({ ...formData, customerPhone: e.target.value })
-                }
+                onChange={handleChange}
               />
             </div>
             <Button gradientDuoTone="purpleToPink" type="submit">
