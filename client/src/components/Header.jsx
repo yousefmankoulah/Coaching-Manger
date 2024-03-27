@@ -15,7 +15,7 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
 
-  const userId = currentUser && currentUser._id;
+  const userId = currentUser && currentUser?._id;
 
   const handleSignout = async () => {
     try {
@@ -66,21 +66,28 @@ export default function Header() {
               <Avatar alt="user" img={currentUser.profilePicture} rounded />
             }
           >
-            <Dropdown.Header>
-              <span className="block text-sm">@{currentUser.fullName}</span>
-              <span className="block text-sm font-medium truncate">
-                {currentUser.email}
-              </span>
-            </Dropdown.Header>
-            {currentUser.role === "coach" && (
+            {currentUser?.role === "coach" ? (
               <>
-                <Link to={`/update-coach/currentUser._id`}>
+                <Dropdown.Header>
+                  <span className="block text-sm">@{currentUser.fullName}</span>
+                  <span className="block text-sm font-medium truncate">
+                    {currentUser.email}
+                  </span>
+                </Dropdown.Header>
+                <Link to={`/update-coach/${currentUser._id}`}>
                   <Dropdown.Item>The Coach Profile</Dropdown.Item>
                 </Link>
               </>
-            )}
-            {currentUser.role === "customer" && (
+            ) : (
               <>
+                <Dropdown.Header>
+                  <span className="block text-sm">
+                    @{currentUser.customerName}
+                  </span>
+                  <span className="block text-sm font-medium truncate">
+                    {currentUser.customerEmail}
+                  </span>
+                </Dropdown.Header>
                 <Link
                   to={`/update-customer/${currentUser.userId}/${currentUser._id}`}
                 >
@@ -106,7 +113,7 @@ export default function Header() {
           <Link to="/">Home</Link>
         </Navbar.Link>
 
-        {currentUser.role === "coach" && (
+        {currentUser?.role === "coach" && (
           <Navbar.Link active={path === "/"} as={"div"}>
             <Link to="/">Plans</Link>
           </Navbar.Link>
@@ -115,7 +122,7 @@ export default function Header() {
         <Navbar.Link active={path === `/dashboard/${userId}`} as={"div"}>
           <Link to={`/dashboard/${userId}`}>Dashboard</Link>
         </Navbar.Link>
-        {currentUser.role === "coach" && (
+        {currentUser?.role === "coach" && (
           <Navbar.Link active={path === "/add-customer"} as={"div"}>
             <Link to="/add-customer">Add a Client</Link>
           </Navbar.Link>

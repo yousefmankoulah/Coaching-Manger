@@ -84,16 +84,16 @@ export function UpdateCustomerLoginInfo() {
   useEffect(() => {
     try {
       const fetchPost = async () => {
-        const res = await fetch(
+        const url =
           currentUser.role === "coach"
             ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getACustomer/${currentUser._id}/${id}`
-            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getACustomer/${currentUser.userId}/${currentUser._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getACustomer/${currentUser.userId}/${currentUser._id}`;
+
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         if (!res.ok) {
           console.log(data.message);
@@ -134,18 +134,18 @@ export function UpdateCustomerLoginInfo() {
         console.error("User not authenticated");
         return;
       }
-
-      const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/updateCustomer/${currentUser._id}/${formData._id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const url =
+        currentUser.role === "coach"
+          ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/updateCustomer/${currentUser._id}/${formData._id}`
+          : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/updateCustomer/${currentUser.userId}/${currentUser._id}`;
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
 
       if (!res.ok) {
