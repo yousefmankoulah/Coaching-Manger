@@ -23,7 +23,7 @@ export default function ExercisesTable() {
             }
           );
           const data = await res.json();
-          
+          console.log(data);
           if (res.ok) {
             setExercise(data);
           } else {

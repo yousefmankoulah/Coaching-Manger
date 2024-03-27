@@ -19,7 +19,7 @@ import { verifyToken } from "../utils/verifyUser.js";
 const router = express.Router();
 
 router.get("/getAllExercies", verifyToken, getAllExercies);
-router.get("/getExercies/:_id", verifyToken, getExercies);
+router.get("/getExercies/:userId", verifyToken, getExercies);
 router.post("/createExercies/:_id", verifyToken, createExercies);
 router.put("/updateExercies/:userId/:_id", verifyToken, updateExercies);
 router.delete("/deleteExercies/:userId/:_id", verifyToken, deleteExercies);
