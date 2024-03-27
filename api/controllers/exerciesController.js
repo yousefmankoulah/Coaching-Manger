@@ -1,11 +1,12 @@
 import { Exercies, SetExerciesToCustomer } from "../models/exerciesModel.js";
 import { errorHandler } from "../utils/error.js";
+import User from "../models/userModel.js";
 
 export const getAllExercies = async (req, res, next) => {
   try {
     if (req.user.isAdmin === false) {
       const adminExercies = await Exercies.find({ userId: "admin" });
-      const coachExercies = await Exercies.find({ userId: req.user.id });
+      const coachExercies = await Exercies.find({ userId: req.params._id });
 
       res.status(200).json(adminExercies.concat(coachExercies));
     } else {
