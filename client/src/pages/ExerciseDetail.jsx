@@ -10,6 +10,8 @@ export default function ExerciseDetail() {
   const [publishError, setPublishError] = useState(null);
   const { currentUser, token } = useSelector((state) => state.user);
   const [showModal, setShowModal] = useState(false);
+  const [image, setImage] = useState(false);
+  const [video, setVideo] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,6 +43,9 @@ export default function ExerciseDetail() {
     } catch (error) {
       console.log(error.message);
     }
+
+    isImage();
+    isVideo();
   }, [currentUser, id]);
 
   const handleDeletePost = async () => {
@@ -66,6 +71,38 @@ export default function ExerciseDetail() {
     }
   };
 
+  const isImage = () => {
+    const imageToCheck = ["png", "gif", "jpeg", "jpg"];
+    let str = formData.exerciseVideo;
+
+    if (typeof str === "string" && str.length > 0) {
+      // Check if any word in wordsToCheck is present in the string
+      const foundWord = imageToCheck.find((word) => str.includes(word));
+
+      if (foundWord) {
+        setImage(true);
+      } else {
+        setImage(false);
+      }
+    }
+  };
+
+  const isVideo = () => {
+    const videoToCheck = ["mp4", "mov", "webm", "avi"];
+    let str = formData.exerciseVideo;
+
+    if (typeof str === "string" && str.length > 0) {
+      // Check if any word in wordsToCheck is present in the string
+      const foundWord = videoToCheck.find((word) => str.includes(word));
+
+      if (foundWord) {
+        setVideo(true);
+      } else {
+        setVideo(false);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen mt-20">
       <h1 className="text-4xl text-center mt-10 mb-10">The Exercise Detail</h1>
@@ -74,29 +111,20 @@ export default function ExerciseDetail() {
           <div className="flex flex-col items-center pb-10">
             {formData && (
               <>
-                {formData.exerciseVideo ? (
-                  formData.exerciseVideo.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                    // If the file is an image, display an img tag
-                    <img
-                      className="w-24 h-24 mb-3 shadow-lg mt-3"
-                      src={formData.exerciseVideo}
-                      alt="Exercise"
-                    />
-                  ) : formData.exerciseVideo.match(/\.(mp4|webm|ogg)$/) ? (
-                    // If the file is a video, display a video tag
-                    <video
-                      className="w-24 h-24 mb-3 shadow-lg mt-3"
-                      src={formData.exerciseVideo}
-                      alt="Exercise video"
-                      controls
-                    />
-                  ) : (
-                    // If the file extension doesn't match any of the above, display nothing or a placeholder
-                    <div>No Preview Available</div>
-                  )
-                ) : (
-                  // If formData.exerciseVideo is empty, display nothing or a placeholder
-                  <div>No File Uploaded</div>
+                {image && (
+                  <img
+                    className="w-24 h-24 mb-3 shadow-lg mt-3"
+                    src={formData.exerciseVideo}
+                    alt="Exercise"
+                  />
+                )}
+                {video && (
+                  <video
+                    className="w-24 h-24 mb-3 shadow-lg mt-3"
+                    src={formData.exerciseVideo}
+                    alt="Exercise video"
+                    controls
+                  />
                 )}
 
                 <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
