@@ -126,7 +126,8 @@ export default function ExerciseUpdate() {
     } catch (error) {
       console.log(error.message);
     }
-  }, [id]);
+    
+  }, [currentUser, id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

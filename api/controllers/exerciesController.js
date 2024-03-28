@@ -29,10 +29,7 @@ export const getExercies = async (req, res, next) => {
 
 export const getAnExercies = async (req, res, next) => {
   try {
-    const exercies = await Exercies.find({
-      userId: req.user.id,
-      id: req.params._id,
-    });
+    const exercies = await Exercies.findById(req.params._id);
     res.status(200).json(exercies);
   } catch (error) {
     next(error);
