@@ -126,7 +126,6 @@ export default function ExerciseUpdate() {
     } catch (error) {
       console.log(error.message);
     }
-    
   }, [currentUser, id]);
 
   const handleSubmit = async (e) => {
@@ -204,6 +203,7 @@ export default function ExerciseUpdate() {
                 placeholder="Exercise Description"
                 value={formData.exerciseDescription}
                 onChange={handleChange}
+                className="h-48"
               />
             </div>
 

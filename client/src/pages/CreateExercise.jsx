@@ -172,6 +172,7 @@ export default function CreateExercise() {
                 placeholder="Exercise Description"
                 value={formData.exerciseDescription}
                 onChange={handleChange}
+                className="h-48"
               />
             </div>
 
