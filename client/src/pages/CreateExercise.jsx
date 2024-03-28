@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { CircularProgressbar } from "react-circular-progressbar";
+
 import {
   Alert,
   Label,
@@ -11,7 +13,7 @@ import {
 } from "flowbite-react";
 import {
   signInStart,
-  createCustomerSuccess,
+  signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
 
@@ -74,9 +76,7 @@ export default function CreateExercise() {
         setImageFileUploadProgress(progress.toFixed(0));
       },
       (error) => {
-        setImageFileUploadError(
-          "Could not upload image (File must be less than 2MB)"
-        );
+        setImageFileUploadError("Could not upload image");
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageFileUrl(null);
@@ -123,8 +123,9 @@ export default function CreateExercise() {
       if (data.success === false) {
         dispatch(signInFailure(data.message)); // Dispatch signInFailure on failure
       }
+
       if (res.ok) {
-        dispatch(createCustomerSuccess(data));
+        dispatch(signInSuccess(data));
         navigate(`/dashboard/${currentUser._id}`);
       }
     } catch (error) {
@@ -184,6 +185,28 @@ export default function CreateExercise() {
                 onChange={handleImageChange}
                 ref={filePickerRef}
               />
+
+              {imageFileUploadProgress && (
+                <CircularProgressbar
+                  value={imageFileUploadProgress || 0}
+                  text={`${imageFileUploadProgress}%`}
+                  strokeWidth={5}
+                  styles={{
+                    root: {
+                      width: "30px",
+                      height: "30px",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    },
+                    path: {
+                      stroke: `rgba(62, 152, 199, ${
+                        imageFileUploadProgress / 100
+                      })`,
+                    },
+                  }}
+                />
+              )}
 
               {imageFileUploadError && (
                 <Alert color="failure">{imageFileUploadError}</Alert>
