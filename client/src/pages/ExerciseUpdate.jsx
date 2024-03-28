@@ -156,7 +156,6 @@ export default function ExerciseUpdate() {
         dispatch(signInFailure(data.message)); // Dispatch signInFailure on failure
       }
       if (res.ok) {
-        dispatch(createCustomerSuccess(data));
         navigate(`/dashboard/${currentUser._id}`);
       }
     } catch (error) {
@@ -221,19 +220,8 @@ export default function ExerciseUpdate() {
               )}
             </div>
 
-            <Button
-              gradientDuoTone="purpleToPink"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </>
-              ) : (
-                "Create an Exercise"
-              )}
+            <Button gradientDuoTone="purpleToPink" type="submit">
+              Update an Exercise
             </Button>
           </form>
 
