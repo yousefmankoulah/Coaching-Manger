@@ -13,7 +13,7 @@ import {
 } from "flowbite-react";
 import {
   signInStart,
-  signInSuccess,
+  createCustomerSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
 
@@ -125,7 +125,7 @@ export default function CreateExercise() {
       }
 
       if (res.ok) {
-        dispatch(signInSuccess(data));
+        dispatch(createCustomerSuccess(data));
         navigate(`/dashboard/${currentUser._id}`);
       }
     } catch (error) {
