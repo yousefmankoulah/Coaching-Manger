@@ -125,7 +125,6 @@ export default function CreateExercise() {
       }
 
       if (res.ok) {
-        dispatch(createCustomerSuccess(data));
         navigate(`/dashboard/${currentUser._id}`);
       }
     } catch (error) {
@@ -195,9 +194,6 @@ export default function CreateExercise() {
                     root: {
                       width: "30px",
                       height: "30px",
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
                     },
                     path: {
                       stroke: `rgba(62, 152, 199, ${
@@ -213,19 +209,8 @@ export default function CreateExercise() {
               )}
             </div>
 
-            <Button
-              gradientDuoTone="purpleToPink"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </>
-              ) : (
-                "Create an Exercise"
-              )}
+            <Button gradientDuoTone="purpleToPink" type="submit">
+              Create an Exercise
             </Button>
           </form>
 
