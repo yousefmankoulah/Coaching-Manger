@@ -37,6 +37,8 @@ export default function ExerciseUpdate() {
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [publishError, setPublishError] = useState(null);
+  
+
   const filePickerRef = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -114,7 +116,6 @@ export default function ExerciseUpdate() {
         }
         if (res.ok) {
           setPublishError(null);
-          console.log(data);
           setFormData({
             exerciseName: data.exerciseName,
             exerciseDescription: data.exerciseDescription,
