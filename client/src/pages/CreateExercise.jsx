@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -52,6 +52,12 @@ export default function CreateExercise() {
     }
   };
 
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
   const uploadImage = async () => {
     setImageFileUploading(true);
     setImageFileUploadError(null);
@@ -79,7 +85,7 @@ export default function CreateExercise() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
-          setFormData({ ...formData, profilePicture: downloadURL });
+          setFormData({ ...formData, exerciseVideo: downloadURL });
           setImageFileUploading(false);
         });
       }
@@ -172,6 +178,7 @@ export default function CreateExercise() {
             <div>
               <Label value="Exercise Video or Image" />
               <input
+                id="exerciseVideo"
                 type="file"
                 accept="image/*, video/*"
                 onChange={handleImageChange}

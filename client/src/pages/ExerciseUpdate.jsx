@@ -55,6 +55,12 @@ export default function ExerciseUpdate() {
     }
   };
 
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
   const uploadImage = async () => {
     setImageFileUploading(true);
     setImageFileUploadError(null);
@@ -83,7 +89,7 @@ export default function ExerciseUpdate() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
-          setFormData({ ...formData, profilePicture: downloadURL });
+          setFormData({ ...formData, exerciseVideo: downloadURL });
           setImageFileUploading(false);
         });
       }
@@ -125,10 +131,6 @@ export default function ExerciseUpdate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.exerciseName) {
-      return dispatch(signInFailure("Please fill out all fields"));
-    }
-
     try {
       if (!currentUser) {
         console.error("User not authenticated");
@@ -138,9 +140,9 @@ export default function ExerciseUpdate() {
       dispatch(signInStart());
 
       const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/createExercies/${currentUser._id}`,
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/updateExercies/${currentUser._id}/${id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -164,7 +166,7 @@ export default function ExerciseUpdate() {
 
   return (
     <div className="min-h-screen mt-20">
-      <h1 className="text-4xl text-center mt-10 mb-10">Create An Exercise</h1>
+      <h1 className="text-4xl text-center mt-10 mb-10">Update The Exercise</h1>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         {/* left */}
         <div className="flex-1">
