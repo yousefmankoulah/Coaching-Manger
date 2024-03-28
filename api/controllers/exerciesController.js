@@ -27,6 +27,18 @@ export const getExercies = async (req, res, next) => {
   }
 };
 
+export const getAnExercies = async (req, res, next) => {
+  try {
+    const exercies = await Exercies.find({
+      userId: req.user.id,
+      id: req.params._id,
+    });
+    res.status(200).json(exercies);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createExercies = async (req, res, next) => {
   const { exerciseName, exerciseDescription, exerciseVideo } = req.body;
 
@@ -35,7 +47,7 @@ export const createExercies = async (req, res, next) => {
     next(errorHandler(400, "You are not allowed to perform this action"));
   }
 
-  if (req.user.id !== req.params.userId) {
+  if (req.user.id !== req.params._id) {
     next(errorHandler(401, "You are not allowed to perform this action"));
   }
 

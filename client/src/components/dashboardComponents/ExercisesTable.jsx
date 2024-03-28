@@ -76,9 +76,7 @@ export default function ExercisesTable() {
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {customer.exerciseName}
                 </Table.Cell>
-                <Table.Cell>
-                  {customer.exerciseDescription.slice(0, 40)}
-                </Table.Cell>
+                <Table.Cell>{customer.exerciseDescription}</Table.Cell>
                 <Table.Cell>
                   <Link
                     to={`/ExerciseDetail/${currentUser._id}/${customer._id}`}
