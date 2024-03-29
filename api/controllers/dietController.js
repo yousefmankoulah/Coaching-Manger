@@ -26,7 +26,6 @@ export const createDiet = async (req, res, next) => {
     userId: userId,
     customerId: customerId,
     date,
-    day,
     time,
     meal,
     foodDescription,

@@ -35,6 +35,7 @@ export default function DietPlansTable() {
     };
     fetchCustomers();
   }, [currentUser._id]);
+  
 
   const handleDeletePost = async () => {
     setShowModal(false);
