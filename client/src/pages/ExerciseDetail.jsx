@@ -43,9 +43,6 @@ export default function ExerciseDetail() {
     } catch (error) {
       console.log(error.message);
     }
-
-    isImage();
-    isVideo();
   }, [currentUser, id]);
 
   const handleDeletePost = async () => {
@@ -102,6 +99,15 @@ export default function ExerciseDetail() {
       }
     }
   };
+
+  useEffect(() => {
+    if (formData.exerciseVideo) {
+      isImage();
+      isVideo();
+    }
+  }, [formData.exerciseVideo]);
+
+
 
   return (
     <div className="min-h-screen mt-20">
