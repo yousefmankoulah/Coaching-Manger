@@ -120,23 +120,24 @@ export default function ExerciseDetail() {
                 </h5>
                 {image && (
                   <img
-                    className="w-95 h-95 mb-3 shadow-lg mt-3"
+                    className="w-95 h-95 mb-3 shadow-lg mt-3 mr-10 ml-10"
                     src={formData.exerciseVideo}
                     alt="Exercise"
                   />
                 )}
                 {video && (
                   <video
-                    className="w-95 h-95 mb-3 shadow-lg mt-3"
+                    className="w-95 h-95 mb-3 shadow-lg mt-3 mr-10 ml-10"
                     src={formData.exerciseVideo}
                     alt="Exercise video"
                     controls
                   />
                 )}
-
-                <span className="text-lg text-gray-500 dark:text-gray-400">
-                  Exercise Description: {formData.exerciseDescription}
-                </span>
+                {formData.exerciseDescription && (
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
+                    Exercise Description: {formData.exerciseDescription}
+                  </span>
+                )}
 
                 {currentUser?.role === "coach" && (
                   <div className="flex mt-4 md:mt-6">
