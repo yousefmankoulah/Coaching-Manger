@@ -12,9 +12,12 @@ import { AddCustomers } from "./pages/AddCustomers.jsx";
 import { UpdateCustomerLoginInfo } from "./pages/UpdateCustomerLoginInfo.jsx";
 import { CustomerDetailCoachSide } from "./pages/CustomerDetailCoachSide.jsx";
 import { UpdateCoachProfile } from "./pages/UpdateCoachProfile.jsx";
-import ExerciseDetail from "./pages/ExerciseDetail.jsx";
-import CreateExercise from "./pages/CreateExercise.jsx";
-import ExerciseUpdate from "./pages/ExerciseUpdate.jsx";
+import ExerciseDetail from "./pages/Exercises/ExerciseDetail.jsx";
+import CreateExercise from "./pages/Exercises/CreateExercise.jsx";
+import ExerciseUpdate from "./pages/Exercises/ExerciseUpdate.jsx";
+import CreateDiet from './pages//DietPlan/CreateDiet.jsx'
+import EditDiet from './pages//DietPlan/EditDiet.jsx'
+import DietDetail from './pages//DietPlan/DietDetail.jsx'
 
 export default function App() {
   return (
@@ -33,10 +36,10 @@ export default function App() {
             element={<ExerciseUpdate />}
           />
           <Route path="/CreateExercise/:id" element={<CreateExercise />} />
-          <Route
-            path="/ExerciseDetail/:userId/:id"
-            element={<ExerciseDetail />}
-          />
+
+          <Route path="/CreateDiet/:id" element={<CreateDiet />} />
+          <Route path="/EditDiet/:id" element={<EditDiet />} />
+         
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard/:id" element={<Dashboard />} />
@@ -48,6 +51,11 @@ export default function App() {
             path="/detail-customer-login-info/:userId/:id"
             element={<CustomerDetailCoachSide />}
           />
+          <Route
+            path="/ExerciseDetail/:userId/:id"
+            element={<ExerciseDetail />}
+          />
+          <Route path="/DietDetail/:id" element={<DietDetail />} />
         </Route>
 
         {/* <Route path='/about' element={<About />} />

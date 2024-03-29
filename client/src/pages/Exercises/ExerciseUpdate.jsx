@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CircularProgressbar } from "react-circular-progressbar";
-
 import {
   Alert,
   Label,
@@ -15,7 +13,7 @@ import {
   signInStart,
   createCustomerSuccess,
   signInFailure,
-} from "../redux/user/userSlice";
+} from "../../redux/user/userSlice";
 
 import {
   getDownloadURL,
@@ -23,9 +21,9 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import app from "../firebase";
+import app from "../../firebase";
 
-export default function CreateExercise() {
+export default function ExerciseUpdate() {
   const [formData, setFormData] = useState({});
   const {
     loading,
@@ -38,9 +36,14 @@ export default function CreateExercise() {
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [publishError, setPublishError] = useState(null);
+  
+
   const filePickerRef = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { id } = useParams();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -63,6 +66,7 @@ export default function CreateExercise() {
   const uploadImage = async () => {
     setImageFileUploading(true);
     setImageFileUploadError(null);
+
     const storage = getStorage(app);
     const fileName = new Date().getTime() + imageFile.name;
     const storageRef = ref(storage, fileName);
@@ -76,7 +80,9 @@ export default function CreateExercise() {
         setImageFileUploadProgress(progress.toFixed(0));
       },
       (error) => {
-        setImageFileUploadError("Could not upload image");
+        setImageFileUploadError(
+          "Could not upload image (File must be less than 2MB)"
+        );
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageFileUrl(null);
@@ -92,12 +98,39 @@ export default function CreateExercise() {
     );
   };
 
+  useEffect(() => {
+    try {
+      const fetchPost = async () => {
+        const url = `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getAnExercies/${currentUser._id}/${id}`;
+
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          console.log(data.message);
+          setPublishError(data.message);
+          return;
+        }
+        if (res.ok) {
+          setPublishError(null);
+          setFormData({
+            exerciseName: data.exerciseName,
+            exerciseDescription: data.exerciseDescription,
+          });
+        }
+      };
+
+      fetchPost();
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [currentUser, id]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.exerciseName) {
-      return dispatch(signInFailure("Please fill out all fields"));
-    }
 
     try {
       if (!currentUser) {
@@ -108,9 +141,9 @@ export default function CreateExercise() {
       dispatch(signInStart());
 
       const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/createExercies/${currentUser._id}`,
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/updateExercies/${currentUser._id}/${id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -123,7 +156,6 @@ export default function CreateExercise() {
       if (data.success === false) {
         dispatch(signInFailure(data.message)); // Dispatch signInFailure on failure
       }
-
       if (res.ok) {
         navigate(`/dashboard/${currentUser._id}`);
       }
@@ -134,7 +166,7 @@ export default function CreateExercise() {
 
   return (
     <div className="min-h-screen mt-20">
-      <h1 className="text-4xl text-center mt-10 mb-10">Create An Exercise</h1>
+      <h1 className="text-4xl text-center mt-10 mb-10">Update The Exercise</h1>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         {/* left */}
         <div className="flex-1">
@@ -179,31 +211,11 @@ export default function CreateExercise() {
             <div>
               <Label value="Exercise Video or Image" />
               <input
-                id="exerciseVideo"
                 type="file"
                 accept="image/*, video/*"
                 onChange={handleImageChange}
                 ref={filePickerRef}
               />
-
-              {imageFileUploadProgress && (
-                <CircularProgressbar
-                  value={imageFileUploadProgress || 0}
-                  text={`${imageFileUploadProgress}%`}
-                  strokeWidth={5}
-                  styles={{
-                    root: {
-                      width: "30px",
-                      height: "30px",
-                    },
-                    path: {
-                      stroke: `rgba(62, 152, 199, ${
-                        imageFileUploadProgress / 100
-                      })`,
-                    },
-                  }}
-                />
-              )}
 
               {imageFileUploadError && (
                 <Alert color="failure">{imageFileUploadError}</Alert>
@@ -211,7 +223,7 @@ export default function CreateExercise() {
             </div>
 
             <Button gradientDuoTone="purpleToPink" type="submit">
-              Create an Exercise
+              Update an Exercise
             </Button>
           </form>
 
