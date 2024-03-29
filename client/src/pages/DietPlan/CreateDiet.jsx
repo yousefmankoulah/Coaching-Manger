@@ -65,7 +65,7 @@ export default function CreateDiet() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.foodDescription) {
+    if (!formData.foodDescription || !formData.meal) {
       return dispatch(signInFailure("Please fill out all fields"));
     }
 

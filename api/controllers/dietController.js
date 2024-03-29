@@ -3,9 +3,9 @@ import Diet from "../models/dietModel.js";
 import { errorHandler } from "../utils/error.js";
 
 export const createDiet = async (req, res, next) => {
-  const { date, day, time, meal, foodDescription, calorie } = req.body;
+  const { date, time, meal, foodDescription, calorie } = req.body;
 
-  if (!day || !meal || !foodDescription) {
+  if (!meal || !foodDescription) {
     next(errorHandler(400, "All fields are required"));
   }
 
