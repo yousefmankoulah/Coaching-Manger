@@ -107,37 +107,35 @@ export default function ExerciseDetail() {
     }
   }, [formData.exerciseVideo]);
 
-
-
   return (
     <div className="min-h-screen mt-20">
       <h1 className="text-4xl text-center mt-10 mb-10">The Exercise Detail</h1>
       <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5">
-        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w max-h bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col items-center pb-10">
             {formData && (
               <>
+                <h5 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-10">
+                  {formData.exerciseName}
+                </h5>
                 {image && (
                   <img
-                    className="w-24 h-24 mb-3 shadow-lg mt-3"
+                    className="w-95 h-95 mb-3 shadow-lg mt-3"
                     src={formData.exerciseVideo}
                     alt="Exercise"
                   />
                 )}
                 {video && (
                   <video
-                    className="w-24 h-24 mb-3 shadow-lg mt-3"
+                    className="w-95 h-95 mb-3 shadow-lg mt-3"
                     src={formData.exerciseVideo}
                     alt="Exercise video"
                     controls
                   />
                 )}
 
-                <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                  {formData.exerciseName}
-                </h5>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {formData.exerciseDescription}
+                <span className="text-lg text-gray-500 dark:text-gray-400">
+                  Exercise Description: {formData.exerciseDescription}
                 </span>
 
                 {currentUser?.role === "coach" && (
