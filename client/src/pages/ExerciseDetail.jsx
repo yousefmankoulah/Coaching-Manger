@@ -115,19 +115,19 @@ export default function ExerciseDetail() {
           <div className="flex flex-col items-center pb-10">
             {formData && (
               <>
-                <h5 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-10">
+                <h5 className="text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-10">
                   {formData.exerciseName}
                 </h5>
                 {image && (
                   <img
-                    className="w-95 h-95 mb-3 shadow-lg mt-3 mr-10 ml-10"
+                    className="w-95 h-95 mb-3 shadow-lg mt-3"
                     src={formData.exerciseVideo}
                     alt="Exercise"
                   />
                 )}
                 {video && (
                   <video
-                    className="w-95 h-95 mb-3 shadow-lg mt-3 mr-10 ml-10"
+                    className="w-95 h-95 mb-3 shadow-lg mt-3"
                     src={formData.exerciseVideo}
                     alt="Exercise video"
                     controls
