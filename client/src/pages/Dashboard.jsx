@@ -12,6 +12,7 @@ export function Dashboard() {
   const { currentUser, token } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
   const [exercise, setExercise] = useState([]);
+  const [diet, setDiet] = useState([]);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -61,9 +62,33 @@ export function Dashboard() {
       }
     };
 
+    const fetchDiet = async () => {
+      try {
+        if (currentUser && currentUser._id) {
+          const res = await fetch(
+            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getAllDiet/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setDiet(data);
+          } else {
+            console.error("Error fetching customers:", data.message);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     if (currentUser?.role === "coach") {
       fetchCustomers();
       fetchExercise();
+      fetchDiet();
     }
   }, [currentUser]);
 
@@ -119,7 +144,7 @@ export function Dashboard() {
                     Exercises created
                   </>
                 ) : (
-                  <>0 customers created</>
+                  <>0 Exercises created</>
                 )}
               </p>
               <Button>
@@ -134,8 +159,21 @@ export function Dashboard() {
                 Number of Diet Plans
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
-                You got 10 Diet Plans created
+                You got{" "}
+                {diet && diet.length > 0 ? (
+                  <>
+                    <span className="font-bold">{diet.length}</span> Diet Plan
+                    created
+                  </>
+                ) : (
+                  <>0 Diet Plan created</>
+                )}
               </p>
+              <Button>
+                <Link to={`/createDiet/${currentUser._id}`}>
+                  <span>Add an Diet Plan</span>
+                </Link>
+              </Button>
             </Card>
           </div>
 

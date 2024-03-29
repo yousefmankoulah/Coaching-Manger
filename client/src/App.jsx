@@ -37,10 +37,7 @@ export default function App() {
           />
           <Route path="/CreateExercise/:id" element={<CreateExercise />} />
 
-          <Route
-            path="/CreateDiet/:userId/:customerId"
-            element={<CreateDiet />}
-          />
+          <Route path="/CreateDiet/:userId" element={<CreateDiet />} />
           <Route path="/EditDiet/:userId/:id" element={<EditDiet />} />
         </Route>
         <Route element={<PrivateRoute />}>

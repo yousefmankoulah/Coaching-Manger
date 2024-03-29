@@ -83,7 +83,7 @@ export default function DietPlansTable() {
                 <Table.Cell>{customer.calorie}</Table.Cell>
                 <Table.Cell>
                   <Link
-                    to={`/ExerciseDetail/${currentUser._id}/${customer._id}`}
+                    to={`/DietDetail/${currentUser._id}/${customer._id}`}
                     className="text-teal-500 hover:underline"
                   >
                     <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
@@ -91,7 +91,7 @@ export default function DietPlansTable() {
                     </span>
                   </Link>
                   <Link
-                    to={`/ExerciseUpdate/${currentUser._id}/${customer._id}`}
+                    to={`/EditDiet/${currentUser._id}/${customer._id}`}
                     className="text-teal-500 hover:underline"
                   >
                     <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
