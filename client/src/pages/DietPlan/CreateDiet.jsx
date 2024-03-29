@@ -174,6 +174,39 @@ export default function CreateDiet() {
               />
             </div>
 
+            <div>
+              <Label value="calories Number" />
+              <TextInput
+                id="calorie"
+                type="text"
+                placeholder="calories Number"
+                value={formData.calorie}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <Label value="Date for the Plan" />
+              <TextInput
+                id="date"
+                type="date"
+                placeholder="Date for the Plan"
+                value={formData.date}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <Label value="Time for the Plan" />
+              <TextInput
+                id="time"
+                type="time"
+                placeholder="Time for the Plan"
+                value={formData.time}
+                onChange={handleChange}
+              />
+            </div>
+
             <Button gradientDuoTone="purpleToPink" type="submit">
               Create an Diet Plan
             </Button>
