@@ -1,15 +1,18 @@
 import mongoose from "mongoose";
+import User from "../models/userModel.js";
+import { Exercies, SetExerciesToCustomer } from "../models/exerciesModel.js";
 
 const addCustomerInfoSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
+      ref: 'User',
       required: true,
     },
-    customerId: {
-      type: String,
-      required: true,
-    },
+    // customerId: {
+    //   type: String,
+    //   required: true,
+    // },
 
     customerName: {
       type: String,
@@ -40,12 +43,14 @@ const addCustomerInfoSchema = new mongoose.Schema(
 const customerSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
+      ref: 'User',
       required: true,
     },
 
     customerId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
+      ref: 'AddCustomerInfo',
       required: true,
     },
     customerCurrentWeight: {
@@ -67,11 +72,13 @@ const customerSchema = new mongoose.Schema(
 const customerExerciesSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
+      ref: 'User',
       required: true,
     },
     customerId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
+      ref: 'AddCustomerInfo',
       required: true,
     },
     date: {
@@ -81,7 +88,8 @@ const customerExerciesSchema = new mongoose.Schema(
       type: String,
     },
     setExerciesToCustomerId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
+      ref: 'setExerciesToCustomerSchema',
       required: true,
     },
     maxCarringWeight: {

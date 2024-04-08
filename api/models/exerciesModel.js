@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
+import User from "../models/userModel.js";
+import { AddCustomerInfo } from "../models/customerModel.js";
+
 
 const excersieSchema = new mongoose.Schema({
     userId: {
-        type: String,
-    },
+        type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
+        ref: 'User',
+        required: true,
+      },
     exerciseName: {
         type: String,
         required: true
@@ -19,16 +24,19 @@ const excersieSchema = new mongoose.Schema({
 
 const setExerciesToCustomerSchema = new mongoose.Schema({
     userId: {
-        type: String,
-        required: true
-    },
-    customerId: {
-        type: String,
-        required: true
-    },
+        type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
+        ref: 'User',
+        required: true,
+      },
+      customerId: {
+        type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
+        ref: 'AddCustomerInfo',
+        required: true,
+      },
     exerciseId: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
+        ref: 'Exercies',
+        required: true,
     },
     date: {
         type: Date,

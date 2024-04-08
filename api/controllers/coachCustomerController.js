@@ -33,8 +33,8 @@ export const addCustomer = async (req, res, next) => {
     }
 
     // Generate a unique customer ID
-    const generateCustomerId = Math.floor(Math.random() * 100000000000);
-    const customerId = req.user.id + "_" + generateCustomerId;
+    // const generateCustomerId = Math.floor(Math.random() * 100000000000);
+    // const customerId = req.user.id + "_" + generateCustomerId;
 
     // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(customerPassword, 10);
@@ -42,7 +42,7 @@ export const addCustomer = async (req, res, next) => {
     // Create a new customer object
     const newCustomer = new AddCustomerInfo({
       userId: req.user.id,
-      customerId,
+      // customerId,
       customerName,
       customerEmail,
       customerPassword: hashedPassword,

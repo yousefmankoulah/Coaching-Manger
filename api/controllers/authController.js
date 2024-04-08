@@ -138,6 +138,7 @@ export const signinGoogle = async (req, res, next) => {
           httpOnly: true,
         })
         .json({ token, rest });
+        res.setHeader("Authorization", `Bearer ${token}`);
     }
   } catch (error) {
     next(error);
@@ -175,6 +176,7 @@ export const customerSignin = async (req, res, next) => {
         httpOnly: true,
       })
       .json({ token, rest });
+      res.setHeader("Authorization", `Bearer ${token}`);
   } catch (error) {
     next(error);
   }
@@ -232,6 +234,7 @@ export const updateUser = async (req, res, next) => {
       );
       const { password, ...rest } = updatedUser._doc;
       res.status(200).json(rest);
+      res.setHeader("Authorization", `Bearer ${token}`);
     } catch (error) {
       next(error);
     }
