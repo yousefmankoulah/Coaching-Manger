@@ -30,8 +30,32 @@ export default function CreateDiet() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.id]: e.target.value });
+  // };
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+
+    // If the input field is for the date and the value is not empty
+    if (id === "date" && value) {
+      // Create a new Date object from the input value
+      const date = new Date(value);
+
+      // Check if the date is valid
+      if (!isNaN(date.getTime())) {
+        // Format the date in "yyyy-MM-dd" format
+        const formattedDate = date.toISOString().slice(0, 10);
+
+        // Update the form data with the formatted date
+        setFormData({ ...formData, [id]: formattedDate });
+      } else {
+        // Invalid date, reset the date field in the form data
+        setFormData({ ...formData, [id]: "" });
+      }
+    } else {
+      // For other input fields, update the form data as usual
+      setFormData({ ...formData, [id]: value });
+    }
   };
 
   useEffect(() => {

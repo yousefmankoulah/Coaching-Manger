@@ -77,7 +77,7 @@ export default function DietDetail() {
             {formData && (
               <>
                 <h5 className="text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-7">
-                  Customer Name: {formData.customerId.customerName}
+                  {/* Customer Name: {formData.customerId.customerName} */}
                 </h5>
                 {formData.meal}
                 {formData.foodDescription && (
@@ -107,7 +107,7 @@ export default function DietDetail() {
                 {currentUser?.role === "coach" && (
                   <div className="flex mt-4 md:mt-6">
                     <a
-                      href={`/ExerciseUpdate/${currentUser._id}/${formData._id}`}
+                      href={`/EditDiet/${currentUser._id}/${formData._id}`}
                       className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                     >
                       Edit

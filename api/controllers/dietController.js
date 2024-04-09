@@ -50,7 +50,9 @@ export const getDietCustomerSide = async (req, res, next) => {
 
 export const getAllDietCoachSide = async (req, res, next) => {
   try {
-    const breakfast = await Diet.find({ userId: req.params.userId });
+    const breakfast = await Diet.find({ userId: req.params.userId }).populate(
+      "customerId"
+    );
     res.status(200).json(breakfast);
   } catch (error) {
     next(error);
@@ -71,7 +73,7 @@ export const getADietCoachSide = async (req, res, next) => {
 
 export const updateDiet = async (req, res, next) => {
   const { date, day, time, meal, foodDescription, calorie } = req.body;
-  const diet = await Diet.findById(req.params._id);
+  const diet = await Diet.findById(req.params._id).populate("customerId");
   const coach = await User.findById(req.user.id);
   if (coach.role !== "coach") {
     next(errorHandler(400, "You are not allowed to perform this action"));

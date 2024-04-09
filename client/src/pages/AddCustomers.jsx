@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Alert, Label, TextInput, Button, Spinner } from "flowbite-react";
+import { Alert, Label, TextInput, Button } from "flowbite-react";
 import {
   signInStart,
   createCustomerSuccess,
@@ -11,7 +11,6 @@ import {
 export function AddCustomers() {
   const [formData, setFormData] = useState({});
   const {
-    loading,
     error: errorMessage,
     currentUser,
     token,
@@ -133,19 +132,8 @@ export function AddCustomers() {
                 onChange={handleChange}
               />
             </div>
-            <Button
-              gradientDuoTone="purpleToPink"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
-                </>
-              ) : (
-                "Create Customer Account"
-              )}
+            <Button gradientDuoTone="purpleToPink" type="submit">
+              Create Customer Account
             </Button>
           </form>
 

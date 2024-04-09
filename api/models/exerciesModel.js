@@ -20,6 +20,8 @@ const excersieSchema = new mongoose.Schema({
   },
 });
 
+const Exercies = mongoose.model("Exercies", excersieSchema);
+
 const setExerciesToCustomerSchema = new mongoose.Schema(
   {
     userId: {
@@ -34,7 +36,7 @@ const setExerciesToCustomerSchema = new mongoose.Schema(
     },
     exerciseId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: "Exercies",
+      ref: Exercies,
       required: true,
     },
     date: {
@@ -52,7 +54,6 @@ const setExerciesToCustomerSchema = new mongoose.Schema(
   }
 );
 
-const Exercies = mongoose.model("Exercies", excersieSchema);
 const SetExerciesToCustomer = mongoose.model(
   "SetExerciesToCustomer",
   setExerciesToCustomerSchema

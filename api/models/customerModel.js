@@ -9,10 +9,6 @@ const addCustomerInfoSchema = new mongoose.Schema(
       ref: User,
       required: true,
     },
-    // customerId: {
-    //   type: String,
-    //   required: true,
-    // },
 
     customerName: {
       type: String,
@@ -94,7 +90,7 @@ const customerExerciesSchema = new mongoose.Schema(
     },
     setExerciesToCustomerId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: 'setExerciesToCustomerSchema',
+      ref: "setExerciesToCustomerSchema",
       required: true,
     },
     maxCarringWeight: {
