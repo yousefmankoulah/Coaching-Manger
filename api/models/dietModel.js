@@ -2,39 +2,37 @@ import mongoose from "mongoose";
 import User from "../models/userModel.js";
 import { AddCustomerInfo } from "../models/customerModel.js";
 
-
-const dietSchema = new mongoose.Schema({
-
+const dietSchema = new mongoose.Schema(
+  {
     userId: {
-        type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
-        ref: 'User',
-        required: true,
-      },
-      customerId: {
-        type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-        ref: 'AddCustomerInfo',
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
+      ref: User,
+      required: true,
+    },
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
+      ref: AddCustomerInfo,
+      required: true,
+    },
     date: {
-        type: Date,
+      type: Date,
     },
     time: {
-        type: String,
+      type: String,
     },
     meal: {
-        type: String,
+      type: String,
     },
     foodDescription: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     calorie: {
-        type: Number,
+      type: Number,
     },
-    
-}, { timestamps: true })
-
-
+  },
+  { timestamps: true }
+);
 
 const Diet = mongoose.model("diet", dietSchema);
-export default Diet
+export default Diet;

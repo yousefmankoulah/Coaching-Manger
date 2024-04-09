@@ -6,7 +6,7 @@ const addCustomerInfoSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
-      ref: 'User',
+      ref: User,
       required: true,
     },
     // customerId: {
@@ -40,17 +40,22 @@ const addCustomerInfoSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const AddCustomerInfo = mongoose.model(
+  "addCustomerInfo",
+  addCustomerInfoSchema
+);
+
 const customerSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
-      ref: 'User',
+      ref: User,
       required: true,
     },
 
     customerId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: 'AddCustomerInfo',
+      ref: AddCustomerInfo,
       required: true,
     },
     customerCurrentWeight: {
@@ -73,12 +78,12 @@ const customerExerciesSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
-      ref: 'User',
+      ref: User,
       required: true,
     },
     customerId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: 'AddCustomerInfo',
+      ref: AddCustomerInfo,
       required: true,
     },
     date: {
@@ -106,10 +111,7 @@ const customerExerciesSchema = new mongoose.Schema(
 );
 
 const Customer = mongoose.model("Customer", customerSchema);
-const AddCustomerInfo = mongoose.model(
-  "addCustomerInfo",
-  addCustomerInfoSchema
-);
+
 const CustomerExercies = mongoose.model(
   "CustomerExercies",
   customerExerciesSchema

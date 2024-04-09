@@ -123,7 +123,7 @@ export function Dashboard() {
                 )}
               </p>
               <Button>
-                <Link to="/add-customer">
+                <Link to={`/add-customer/${currentUser._id}`}>
                   <span>Add a Client</span>
                 </Link>
               </Button>

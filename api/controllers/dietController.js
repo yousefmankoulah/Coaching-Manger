@@ -62,7 +62,7 @@ export const getADietCoachSide = async (req, res, next) => {
     const breakfast = await Diet.findOne({
       userId: req.params.userId,
       _id: req.params._id,
-    });
+    }).populate("customerId"); // Populate the customerId field
     res.status(200).json(breakfast);
   } catch (error) {
     next(error);
