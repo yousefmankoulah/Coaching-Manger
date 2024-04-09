@@ -27,7 +27,7 @@ router.put("/updateExercies/:userId/:_id", verifyToken, updateExercies);
 router.delete("/deleteExercies/:userId/:_id", verifyToken, deleteExercies);
 
 router.post(
-  "/coachSetExerciesToCustomer/:customerId/:exerciseId",
+  "/coachSetExerciesToCustomer/:userId",
   verifyToken,
   coachSetExerciesToCustomer
 );

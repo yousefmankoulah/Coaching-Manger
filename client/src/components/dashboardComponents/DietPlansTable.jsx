@@ -14,14 +14,15 @@ export default function DietPlansTable() {
     const fetchCustomers = async () => {
       try {
         if (currentUser && currentUser._id) {
-          const res = await fetch(
-            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getAllDiet/${currentUser._id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const url =
+            currentUser.role === "coach"
+              ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getAllDiet/${currentUser._id}`
+              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getDiet/${currentUser._id}`;
+          const res = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           const data = await res.json();
           if (res.ok) {
             setExercise(data);
@@ -35,7 +36,6 @@ export default function DietPlansTable() {
     };
     fetchCustomers();
   }, [currentUser._id]);
-  
 
   const handleDeletePost = async () => {
     setShowModal(false);
@@ -64,6 +64,8 @@ export default function DietPlansTable() {
 
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      {currentUser?.role === "coach" ? (
+        <>
       <Table hoverable className="shadow-md">
         <Table.Head>
           <Table.HeadCell>Customer Name</Table.HeadCell>
@@ -146,6 +148,53 @@ export default function DietPlansTable() {
           </div>
         </Modal.Body>
       </Modal>
+      </>
+      ) : (
+        <>
+              <Table hoverable className="shadow-md">
+        <Table.Head>
+          <Table.HeadCell>Meal Date</Table.HeadCell>
+          <Table.HeadCell>Meal Name</Table.HeadCell>
+          <Table.HeadCell>Food Description</Table.HeadCell>
+          <Table.HeadCell>Meal calories</Table.HeadCell>
+          <Table.HeadCell>Updates</Table.HeadCell>
+        </Table.Head>
+        {exercise && exercise.length > 0 ? ( // Check if customers array exists and is not empty
+          exercise.map((customer) => (
+            <Table.Body className="divide-y" key={customer._id}>
+              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell>{customer.date}</Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {customer.meal}
+                </Table.Cell>
+                <Table.Cell>{customer.foodDescription}</Table.Cell>
+                <Table.Cell>{customer.calorie}</Table.Cell>
+                <Table.Cell>
+                  <Link
+                    to={`/DietDetail/${currentUser._id}/${customer._id}`}
+                    className="text-teal-500 hover:underline"
+                  >
+                    <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
+                      Details
+                    </span>
+                  </Link>
+                
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          ))
+        ) : (
+          <Table.Body className="divide-y">
+            <Table.Row>
+              <Table.Cell colSpan={4} className="text-center">
+                No Diet Plan to display
+              </Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        )}
+      </Table>
+        </>
+      )}
     </div>
   );
 }

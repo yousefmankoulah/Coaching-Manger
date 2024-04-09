@@ -65,14 +65,15 @@ export function Dashboard() {
     const fetchDiet = async () => {
       try {
         if (currentUser && currentUser._id) {
-          const res = await fetch(
-            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getAllDiet/${currentUser._id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const url =
+            currentUser.role === "coach"
+              ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getAllDiet/${currentUser._id}`
+              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getDiet/${currentUser._id}`;
+          const res = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           const data = await res.json();
           if (res.ok) {
             setDiet(data);
@@ -87,6 +88,9 @@ export function Dashboard() {
 
     if (currentUser?.role === "coach") {
       fetchCustomers();
+      fetchExercise();
+      fetchDiet();
+    } else {
       fetchExercise();
       fetchDiet();
     }
@@ -152,6 +156,11 @@ export function Dashboard() {
                   <span>Add an Exercise</span>
                 </Link>
               </Button>
+              <Button>
+                <Link to={`/AssignExercise/${currentUser._id}`}>
+                  <span>Assign an Exercise</span>
+                </Link>
+              </Button>
             </Card>
 
             <Card className="max-w-sm" onClick={() => handleCardClick("diet")}>
@@ -183,7 +192,49 @@ export function Dashboard() {
           {selectedCard === "diet" && <DietPlansTable />}
         </>
       ) : (
-        <div>Tmam</div>
+        <>
+          <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
+            <Card
+              className="max-w-sm"
+              onClick={() => handleCardClick("exercises")}
+            >
+              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Number of Exercises
+              </h5>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                You got{" "}
+                {exercise && exercise.length > 0 ? (
+                  <>
+                    <span className="font-bold">{exercise.length}</span>{" "}
+                    Exercises created
+                  </>
+                ) : (
+                  <>0 Exercises created</>
+                )}
+              </p>
+            </Card>
+
+            <Card className="max-w-sm" onClick={() => handleCardClick("diet")}>
+              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Number of Diet Plans
+              </h5>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                You got{" "}
+                {diet && diet.length > 0 ? (
+                  <>
+                    <span className="font-bold">{diet.length}</span> Diet Plan
+                    created
+                  </>
+                ) : (
+                  <>0 Diet Plan created</>
+                )}
+              </p>
+            </Card>
+          </div>
+          {selectedCard === null && <ExercisesTable />}
+          {selectedCard === "exercises" && <ExercisesTable />}
+          {selectedCard === "diet" && <DietPlansTable />}
+        </>
       )}
     </div>
   );

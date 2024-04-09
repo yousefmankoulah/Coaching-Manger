@@ -77,9 +77,9 @@ export default function DietDetail() {
             {formData && (
               <>
                 <h5 className="text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-7">
-                  {/* Customer Name: {formData.customerId.customerName} */}
+                  {formData.meal}
                 </h5>
-                {formData.meal}
+
                 {formData.foodDescription && (
                   <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
                     Meal Description: {formData.foodDescription}

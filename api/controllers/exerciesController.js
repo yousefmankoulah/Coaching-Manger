@@ -124,11 +124,11 @@ export const deleteExercies = async (req, res, next) => {
 };
 
 export const coachSetExerciesToCustomer = async (req, res, next) => {
-  const { date, time, setNumbers } = req.body;
-  const exerciseId = req.params.exerciseId;
+  const { date, time, setNumbers, exerciseId, customerId } = req.body;
+
   const exercies = new SetExerciesToCustomer({
     userId: req.user.id,
-    customerId: req.params.customerId,
+    customerId,
     exerciseId,
     date,
     time,
