@@ -5,7 +5,7 @@ import { AddCustomerInfo } from "../models/customerModel.js";
 const excersieSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   exerciseName: {
@@ -20,13 +20,11 @@ const excersieSchema = new mongoose.Schema({
   },
 });
 
-const Exercies = mongoose.model("Exercies", excersieSchema);
-
 const setExerciesToCustomerSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     customerId: {
@@ -36,7 +34,7 @@ const setExerciesToCustomerSchema = new mongoose.Schema(
     },
     exerciseId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: 'Exercies',
+      ref: "Exercies",
       required: true,
     },
     date: {
@@ -58,5 +56,7 @@ const SetExerciesToCustomer = mongoose.model(
   "SetExerciesToCustomer",
   setExerciesToCustomerSchema
 );
+
+const Exercies = mongoose.model("Exercies", excersieSchema);
 
 export { Exercies, SetExerciesToCustomer };

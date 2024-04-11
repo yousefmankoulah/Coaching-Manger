@@ -213,19 +213,57 @@ export const getASetForCoach = async (req, res, next) => {
 
 export const getASetForCustomer = async (req, res, next) => {
   try {
-    if (req.user.id === req.params.customerId || req.user.isAdmin === true) {
-      const setExercies = await SetExerciesToCustomer.findById(req.params._id);
-      const exerciesById = await Exercies.findById({
-        _id: setExercies.exerciseId,
-      });
-      res.status(200).json({ setExercies, exerciesById });
-    } else {
-      next(errorHandler(401, "You are not allowed to perform this action"));
+    if (req.user.id !== req.params.customerId && !req.user.isAdmin) {
+      return next(
+        errorHandler(401, "You are not allowed to perform this action")
+      );
     }
+
+    const setExercies = await SetExerciesToCustomer.findById(
+      req.params._id
+    ).populate("exerciseId");
+
+    if (!setExercies) {
+      return res.status(404).send("SetExercies not found");
+    }
+
+    res.status(200).json(setExercies);
   } catch (error) {
-    next(error);
+    // Proper error handling to avoid multiple response headers
+    if (!res.headersSent) {
+      next(error);
+    }
   }
 };
+
+// export const getASetForCustomer = async (req, res, next) => {
+//   try {
+//     if (req.user.id === req.params.customerId || req.user.isAdmin === true) {
+//       const setId = new mongoose.Types.ObjectId(req.params._id);
+
+//       const pipeline = [
+//         {
+//           $match: { _id: setId }, // Match the SetExerciesToCustomer document by _id
+//         },
+//         {
+//           $lookup: {
+//             from: "exercies", // Collection name to lookup
+//             localField: "exerciseId",
+//             foreignField: "_id",
+//             as: "exercise", // Field name to store the populated exercise document
+//           },
+//         },
+//       ];
+
+//       const result = await SetExerciesToCustomer.aggregate(pipeline);
+//       res.status(200).json(result);
+//     } else {
+//       next(errorHandler(401, "You are not allowed to perform this action"));
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 export const updateSetExercies = async (req, res, next) => {
   const { date, time, setNumbers } = req.body;

@@ -31,7 +31,6 @@ export default function ViewAssignExercise() {
         });
         const data = await res.json();
         if (!res.ok) {
-          console.log(data.message);
           setPublishError(data.message);
           return;
         }
@@ -52,7 +51,7 @@ export default function ViewAssignExercise() {
     setShowModal(false);
     try {
       const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteExercies/${currentUser._id}/${id}`,
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteSetExercies/${currentUser._id}/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -71,45 +70,45 @@ export default function ViewAssignExercise() {
     }
   };
 
-  const isImage = () => {
-    const imageToCheck = ["png", "gif", "jpeg", "jpg"];
-    let str = formData.exerciseVideo;
-
-    if (typeof str === "string" && str.length > 0) {
-      // Check if any word in wordsToCheck is present in the string
-      const foundWord = imageToCheck.find((word) => str.includes(word));
-
-      if (foundWord) {
-        setImage(true);
-      } else {
-        setImage(false);
-      }
-    }
-  };
-
-  const isVideo = () => {
-    const videoToCheck = ["mp4", "mov", "webm", "avi"];
-    let str = formData.exerciseVideo;
-
-    if (typeof str === "string" && str.length > 0) {
-      // Check if any word in wordsToCheck is present in the string
-      const foundWord = videoToCheck.find((word) => str.includes(word));
-
-      if (foundWord) {
-        setVideo(true);
-      } else {
-        setVideo(false);
-      }
-    }
-  };
-
   useEffect(() => {
-    if (formData.exerciseVideo) {
+    if (formData && formData.exerciseId) {
+      const isImage = () => {
+        const imageToCheck = ["png", "gif", "jpeg", "jpg"];
+
+        let str = formData.exerciseId.exerciseVideo;
+
+        if (typeof str === "string" && str.length > 0) {
+          // Check if any word in wordsToCheck is present in the string
+          const foundWord = imageToCheck.find((word) => str.includes(word));
+
+          if (foundWord) {
+            setImage(true);
+          } else {
+            setImage(false);
+          }
+        }
+      };
+
+      const isVideo = () => {
+        const videoToCheck = ["mp4", "mov", "webm", "avi"];
+
+        let str = formData.exerciseId.exerciseVideo;
+
+        if (typeof str === "string" && str.length > 0) {
+          // Check if any word in wordsToCheck is present in the string
+          const foundWord = videoToCheck.find((word) => str.includes(word));
+
+          if (foundWord) {
+            setVideo(true);
+          } else {
+            setVideo(false);
+          }
+        }
+      };
       isImage();
       isVideo();
     }
-  }, [formData.exerciseVideo]);
-  console.log(formData);
+  }, [formData]);
 
   return (
     <div className="min-h-screen mt-20">
@@ -117,52 +116,52 @@ export default function ViewAssignExercise() {
       <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5 rounded-lg">
         <div className="w-full max-w max-h bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col items-center pb-10">
-            {formData && (
+            {formData && formData.exerciseId && (
               <>
                 <h5 className="text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-10">
-                  {formData.exerciesById.exerciseName}
+                  {formData.exerciseId.exerciseName}
                 </h5>
                 {image && (
                   <img
                     className="w-95 h-95 mb-3 shadow-lg mt-3"
-                    src={formData.exerciesById.exerciseVideo}
+                    src={formData.exerciseId.exerciseVideo}
                     alt="Exercise"
                   />
                 )}
                 {video && (
                   <video
                     className="w-95 h-95 mb-3 shadow-lg mt-3"
-                    src={formData.exerciesById.exerciseVideo}
+                    src={formData.exerciseId.exerciseVideo}
                     alt="Exercise video"
                     controls
                   />
                 )}
-                {formData.exerciesById.exerciseDescription && (
+                {formData.exerciseId.exerciseDescription && (
                   <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
                     Exercise Description:{" "}
-                    {formData.exerciesById.exerciseDescription}
+                    {formData.exerciseId.exerciseDescription}
                   </span>
                 )}
 
-                {formData.setExercies.date && (
+                {formData.date && (
                   <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
-                    Exercise Description: {formData.setExercies.date}
+                    Exercise Description: {formData.date}
                   </span>
                 )}
 
-                {formData.setExercies.time && (
+                {formData.time && (
                   <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
-                    Exercise Description: {formData.setExercies.time}
+                    Exercise Description: {formData.time}
                   </span>
                 )}
 
-                {formData.setExercies.setNumbers && (
+                {formData.setNumbers && (
                   <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
-                    Exercise Description: {formData.setExercies.setNumbers}
+                    Exercise Description: {formData.setNumbers}
                   </span>
                 )}
 
-                {currentUser?.role === "coach" && (
+                {currentUser?.role === "coach" ? (
                   <div className="flex mt-4 md:mt-6">
                     <a
                       href={`/ExerciseUpdate/${currentUser._id}/${formData._id}`}
@@ -177,6 +176,15 @@ export default function ViewAssignExercise() {
                       className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700"
                     >
                       Delete
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex mt-4 md:mt-6">
+                    <a
+                      href={`/ExerciseUpdate/${currentUser._id}/${formData._id}`}
+                      className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-green-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                    >
+                      Add Your Training result Info
                     </a>
                   </div>
                 )}
