@@ -109,6 +109,7 @@ export default function ViewAssignExercise() {
       isVideo();
     }
   }, [formData.exerciseVideo]);
+  console.log(formData);
 
   return (
     <div className="min-h-screen mt-20">

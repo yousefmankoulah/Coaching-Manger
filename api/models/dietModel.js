@@ -6,12 +6,12 @@ const dietSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId, // Define userId as ObjectId
-      ref: User,
+      ref: "User",
       required: true,
     },
     customerId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: AddCustomerInfo,
+      ref: "AddCustomerInfo",
       required: true,
     },
     date: {
