@@ -20,6 +20,8 @@ import EditDiet from "./pages/DietPlan/EditDiet.jsx";
 import DietDetail from "./pages/DietPlan/DietDetail.jsx";
 import AssignExercise from "./pages/Exercises/AssignExercise.jsx";
 import ViewAssignExercise from "./pages/Exercises/ViewAssignExercise.jsx";
+import CustomerExerciseResult from "./pages/Exercises/CustomerExerciseResult.jsx";
+import UpdateAssignEx from "./pages/Exercises/UpdateAssignEx.jsx";
 
 export default function App() {
   return (
@@ -30,6 +32,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/add-customer/:id" element={<AddCustomers />} />
           <Route path="/update-coach/:id" element={<UpdateCoachProfile />} />
@@ -46,7 +49,12 @@ export default function App() {
             path="/ViewAssignExercise/:userId/:id"
             element={<ViewAssignExercise />}
           />
+          <Route
+            path="/UpdateAssignEx/:userId/:id"
+            element={<UpdateAssignEx />}
+          />
         </Route>
+
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard/:id" element={<Dashboard />} />
           <Route
@@ -65,6 +73,10 @@ export default function App() {
           <Route
             path="/ViewAssignExerciseCustomer/:customerId/:id"
             element={<ViewAssignExercise />}
+          />
+          <Route
+            path="/addCustomerExerciesInfo/:userId/:customerId/:setExerciesToCustomerId"
+            element={<CustomerExerciseResult />}
           />
         </Route>
 
