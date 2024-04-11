@@ -40,7 +40,7 @@ const setExerciesToCustomerSchema = new mongoose.Schema(
       required: true,
     },
     date: {
-      type: Date,
+      type: String,
     },
     time: {
       type: String,

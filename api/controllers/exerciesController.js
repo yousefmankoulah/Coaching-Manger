@@ -6,7 +6,7 @@ export const getAllExercies = async (req, res, next) => {
   try {
     if (req.user.isAdmin === false) {
       const adminExercies = await Exercies.find({ userId: "admin" });
-      const coachExercies = await Exercies.find({ userId: req.params._id });
+      const coachExercies = await Exercies.find({ userId: req.params.userId });
 
       res.status(200).json(adminExercies.concat(coachExercies));
     } else {
@@ -154,7 +154,7 @@ export const getSetExerciesForCustomer = async (req, res, next) => {
     if (req.user.id === req.params.customerId || req.user.isAdmin === true) {
       const setExercies = await SetExerciesToCustomer.find({
         customerId: req.params.customerId,
-      });
+      }).populate("exerciseId");
       res.status(200).json(setExercies);
     } else {
       next(errorHandler(401, "You are not allowed to perform this action"));
