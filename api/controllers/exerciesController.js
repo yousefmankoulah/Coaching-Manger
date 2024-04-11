@@ -169,7 +169,7 @@ export const getSetExerciesCoachSide = async (req, res, next) => {
     if (req.user.id === req.params.userId || req.user.isAdmin === true) {
       const setExercies = await SetExerciesToCustomer.find({
         userId: req.params.userId,
-      });
+      }).populate("exerciseId");
       res.status(200).json(setExercies);
     } else {
       next(errorHandler(401, "You are not allowed to perform this action"));

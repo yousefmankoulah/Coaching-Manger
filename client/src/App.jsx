@@ -19,7 +19,7 @@ import CreateDiet from "./pages/DietPlan/CreateDiet.jsx";
 import EditDiet from "./pages/DietPlan/EditDiet.jsx";
 import DietDetail from "./pages/DietPlan/DietDetail.jsx";
 import AssignExercise from "./pages/Exercises/AssignExercise.jsx";
-import ViewAssignExercise from './pages/Exercises/ViewAssignExercise.jsx'
+import ViewAssignExercise from "./pages/Exercises/ViewAssignExercise.jsx";
 
 export default function App() {
   return (
@@ -42,7 +42,10 @@ export default function App() {
           <Route path="/CreateDiet/:userId" element={<CreateDiet />} />
           <Route path="/EditDiet/:userId/:id" element={<EditDiet />} />
           <Route path="/AssignExercise/:userId" element={<AssignExercise />} />
-          <Route path="/ViewAssignExercise/:userId/:id" element={<ViewAssignExercise />} />
+          <Route
+            path="/ViewAssignExercise/:userId/:id"
+            element={<ViewAssignExercise />}
+          />
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard/:id" element={<Dashboard />} />
@@ -59,8 +62,10 @@ export default function App() {
             element={<ExerciseDetail />}
           />
           <Route path="/DietDetail/:userId/:id" element={<DietDetail />} />
-          <Route path="/ViewAssignExercise/:customerId/:id" element={<ViewAssignExercise />} />
-
+          <Route
+            path="/ViewAssignExerciseCustomer/:customerId/:id"
+            element={<ViewAssignExercise />}
+          />
         </Route>
 
         {/* <Route path='/about' element={<About />} />

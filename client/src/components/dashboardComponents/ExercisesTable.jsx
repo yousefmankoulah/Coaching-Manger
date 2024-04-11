@@ -162,7 +162,7 @@ export default function ExercisesTable() {
                   <Table.Cell>{customer.exerciseId.exerciseName}</Table.Cell>
                   <Table.Cell>
                     <Link
-                      to={`/ViewAssignExercise/${currentUser._id}/${customer._id}`}
+                      to={`/ViewAssignExerciseCustomer/${currentUser._id}/${customer._id}`}
                       className="text-teal-500 hover:underline"
                     >
                       <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
