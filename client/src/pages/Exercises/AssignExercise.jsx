@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CircularProgressbar } from "react-circular-progressbar";
 
-import { Alert, Label, TextInput, Button, Textarea } from "flowbite-react";
+import { Alert, Label, TextInput, Button } from "flowbite-react";
 import { signInStart, signInFailure } from "../../redux/user/userSlice";
 
 export default function AssignExercise() {
