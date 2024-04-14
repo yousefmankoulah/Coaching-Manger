@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import CustomersTable from "../components/dashboardComponents/CustomersTable";
 import ExercisesTable from "../components/dashboardComponents/ExercisesTable";
 import DietPlansTable from "../components/dashboardComponents/DietPlansTable";
+import AssignExTable from "../components/dashboardComponents/AssignExTable";
 
 export function Dashboard() {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -86,12 +87,38 @@ export function Dashboard() {
       }
     };
 
+    const fetchAssignEx = async () => {
+      try {
+        if (currentUser && currentUser._id) {
+          const url =
+            currentUser.role === "coach"
+              ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSide/${currentUser._id}`
+              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSideForACustomer/${currentUser.userId}/${currentUser._id}`;
+          const res = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setCustomers(data);
+          } else {
+            // Handle unauthorized access or other errors
+            console.error("Error fetching customers:", data.message);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     if (currentUser?.role === "coach") {
       fetchCustomers();
       fetchExercise();
       fetchDiet();
+      fetchAssignEx();
     } else {
-      fetchExercise();
+      fetchAssignEx();
       fetchDiet();
     }
   }, [currentUser]);
@@ -107,7 +134,7 @@ export function Dashboard() {
       </h1>
       {currentUser?.role === "coach" ? (
         <>
-          <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
+          <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5">
             <Card
               className="max-w-sm"
               onClick={() => handleCardClick("customers")}
@@ -135,6 +162,31 @@ export function Dashboard() {
 
             <Card
               className="max-w-sm"
+              onClick={() => handleCardClick("assignEx")}
+            >
+              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Number of Assigned Exercises
+              </h5>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                You got{" "}
+                {customers && customers.length > 0 ? (
+                  <>
+                    <span className="font-bold">{customers.length}</span>{" "}
+                    Assigned exercises created
+                  </>
+                ) : (
+                  <>0 Assigned exercises created</>
+                )}
+              </p>
+              <Button>
+                <Link to={`/AssignExercise/${currentUser._id}`}>
+                  <span>Assign an Exercise</span>
+                </Link>
+              </Button>
+            </Card>
+
+            <Card
+              className="max-w-sm"
               onClick={() => handleCardClick("exercises")}
             >
               <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -154,11 +206,6 @@ export function Dashboard() {
               <Button>
                 <Link to={`/CreateExercise/${currentUser._id}`}>
                   <span>Add an Exercise</span>
-                </Link>
-              </Button>
-              <Button>
-                <Link to={`/AssignExercise/${currentUser._id}`}>
-                  <span>Assign an Exercise</span>
                 </Link>
               </Button>
             </Card>
@@ -188,6 +235,7 @@ export function Dashboard() {
 
           {selectedCard === null && <CustomersTable />}
           {selectedCard === "customers" && <CustomersTable />}
+          {selectedCard === "assignEx" && <AssignExTable />}
           {selectedCard === "exercises" && <ExercisesTable />}
           {selectedCard === "diet" && <DietPlansTable />}
         </>

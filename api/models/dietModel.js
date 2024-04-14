@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import User from "../models/userModel.js";
-import { AddCustomerInfo } from "../models/customerModel.js";
+// import User from "../models/userModel.js";
+// import { AddCustomerInfo } from "../models/customerModel.js";
 
 const dietSchema = new mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const dietSchema = new mongoose.Schema(
     },
     customerId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: "AddCustomerInfo",
+      ref: "addCustomerInfo",
       required: true,
     },
     date: {

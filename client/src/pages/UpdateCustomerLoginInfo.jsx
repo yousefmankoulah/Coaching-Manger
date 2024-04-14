@@ -136,7 +136,7 @@ export function UpdateCustomerLoginInfo() {
       }
       const url =
         currentUser.role === "coach"
-          ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/updateCustomer/${currentUser._id}/${formData._id}`
+          ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/updateCustomer/${currentUser._id}/${id}`
           : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/updateCustomer/${currentUser.userId}/${currentUser._id}`;
       const res = await fetch(url, {
         method: "PUT",

@@ -136,6 +136,11 @@ export default function ViewAssignExercise() {
                     controls
                   />
                 )}
+                {formData.customerId.customerName && (
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
+                    customer Name: {formData.customerId.customerName}
+                  </span>
+                )}
                 {formData.exerciseId.exerciseDescription && (
                   <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
                     Exercise Description:{" "}

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
-export default function CustomersTable() {
+export default function AssignExTable() {
   const { currentUser, token } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -14,14 +14,15 @@ export default function CustomersTable() {
     const fetchCustomers = async () => {
       try {
         if (currentUser && currentUser._id) {
-          const res = await fetch(
-            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/getAllCustomer/${currentUser._id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const url =
+            currentUser.role === "coach"
+              ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSide/${currentUser._id}`
+              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSideForACustomer/${currentUser.userId}/${currentUser._id}`;
+          const res = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           const data = await res.json();
           if (res.ok) {
             setCustomers(data);
@@ -42,7 +43,7 @@ export default function CustomersTable() {
     setShowModal(false);
     try {
       const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/deleteCustomer/${currentUser._id}/${postIdToDelete}`,
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteSetExercies/${currentUser._id}/${postIdToDelete}`,
         {
           method: "DELETE",
           headers: {
@@ -68,46 +69,50 @@ export default function CustomersTable() {
       <Table hoverable className="shadow-md">
         <Table.Head>
           <Table.HeadCell>Customer Name</Table.HeadCell>
-          <Table.HeadCell>Customer Email</Table.HeadCell>
-          <Table.HeadCell>Customer Phone Number</Table.HeadCell>
+          <Table.HeadCell>Exercise Name</Table.HeadCell>
+          <Table.HeadCell>Date</Table.HeadCell>
           <Table.HeadCell>Updates</Table.HeadCell>
         </Table.Head>
         {customers && customers.length > 0 ? ( // Check if customers array exists and is not empty
           customers.map((customer) => (
             <Table.Body className="divide-y" key={customer._id}>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {customer.customerName}
-                </Table.Cell>
-                <Table.Cell>{customer.customerEmail}</Table.Cell>
-                <Table.Cell>{customer.customerPhone}</Table.Cell>
-                <Table.Cell>
-                  <Link
-                    to={`/detail-customer-login-info/${currentUser._id}/${customer._id}`}
-                    className="text-teal-500 hover:underline"
-                  >
-                    <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
-                      Details
-                    </span>
-                  </Link>
-                  <Link
-                    to={`/update-customer/${currentUser._id}/${customer._id}`}
-                    className="text-teal-500 hover:underline"
-                  >
-                    <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
-                      Edit
-                    </span>
-                  </Link>
-                  <span
-                    onClick={() => {
-                      setShowModal(true);
-                      setPostIdToDelete(customer._id);
-                    }}
-                    className="font-medium text-red-500 hover:underline cursor-pointer"
-                  >
-                    Delete
-                  </span>
-                </Table.Cell>
+                {customer && customer.customerId && (
+                  <>
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {customer.customerId.customerName}
+                    </Table.Cell>
+                    <Table.Cell>{customer.exerciseId.exerciseName}</Table.Cell>
+                    <Table.Cell>{customer.date}</Table.Cell>
+                    <Table.Cell>
+                      <Link
+                        to={`/ViewAssignExercise/${currentUser._id}/${customer._id}`}
+                        className="text-teal-500 hover:underline"
+                      >
+                        <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
+                          Details
+                        </span>
+                      </Link>
+                      <Link
+                        to={`/UpdateAssignEx/${currentUser._id}/${customer._id}`}
+                        className="text-teal-500 hover:underline"
+                      >
+                        <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
+                          Edit
+                        </span>
+                      </Link>
+                      <span
+                        onClick={() => {
+                          setShowModal(true);
+                          setPostIdToDelete(customer._id);
+                        }}
+                        className="font-medium text-red-500 hover:underline cursor-pointer"
+                      >
+                        Delete
+                      </span>
+                    </Table.Cell>
+                  </>
+                )}
               </Table.Row>
             </Table.Body>
           ))

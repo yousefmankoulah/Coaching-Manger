@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import User from "../models/userModel.js";
-import { AddCustomerInfo } from "../models/customerModel.js";
+// import User from "../models/userModel.js";
+// import { AddCustomerInfo } from "../models/customerModel.js";
 
 const excersieSchema = new mongoose.Schema({
   userId: {
@@ -29,7 +29,7 @@ const setExerciesToCustomerSchema = new mongoose.Schema(
     },
     customerId: {
       type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
-      ref: "AddCustomerInfo",
+      ref: "addCustomerInfo",
       required: true,
     },
     exerciseId: {

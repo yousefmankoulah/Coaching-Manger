@@ -167,10 +167,12 @@ export const getSetExerciesForCustomer = async (req, res, next) => {
 export const getSetExerciesCoachSide = async (req, res, next) => {
   try {
     if (req.user.id === req.params.userId || req.user.isAdmin === true) {
-      const setExercies = await SetExerciesToCustomer.find({
+      const setExercises = await SetExerciesToCustomer.find({
         userId: req.params.userId,
-      }).populate("exerciseId");
-      res.status(200).json(setExercies);
+      })
+        .populate("exerciseId")
+        .populate("customerId");
+      res.status(200).json(setExercises);
     } else {
       next(errorHandler(401, "You are not allowed to perform this action"));
     }
@@ -198,11 +200,14 @@ export const getSetExerciesCoachSideForACustomer = async (req, res, next) => {
 export const getASetForCoach = async (req, res, next) => {
   try {
     if (req.user.id === req.params.userId || req.user.isAdmin === true) {
-      const setExercies = await SetExerciesToCustomer.findById(req.params._id);
-      const exerciesById = await Exercies.findById({
-        _id: setExercies.exerciseId,
-      });
-      res.status(200).json({ setExercies, exerciesById });
+      const setExercies = await SetExerciesToCustomer.findById(req.params._id)
+        .populate("exerciseId")
+        .populate("customerId");
+      if (!setExercies) {
+        return res.status(404).send("SetExercies not found");
+      }
+
+      res.status(200).json(setExercies);
     } else {
       next(errorHandler(401, "You are not allowed to perform this action"));
     }
@@ -235,35 +240,6 @@ export const getASetForCustomer = async (req, res, next) => {
     }
   }
 };
-
-// export const getASetForCustomer = async (req, res, next) => {
-//   try {
-//     if (req.user.id === req.params.customerId || req.user.isAdmin === true) {
-//       const setId = new mongoose.Types.ObjectId(req.params._id);
-
-//       const pipeline = [
-//         {
-//           $match: { _id: setId }, // Match the SetExerciesToCustomer document by _id
-//         },
-//         {
-//           $lookup: {
-//             from: "exercies", // Collection name to lookup
-//             localField: "exerciseId",
-//             foreignField: "_id",
-//             as: "exercise", // Field name to store the populated exercise document
-//           },
-//         },
-//       ];
-
-//       const result = await SetExerciesToCustomer.aggregate(pipeline);
-//       res.status(200).json(result);
-//     } else {
-//       next(errorHandler(401, "You are not allowed to perform this action"));
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 export const updateSetExercies = async (req, res, next) => {
   const { date, time, setNumbers } = req.body;
