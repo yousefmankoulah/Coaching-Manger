@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { compareSync } from "bcrypt";
 
 export default function ViewAssignExercise() {
   const [formData, setFormData] = useState({});
@@ -41,7 +42,31 @@ export default function ViewAssignExercise() {
         }
       };
 
+      const fetchResult = async () => {
+        const url =
+          currentUser.role === "coach"
+            ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/addCustomerExerciesInfo/getCustomerExerciesBySetExerciesId/${formData.customerId}/${id}`
+            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/addCustomerExerciesInfo/getCustomerExerciesBySetExerciesId/${currentUser._id}/${id}`;
+
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setPublishError(data.message);
+          return;
+        }
+        if (res.ok) {
+          setPublishError(null);
+
+          setFormData(data);
+        }
+      };
+
       fetchPost();
+      fetchResult();
     } catch (error) {
       console.log(error.message);
     }

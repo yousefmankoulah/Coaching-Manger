@@ -94,9 +94,9 @@ export function Dashboard() {
           const url =
             currentUser.role === "coach"
               ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSide/${currentUser._id}`
-              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSideForACustomer/${currentUser.userId}/${currentUser._id}`;
-          
-            const res = await fetch(url, {
+              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesForCustomer/${currentUser._id}`;
+
+          const res = await fetch(url, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -128,8 +128,6 @@ export function Dashboard() {
   const handleCardClick = (cardName) => {
     setSelectedCard(cardName);
   };
-
-
 
   return (
     <div className="min-h-screen mt-20">
