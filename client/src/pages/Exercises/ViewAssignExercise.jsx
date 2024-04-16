@@ -8,6 +8,7 @@ import { compareSync } from "bcrypt";
 
 export default function ViewAssignExercise() {
   const [formData, setFormData] = useState({});
+  const [resultData, setResultData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const { currentUser, token } = useSelector((state) => state.user);
   const [showModal, setShowModal] = useState(false);
@@ -61,7 +62,7 @@ export default function ViewAssignExercise() {
         if (res.ok) {
           setPublishError(null);
 
-          setFormData(data);
+          setResultData(data);
         }
       };
 
@@ -75,15 +76,17 @@ export default function ViewAssignExercise() {
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteSetExercies/${currentUser._id}/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const url =
+        currentUser.role === "coach"
+          ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteSetExercies/${currentUser._id}/${id}`
+          : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/addCustomerExerciesInfo/deleteCustomerExercies/${currentUser._id}/${id}`;
+
+      const res = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
@@ -215,6 +218,66 @@ export default function ViewAssignExercise() {
                       className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-green-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                     >
                       Add Your Training result Info
+                    </a>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <h2>Exercise Results</h2>
+      <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5 rounded-lg">
+        <div className="w-full max-w max-h bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <div className="flex flex-col items-center pb-10">
+            {formData && (
+              <>
+                {resultData.date && (
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
+                    Exercise Date: {resultData.date}
+                  </span>
+                )}
+
+                {resultData.time && (
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
+                    Exercise Time: {resultData.time}
+                  </span>
+                )}
+
+                {resultData.maxCarringWeight && (
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
+                    Exercise Max. Carrying Weight: {resultData.maxCarringWeight}
+                  </span>
+                )}
+
+                {resultData.minCarringWeight && (
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
+                    Exercise Min. Carrying Weight: {resultData.minCarringWeight}
+                  </span>
+                )}
+
+                {resultData.timeSpend && (
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb- 10">
+                    Exercise Time Spend: {resultData.timeSpend}
+                  </span>
+                )}
+
+                {currentUser?.role === "customer" && (
+                  <div className="flex mt-4 md:mt-6">
+                    <a
+                      href={`/ExerciseUpdate/${currentUser._id}/${formData._id}`}
+                      className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                    >
+                      Edit
+                    </a>
+                    <a
+                      onClick={() => {
+                        setShowModal(true);
+                      }}
+                      className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700"
+                    >
+                      Delete
                     </a>
                   </div>
                 )}
