@@ -14,6 +14,7 @@ export function Dashboard() {
   const [customers, setCustomers] = useState([]);
   const [exercise, setExercise] = useState([]);
   const [diet, setDiet] = useState([]);
+  const [assignEX, setAssignEX] = useState([]);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -94,14 +95,15 @@ export function Dashboard() {
             currentUser.role === "coach"
               ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSide/${currentUser._id}`
               : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSideForACustomer/${currentUser.userId}/${currentUser._id}`;
-          const res = await fetch(url, {
+          
+            const res = await fetch(url, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           const data = await res.json();
           if (res.ok) {
-            setCustomers(data);
+            setAssignEX(data);
           } else {
             // Handle unauthorized access or other errors
             console.error("Error fetching customers:", data.message);
@@ -126,6 +128,8 @@ export function Dashboard() {
   const handleCardClick = (cardName) => {
     setSelectedCard(cardName);
   };
+
+
 
   return (
     <div className="min-h-screen mt-20">
@@ -169,9 +173,9 @@ export function Dashboard() {
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
                 You got{" "}
-                {customers && customers.length > 0 ? (
+                {assignEX && assignEX.length > 0 ? (
                   <>
-                    <span className="font-bold">{customers.length}</span>{" "}
+                    <span className="font-bold">{assignEX.length}</span>{" "}
                     Assigned exercises created
                   </>
                 ) : (
@@ -251,9 +255,9 @@ export function Dashboard() {
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
                 You got{" "}
-                {exercise && exercise.length > 0 ? (
+                {assignEX && assignEX.length > 0 ? (
                   <>
-                    <span className="font-bold">{exercise.length}</span>{" "}
+                    <span className="font-bold">{assignEX.length}</span>{" "}
                     Exercises created
                   </>
                 ) : (

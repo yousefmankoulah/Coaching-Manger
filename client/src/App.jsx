@@ -22,6 +22,7 @@ import AssignExercise from "./pages/Exercises/AssignExercise.jsx";
 import ViewAssignExercise from "./pages/Exercises/ViewAssignExercise.jsx";
 import CustomerExerciseResult from "./pages/Exercises/CustomerExerciseResult.jsx";
 import UpdateAssignEx from "./pages/Exercises/UpdateAssignEx.jsx";
+import AddExResult from "./pages/Exercises/AddExResult.jsx";
 
 export default function App() {
   return (
@@ -77,6 +78,10 @@ export default function App() {
           <Route
             path="/addCustomerExerciesInfo/:userId/:customerId/:setExerciesToCustomerId"
             element={<CustomerExerciseResult />}
+          />
+          <Route
+            path="/AddExResult/:userId/:id/:setExerciesToCustomerId"
+            element={<AddExResult />}
           />
         </Route>
 
