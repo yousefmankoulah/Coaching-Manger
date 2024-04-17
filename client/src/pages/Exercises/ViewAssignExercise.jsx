@@ -77,22 +77,24 @@ export default function ViewAssignExercise() {
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
-      const url =
-        currentUser.role === "coach"
-          ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteSetExercies/${currentUser._id}/${id}`
-          : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/deleteCustomerExercies/${currentUser._id}/${id}`;
+      if (formData && formData.customerId) {
+        const url =
+          currentUser.role === "coach"
+            ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteSetExercies/${currentUser._id}/${id}`
+            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/deleteCustomerExercies/${currentUser._id}/${resultData._id}`;
 
-      const res = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        console.log(data.message);
-      } else {
-        navigate(`/dashboard/${currentUser._id}`);
+        const res = await fetch(url, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          console.log(data.message);
+        } else {
+          navigate(`/dashboard/${currentUser._id}`);
+        }
       }
     } catch (error) {
       console.log(error.message);
@@ -287,6 +289,7 @@ export default function ViewAssignExercise() {
             ))}
         </div>
       </div>
+      {formData && (
       <Modal
         show={showModal}
         onClose={() => setShowModal(false)}
@@ -311,6 +314,7 @@ export default function ViewAssignExercise() {
           </div>
         </Modal.Body>
       </Modal>
+      )}
     </div>
   );
 }
