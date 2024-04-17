@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { compareSync } from "bcrypt";
 
 export default function ViewAssignExercise() {
   const [formData, setFormData] = useState({});
@@ -138,6 +137,8 @@ export default function ViewAssignExercise() {
     }
   }, [formData]);
 
+  console.log(resultData);
+
   return (
     <div className="min-h-screen mt-20">
       <h1 className="text-4xl text-center mt-10 mb-10">The Exercise Detail</h1>
@@ -227,7 +228,7 @@ export default function ViewAssignExercise() {
         </div>
       </div>
 
-      <h2>Exercise Results</h2>
+      <h2 className="text-2xl text-center mt-12 mb-10">Exercise Results</h2>
       <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5 rounded-lg">
         <div className="w-full max-w max-h bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col items-center pb-10">

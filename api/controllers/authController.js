@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import { AddCustomerInfo } from "../models/customerModel.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import passwordValidator from "password-validator";
 
