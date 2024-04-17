@@ -13,6 +13,7 @@ export default function ViewAssignExercise() {
   const [showModal, setShowModal] = useState(false);
   const [image, setImage] = useState(false);
   const [video, setVideo] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export default function ViewAssignExercise() {
           const url =
             currentUser.role === "coach"
               ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerExerciesBySetExerciesId/${currentUser._id}/${formData.customerId._id}/${id}`
-              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerExerciesBySetExerciesId/${formData.userId}/${currentUser._id}/${id}`;
+              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerExerciesBySetExerciesId/${currentUser.userId}/${currentUser._id}/${id}`;
 
           const res = await fetch(url, {
             headers: {
@@ -72,7 +73,7 @@ export default function ViewAssignExercise() {
     } catch (error) {
       console.log(error.message);
     }
-  }, [currentUser, id]);
+  }, [currentUser]);
 
   const handleDeletePost = async () => {
     setShowModal(false);
@@ -81,7 +82,7 @@ export default function ViewAssignExercise() {
         const url =
           currentUser.role === "coach"
             ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/deleteSetExercies/${currentUser._id}/${id}`
-            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/deleteCustomerExercies/${currentUser._id}/${resultData._id}`;
+            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/deleteCustomerExercies/${currentUser._id}/${postIdToDelete}`;
 
         const res = await fetch(url, {
           method: "DELETE",
@@ -140,8 +141,6 @@ export default function ViewAssignExercise() {
       isVideo();
     }
   }, [formData]);
-
-  console.log(resultData);
 
   return (
     <div className="min-h-screen mt-20">
@@ -276,7 +275,10 @@ export default function ViewAssignExercise() {
                         Edit
                       </a>
                       <a
-                        onClick={() => setShowModal(true)}
+                        onClick={() => {
+                          setShowModal(true);
+                          setPostIdToDelete(customer._id);
+                        }}
                         className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700"
                       >
                         Delete
@@ -290,30 +292,30 @@ export default function ViewAssignExercise() {
         </div>
       </div>
       {formData && (
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this post?
-            </h3>
-            <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeletePost}>
-                Yes, I'm sure
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
-                No, cancel
-              </Button>
+        <Modal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          popup
+          size="md"
+        >
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+              <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+                Are you sure you want to delete this post?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button color="failure" onClick={handleDeletePost}>
+                  Yes, I'm sure
+                </Button>
+                <Button color="gray" onClick={() => setShowModal(false)}>
+                  No, cancel
+                </Button>
+              </div>
             </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+          </Modal.Body>
+        </Modal>
       )}
     </div>
   );
