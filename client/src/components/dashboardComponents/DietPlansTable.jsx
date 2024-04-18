@@ -10,6 +10,9 @@ export default function DietPlansTable() {
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -62,10 +65,29 @@ export default function DietPlansTable() {
     }
   };
 
+  useEffect(() => {
+    setFilteredCustomers(exercise.filter(customer =>
+        customer.customerId.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        customer.meal?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        customer.foodDescription?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        customer.calorie?.includes(searchQuery)
+    ));
+}, [exercise, searchQuery]);
+
+
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser?.role === "coach" ? (
         <>
+        <div className="mb-2 mt-4 text-black">
+        <input
+          type="text"
+          placeholder="Search by Customer Name, Meal, or Description"
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          className="input input-bordered w-1/4 rounded-xl"
+        />
+      </div>
           <Table hoverable className="shadow-md">
             <Table.Head>
               <Table.HeadCell className="light:bg-slate-700 light:text-white">
@@ -85,7 +107,7 @@ export default function DietPlansTable() {
               </Table.HeadCell>
             </Table.Head>
             {exercise && exercise.length > 0 ? ( // Check if customers array exists and is not empty
-              exercise.map((customer) => (
+              filteredCustomers.map((customer) => (
                 <Table.Body className="divide-y" key={customer._id}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     {customer && customer.customerId && (

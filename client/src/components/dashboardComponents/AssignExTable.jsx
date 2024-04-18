@@ -87,7 +87,7 @@ export default function AssignExTable() {
         />
       </div>
       
-      <Table hoverable className="Success">
+      <Table hoverable className="shadow-md">
         <Table.Head>
           <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Customer Name

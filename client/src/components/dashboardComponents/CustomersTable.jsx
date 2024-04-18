@@ -10,6 +10,9 @@ export default function CustomersTable() {
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -63,8 +66,27 @@ export default function CustomersTable() {
     }
   };
 
+  useEffect(() => {
+    setFilteredCustomers(customers.filter(customer =>
+        customer.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        customer.customerEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        customer.customerPhone?.includes(searchQuery)
+    ));
+}, [customers, searchQuery]);
+
+
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      <div className="mb-2 mt-4 text-black">
+        <input
+          type="text"
+          placeholder="Search by Customer Name, Phone, or Email"
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          className="input input-bordered w-1/4 rounded-xl"
+        />
+      </div>
+      
       <Table hoverable className="shadow-md">
         <Table.Head>
           <Table.HeadCell className="light:bg-slate-700 light:text-white">
@@ -81,7 +103,7 @@ export default function CustomersTable() {
           </Table.HeadCell>
         </Table.Head>
         {customers && customers.length > 0 ? ( // Check if customers array exists and is not empty
-          customers.map((customer) => (
+          filteredCustomers.map((customer) => (
             <Table.Body className="divide-y" key={customer._id}>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
