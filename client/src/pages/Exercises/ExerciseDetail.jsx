@@ -139,7 +139,7 @@ export default function ExerciseDetail() {
                   </span>
                 )}
 
-                {currentUser?.role === "coach" && (
+                {currentUser?._id === formData.userId && (
                   <div className="flex mt-4 md:mt-6">
                     <a
                       href={`/ExerciseUpdate/${currentUser._id}/${formData._id}`}

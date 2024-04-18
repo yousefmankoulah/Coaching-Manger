@@ -18,6 +18,15 @@ export const getAllExercies = async (req, res, next) => {
   }
 };
 
+export const getAdminExercies = async (req, res, next) => {
+  try {
+    const exercies = await Exercies.find({ userId: "admin" });
+    res.status(200).json(exercies);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getExercies = async (req, res, next) => {
   try {
     const exercies = await Exercies.find({ userId: req.user.id });

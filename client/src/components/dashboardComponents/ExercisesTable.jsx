@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 export default function ExercisesTable() {
   const { currentUser, token } = useSelector((state) => state.user);
   const [exercise, setExercise] = useState([]);
+  const [adminExercise, setAdminExercise] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
@@ -35,6 +36,33 @@ export default function ExercisesTable() {
       }
     };
     fetchCustomers();
+  }, [currentUser._id]);
+
+  useEffect(() => {
+    const fetchAdminEx = async () => {
+      try {
+        if (currentUser && currentUser._id) {
+          const url =
+            currentUser.role === "coach" &&
+            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getAdminExercies/${currentUser._id}`;
+
+          const res = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setAdminExercise(data);
+          } else {
+            console.error("Error fetching customers:", data.message);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchAdminEx();
   }, [currentUser._id]);
 
   const handleDeletePost = async () => {
@@ -114,6 +142,55 @@ export default function ExercisesTable() {
                       >
                         Delete
                       </span>
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              ))
+            ) : (
+              <Table.Body className="divide-y">
+                <Table.Row>
+                  <Table.Cell colSpan={4} className="text-center">
+                    No Exercises to display
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            )}
+          </Table>
+
+          <h3 className="mt-10 mb-10 text-center font-bold text-2xl">
+            All Admin Exercies
+          </h3>
+          <Table hoverable className="shadow-md">
+            <Table.Head>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Exercises Name
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Exercises Description
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Updates
+              </Table.HeadCell>
+            </Table.Head>
+            {adminExercise && adminExercise.length > 0 ? ( // Check if customers array exists and is not empty
+              adminExercise.map((customer) => (
+                <Table.Body className="divide-y" key={customer._id}>
+                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-slate-50">
+                      {customer.exerciseName}
+                    </Table.Cell>
+                    <Table.Cell className="bg-slate-50">
+                      {customer.exerciseDescription}
+                    </Table.Cell>
+                    <Table.Cell className="bg-slate-50">
+                      <Link
+                        to={`/ExerciseDetail/${currentUser._id}/${customer._id}`}
+                        className="text-teal-500 hover:underline"
+                      >
+                        <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
+                          Details
+                        </span>
+                      </Link>
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
