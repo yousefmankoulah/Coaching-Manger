@@ -112,14 +112,12 @@ export default function Header() {
         <Navbar.Link active={path === "/"} as={"div"}>
           <Link to="/">Home</Link>
         </Navbar.Link>
-        {!currentUser && (
-          <Navbar.Link active={path === "/"} as={"div"}>
-            <Link to="/">Plans</Link>
-          </Navbar.Link>
-        )}
+        <Navbar.Link active={path === "/aboutus"} as={"div"}>
+          <Link to="/">About Us</Link>
+        </Navbar.Link>
 
         {currentUser?.role === "coach" && (
-          <Navbar.Link active={path === "/"} as={"div"}>
+          <Navbar.Link active={path === "/plans"} as={"div"}>
             <Link to="/">Plans</Link>
           </Navbar.Link>
         )}
@@ -128,10 +126,13 @@ export default function Header() {
           <Link to={`/dashboard/${userId}`}>Dashboard</Link>
         </Navbar.Link>
         {currentUser?.role === "coach" && (
-          <Navbar.Link active={path === "/add-customer"} as={"div"}>
-            <Link to="/add-customer">Add a Client</Link>
+          <Navbar.Link active={path === `/add-customer/${userId}`} as={"div"}>
+            <Link to={`/add-customer/${userId}`}>Add a Client</Link>
           </Navbar.Link>
         )}
+        <Navbar.Link active={path === "/contactus"} as={"div"}>
+          <Link to="/">Contact Us</Link>
+        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );

@@ -68,19 +68,27 @@ export default function ExercisesTable() {
         <>
           <Table hoverable className="shadow-md">
             <Table.Head>
-              <Table.HeadCell>Exercises Name</Table.HeadCell>
-              <Table.HeadCell>Exercises Description</Table.HeadCell>
-              <Table.HeadCell>Updates</Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Exercises Name
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Exercises Description
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Updates
+              </Table.HeadCell>
             </Table.Head>
             {exercise && exercise.length > 0 ? ( // Check if customers array exists and is not empty
               exercise.map((customer) => (
                 <Table.Body className="divide-y" key={customer._id}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-slate-50">
                       {customer.exerciseName}
                     </Table.Cell>
-                    <Table.Cell>{customer.exerciseDescription}</Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell className="bg-slate-50">
+                      {customer.exerciseDescription}
+                    </Table.Cell>
+                    <Table.Cell className="bg-slate-50">
                       <Link
                         to={`/ExerciseDetail/${currentUser._id}/${customer._id}`}
                         className="text-teal-500 hover:underline"

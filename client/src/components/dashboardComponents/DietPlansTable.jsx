@@ -68,11 +68,21 @@ export default function DietPlansTable() {
         <>
           <Table hoverable className="shadow-md">
             <Table.Head>
-              <Table.HeadCell>Customer Name</Table.HeadCell>
-              <Table.HeadCell>Meal Name</Table.HeadCell>
-              <Table.HeadCell>Food Description</Table.HeadCell>
-              <Table.HeadCell>Meal calories</Table.HeadCell>
-              <Table.HeadCell>Updates</Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Customer Name
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Meal Name
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Food Description
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Meal calories
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Updates
+              </Table.HeadCell>
             </Table.Head>
             {exercise && exercise.length > 0 ? ( // Check if customers array exists and is not empty
               exercise.map((customer) => (
@@ -80,15 +90,19 @@ export default function DietPlansTable() {
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     {customer && customer.customerId && (
                       <>
-                        <Table.Cell>
+                        <Table.Cell className="bg-slate-50">
                           {customer.customerId.customerName}
                         </Table.Cell>
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-slate-50">
                           {customer.meal}
                         </Table.Cell>
-                        <Table.Cell>{customer.foodDescription}</Table.Cell>
-                        <Table.Cell>{customer.calorie}</Table.Cell>
-                        <Table.Cell>
+                        <Table.Cell className="bg-slate-50">
+                          {customer.foodDescription}
+                        </Table.Cell>
+                        <Table.Cell className="bg-slate-50">
+                          {customer.calorie}
+                        </Table.Cell>
+                        <Table.Cell className="bg-slate-50">
                           <Link
                             to={`/DietDetail/${currentUser._id}/${customer._id}`}
                             className="text-teal-500 hover:underline"

@@ -162,12 +162,9 @@ export function Dashboard() {
       </h1>
       {currentUser?.role === "coach" ? (
         <>
-          <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5">
-            <Card
-              className="max-w-sm"
-              onClick={() => handleCardClick("customers")}
-            >
-              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <div className="grid grid-flow-col grid-rows-2 sm:grid-rows-2 md:grid-rows-2 lg:grid-rows-1 xl:grid-rows-1 h-90 gap-2 justify-center">
+            <Card className="" onClick={() => handleCardClick("customers")}>
+              <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Number of Customers
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
@@ -188,11 +185,8 @@ export function Dashboard() {
               </Button>
             </Card>
 
-            <Card
-              className="max-w-sm"
-              onClick={() => handleCardClick("assignEx")}
-            >
-              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <Card className="" onClick={() => handleCardClick("assignEx")}>
+              <h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
                 Number of Assigned Exercises
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
@@ -213,11 +207,8 @@ export function Dashboard() {
               </Button>
             </Card>
 
-            <Card
-              className="max-w-sm"
-              onClick={() => handleCardClick("exercises")}
-            >
-              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <Card className="" onClick={() => handleCardClick("exercises")}>
+              <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Number of Exercises
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
@@ -238,8 +229,8 @@ export function Dashboard() {
               </Button>
             </Card>
 
-            <Card className="max-w-sm" onClick={() => handleCardClick("diet")}>
-              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <Card className="" onClick={() => handleCardClick("diet")}>
+              <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Number of Diet Plans
               </h5>
               <p className="font-normal text-gray-700 dark:text-gray-400">
@@ -269,48 +260,52 @@ export function Dashboard() {
         </>
       ) : (
         <>
-          <div>
-            <h2>Your Profile Detail</h2>
-            {customerInfo.customerCurrentWeight && (
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Current Weight: {customerInfo.customerCurrentWeight}
-              </p>
-            )}
-            {customerInfo.customerTargetWeight && (
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Target Weight: {customerInfo.customerTargetWeight}
-              </p>
-            )}
-            {customerInfo.customerCurrentHeight && (
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Current Height: {customerInfo.customerCurrentHeight}
-              </p>
-            )}
-            {customerInfo.customerCurrentAge && (
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Current Age: {customerInfo.customerCurrentAge}
-              </p>
-            )}
+          <div className="grid grid-flow-col grid-rows-1 justify-center">
+            <Card className="text-left justify-center items-center mb-10 hover:shadow-md bg-slate-50">
+              <h2 className="text-center font-bold text-2xl">
+                Your Profile Detail
+              </h2>
+              {customerInfo.customerCurrentWeight && (
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  Current Weight: {customerInfo.customerCurrentWeight}
+                </p>
+              )}
+              {customerInfo.customerTargetWeight && (
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  Target Weight: {customerInfo.customerTargetWeight}
+                </p>
+              )}
+              {customerInfo.customerCurrentHeight && (
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  Current Height: {customerInfo.customerCurrentHeight}
+                </p>
+              )}
+              {customerInfo.customerCurrentAge && (
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  Current Age: {customerInfo.customerCurrentAge}
+                </p>
+              )}
 
-            {customerInfo ? (
-              <Button>
-                <Link
-                  to={`/UpdateCustomerInformation/${currentUser._id}/${customerInfo._id}`}
-                >
-                  <span>Update Your Information</span>
-                </Link>
-              </Button>
-            ) : (
-              <Button>
-                <Link
-                  to={`/AddCustomerInformation/${currentUser.userId}/${currentUser._id}`}
-                >
-                  <span>Add Your Information</span>
-                </Link>
-              </Button>
-            )}
+              {customerInfo ? (
+                <Button className="justify-center">
+                  <Link
+                    to={`/UpdateCustomerInformation/${currentUser._id}/${customerInfo._id}`}
+                  >
+                    <span>Update Your Information</span>
+                  </Link>
+                </Button>
+              ) : (
+                <Button className="justify-center">
+                  <Link
+                    to={`/AddCustomerInformation/${currentUser.userId}/${currentUser._id}`}
+                  >
+                    <span>Add Your Information</span>
+                  </Link>
+                </Button>
+              )}
+            </Card>
           </div>
-          <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
+          <div className="grid grid-flow-col grid-rows-1 h-90 gap-2 justify-center">
             <Card
               className="max-w-sm"
               onClick={() => handleCardClick("exercises")}
