@@ -2,6 +2,12 @@ import { Customer, CustomerExercies } from "../models/customerModel.js";
 import { errorHandler } from "../utils/error.js";
 
 export const addCustomerInfo = async (req, res, next) => {
+  const checkCustomer = await Customer.find({
+    customerId: req.params.customerId,
+  });
+  if (checkCustomer) {
+    next(errorHandler(401, "Please update your old information"));
+  }
   const {
     customerCurrentWeight,
     customerTargetWeight,

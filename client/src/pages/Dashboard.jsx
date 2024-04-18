@@ -15,6 +15,7 @@ export function Dashboard() {
   const [exercise, setExercise] = useState([]);
   const [diet, setDiet] = useState([]);
   const [assignEX, setAssignEX] = useState([]);
+  const [customerInfo, setCustomerInfo] = useState({});
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -114,6 +115,30 @@ export function Dashboard() {
       }
     };
 
+    const fetchCustomerInfo = async () => {
+      try {
+        if (currentUser && currentUser._id) {
+          const res = await fetch(
+            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerInfo/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setCustomerInfo(data);
+          } else {
+            // Handle unauthorized access or other errors
+            console.error("Error fetching customers:", data.message);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     if (currentUser?.role === "coach") {
       fetchCustomers();
       fetchExercise();
@@ -122,6 +147,7 @@ export function Dashboard() {
     } else {
       fetchAssignEx();
       fetchDiet();
+      fetchCustomerInfo();
     }
   }, [currentUser]);
 
@@ -243,6 +269,47 @@ export function Dashboard() {
         </>
       ) : (
         <>
+          <div>
+            <h2>Your Profile Detail</h2>
+            {customerInfo.customerCurrentWeight && (
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                Current Weight: {customerInfo.customerCurrentWeight}
+              </p>
+            )}
+            {customerInfo.customerTargetWeight && (
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                Target Weight: {customerInfo.customerTargetWeight}
+              </p>
+            )}
+            {customerInfo.customerCurrentHeight && (
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                Current Height: {customerInfo.customerCurrentHeight}
+              </p>
+            )}
+            {customerInfo.customerCurrentAge && (
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                Current Age: {customerInfo.customerCurrentAge}
+              </p>
+            )}
+
+            {customerInfo ? (
+              <Button>
+                <Link
+                  to={`/UpdateCustomerInformation/${currentUser._id}/${customerInfo._id}`}
+                >
+                  <span>Update Your Information</span>
+                </Link>
+              </Button>
+            ) : (
+              <Button>
+                <Link
+                  to={`/AddCustomerInformation/${currentUser.userId}/${currentUser._id}`}
+                >
+                  <span>Add Your Information</span>
+                </Link>
+              </Button>
+            )}
+          </div>
           <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
             <Card
               className="max-w-sm"

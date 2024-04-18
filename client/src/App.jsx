@@ -23,6 +23,8 @@ import ViewAssignExercise from "./pages/Exercises/ViewAssignExercise.jsx";
 import UpdateAssignEx from "./pages/Exercises/UpdateAssignEx.jsx";
 import AddExResult from "./pages/Exercises/AddExResult.jsx";
 import UpdateEXResult from "./pages/Exercises/UpdateEXResult.jsx";
+import AddCustomerInformation from "./pages/AddCustomerInformation.jsx";
+import UpdateCustomerInformation from "./pages/UpdateCustomerInformation.jsx";
 
 export default function App() {
   return (
@@ -83,6 +85,16 @@ export default function App() {
           <Route
             path="/UpdateExResult/:customerId/:id"
             element={<UpdateEXResult />}
+          />
+
+          <Route
+            path="/AddCustomerInformation/:userId/:id"
+            element={<AddCustomerInformation />}
+          />
+
+          <Route
+            path="/UpdateCustomerInformation/:customerId/:id"
+            element={<UpdateCustomerInformation />}
           />
         </Route>
 

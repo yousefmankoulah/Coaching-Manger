@@ -50,7 +50,7 @@ const customerSchema = new mongoose.Schema(
     },
 
     customerId: {
-      type: mongoose.Schema.Types.ObjectId, // Define customerId as ObjectId
+      type: mongoose.Schema.Types.ObjectId,
       ref: "AddCustomerInfo",
       required: true,
     },
