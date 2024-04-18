@@ -9,6 +9,7 @@ import {
   updateCustomerExerciesInfo,
   deleteCustomerExercies,
   getACustomerExerices,
+  getCustomerInfoCoachSide,
 } from "../controllers/customerInfoController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -21,6 +22,12 @@ router.post(
   addCustomerInfo
 );
 router.get("/getCustomerInfo/:customerId", verifyToken, getCustomerInfo);
+router.get(
+  "/getCustomerInfoCoachSide/:userId/:customerId",
+  verifyToken,
+  getCustomerInfoCoachSide
+);
+
 router.put(
   "/updateCutomerInfo/:customerId/:_id",
   verifyToken,

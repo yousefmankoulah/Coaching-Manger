@@ -91,8 +91,8 @@ export default function AddCustomerInformation() {
             <div>
               <Label value="Your Target Weight" />
               <TextInput
-                id="text"
-                type="customerTargetWeight"
+                id="customerTargetWeight"
+                type="text"
                 value={formData.customerTargetWeight}
                 onChange={handleChange}
               />

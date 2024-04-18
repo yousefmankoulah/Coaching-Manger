@@ -53,8 +53,6 @@ export default function UpdateCustomerInformation() {
     }
   }, [currentUser._id]);
 
-  console.log(formData);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -127,8 +125,8 @@ export default function UpdateCustomerInformation() {
             <div>
               <Label value="Your Target Weight" />
               <TextInput
-                id="text"
-                type="customerTargetWeight"
+                id="customerTargetWeight"
+                type="text"
                 value={formData.customerTargetWeight}
                 onChange={handleChange}
               />

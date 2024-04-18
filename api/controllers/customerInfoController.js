@@ -53,6 +53,21 @@ export const getCustomerInfo = async (req, res, next) => {
   }
 };
 
+export const getCustomerInfoCoachSide = async (req, res, next) => {
+  try {
+    if (req.user.isAdmin === true || req.user.id === req.params.userId) {
+      const customerInfo = await Customer.findOne({
+        customerId: req.params.customerId,
+      });
+      res.status(200).json(customerInfo);
+    } else {
+      next(errorHandler(401, "You are not allowed to perform this action"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateCutomerInfo = async (req, res, next) => {
   const {
     customerCurrentWeight,

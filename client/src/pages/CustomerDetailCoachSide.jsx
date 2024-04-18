@@ -7,6 +7,9 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export function CustomerDetailCoachSide() {
   const [formData, setFormData] = useState({});
+  const [customerData, setCustomerData] = useState({});
+  const [dietData, setDietData] = useState({});
+  const [exData, setExData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const { currentUser, token } = useSelector((state) => state.user);
   const [showModal, setShowModal] = useState(false);
@@ -42,6 +45,99 @@ export function CustomerDetailCoachSide() {
       console.log(error.message);
     }
   }, [id]);
+
+  useEffect(() => {
+    try {
+      const fetchCustomerInfo = async () => {
+        try {
+          if (currentUser && currentUser._id) {
+            const res = await fetch(
+              `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerInfoCoachSide/${currentUser._id}/${id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const data = await res.json();
+            if (res.ok) {
+              setCustomerData(data);
+            } else {
+              // Handle unauthorized access or other errors
+              console.error("Error fetching customers:", data.message);
+            }
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      fetchCustomerInfo();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [currentUser._id]);
+
+  useEffect(() => {
+    try {
+      const fetchExInfo = async () => {
+        try {
+          if (currentUser && currentUser._id) {
+            const res = await fetch(
+              `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/exercise/getSetExerciesCoachSideForACustomer/${currentUser._id}/${id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const data = await res.json();
+            if (res.ok) {
+              setExData(data);
+            } else {
+              // Handle unauthorized access or other errors
+              console.error("Error fetching customers:", data.message);
+            }
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      fetchExInfo();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [currentUser._id]);
+
+  useEffect(() => {
+    try {
+      const fetchDietInfo = async () => {
+        try {
+          if (currentUser && currentUser._id) {
+            const res = await fetch(
+              `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/getDiet/${id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const data = await res.json();
+            if (res.ok) {
+              setDietData(data);
+            } else {
+              // Handle unauthorized access or other errors
+              console.error("Error fetching customers:", data.message);
+            }
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      fetchDietInfo();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [currentUser._id]);
 
   const handleDeletePost = async () => {
     setShowModal(false);
@@ -125,11 +221,94 @@ export function CustomerDetailCoachSide() {
                 <h2 className="text-2xl text-center mt-10 mb-10">
                   {formData.customerName}
                 </h2>
-                <span></span>
+                {customerData.customerCurrentWeight && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Current Weight: {customerData.customerCurrentWeight}
+                  </p>
+                )}
+                {customerData.customerTargetWeight && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Target Weight: {customerData.customerTargetWeight}
+                  </p>
+                )}
+                {customerData.customerCurrentHeight && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Current Height: {customerData.customerCurrentHeight}
+                  </p>
+                )}
+                {customerData.customerCurrentAge && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Current Age: {customerData.customerCurrentAge}
+                  </p>
+                )}
               </>
             )}
           </Card>
         </div>
+      </div>
+
+      <h3>Assigned Exercise</h3>
+      <div className="flex">
+        {exData && exData.length > 0 ? (
+          exData.map((dietData) => (
+            <>
+              <Card className="max-w-sm">
+                <h2 className="text-2xl text-center mt-10 mb-10">
+                  {dietData.exerciseId.exerciseName}
+                </h2>
+                {dietData.exerciseId.exerciseDescription && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Current Weight: {dietData.exerciseId.exerciseDescription}
+                  </p>
+                )}
+                {dietData.date && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Date: {dietData.date}
+                  </p>
+                )}
+                {dietData.setNumbers && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Set Numbers: {dietData.setNumbers}
+                  </p>
+                )}
+              </Card>
+            </>
+          ))
+        ) : (
+          <span>No Diet Assigned</span>
+        )}
+      </div>
+
+      <h3>Assigned Diet</h3>
+      <div className="flex">
+        {dietData && dietData.length > 0 ? (
+          dietData.map((dietData) => (
+            <>
+              <Card className="max-w-sm">
+                <h2 className="text-2xl text-center mt-10 mb-10">
+                  {dietData.meal}
+                </h2>
+                {dietData.foodDescription && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Meal Description: {dietData.foodDescription}
+                  </p>
+                )}
+                {dietData.date && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Date: {dietData.date}
+                  </p>
+                )}
+                {dietData.calorie && (
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Calories: {dietData.calorie}
+                  </p>
+                )}
+              </Card>
+            </>
+          ))
+        ) : (
+          <span>No Diet Assigned</span>
+        )}
       </div>
       <Modal
         show={showModal}
