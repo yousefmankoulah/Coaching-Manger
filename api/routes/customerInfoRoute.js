@@ -8,6 +8,7 @@ import {
   getCustomerExerciesBySetExerciesId,
   updateCustomerExerciesInfo,
   deleteCustomerExercies,
+  getACustomerExerices,
 } from "../controllers/customerInfoController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -37,7 +38,19 @@ router.get(
   getAllCustomerExerices
 );
 router.get(
-  "/getCustomerExerciesBySetExerciesId/:userId/:customerId/:setExerciesToCustomerId",
+  "/getACustomerExerices/:customerId/:_id",
+  verifyToken,
+  getACustomerExerices
+);
+
+router.get(
+  "/getCustomerExerciesBySetExerciesId/:customerId/:setExerciesToCustomerId",
+  verifyToken,
+  getCustomerExerciesBySetExerciesId
+);
+
+router.get(
+  "/getCustomerExerciesBySetExerciesIdForCoach/:userId/:setExerciesToCustomerId",
   verifyToken,
   getCustomerExerciesBySetExerciesId
 );

@@ -121,6 +121,19 @@ export const getAllCustomerExerices = async (req, res, next) => {
   }
 };
 
+export const getACustomerExerices = async (req, res, next) => {
+  try {
+    if (req.user.id === req.params.customerId || req.user.isAdmin === true) {
+      const customerExercies = await CustomerExercies.findById(req.params._id);
+      res.status(200).json(customerExercies);
+    } else {
+      next(errorHandler(401, "You are not allowed to perform this action"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getCustomerExerciesBySetExerciesId = async (req, res, next) => {
   try {
     if (

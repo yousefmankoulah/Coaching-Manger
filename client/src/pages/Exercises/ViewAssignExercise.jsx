@@ -43,32 +43,37 @@ export default function ViewAssignExercise() {
         }
       };
 
+      fetchPost();
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    try {
       const fetchResult = async () => {
-        if (formData && formData.customerId) {
-          const url =
-            currentUser.role === "coach"
-              ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerExerciesBySetExerciesId/${currentUser._id}/${formData.customerId._id}/${id}`
-              : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerExerciesBySetExerciesId/${currentUser.userId}/${currentUser._id}/${id}`;
+        const url =
+          currentUser.role === "coach"
+            ? `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerExerciesBySetExerciesIdForCoach/${currentUser._id}/${id}`
+            : `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerExerciesBySetExerciesId/${currentUser._id}/${id}`;
 
-          const res = await fetch(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          const data = await res.json();
-          if (!res.ok) {
-            setPublishError(data.message);
-            return;
-          }
-          if (res.ok) {
-            setPublishError(null);
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setPublishError(data.message);
+          return;
+        }
+        if (res.ok) {
+          setPublishError(null);
 
-            setResultData(data);
-          }
+          setResultData(data);
         }
       };
 
-      fetchPost();
       fetchResult();
     } catch (error) {
       console.log(error.message);
@@ -232,65 +237,76 @@ export default function ViewAssignExercise() {
       </div>
 
       <h2 className="text-2xl text-center mt-12 mb-10">Exercise Results</h2>
-      <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5 rounded-lg">
-        <div className="w-full max-w max-h bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      {resultData && resultData.length > 0 ? (
+        <>
           {formData &&
             Array.isArray(resultData) &&
             resultData.map((customer) => (
               <React.Fragment key={customer.id || customer._id}>
-                <div className="flex flex-col items-center pb-10">
-                  {" "}
-                  {/* Ensure key is added to React.Fragment */}
-                  {customer.date && (
-                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
-                      Exercise Date: {customer.date}
-                    </span>
-                  )}
-                  {customer.time && (
-                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
-                      Exercise Time: {customer.time}
-                    </span>
-                  )}
-                  {customer.maxCarringWeight && (
-                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
-                      Exercise Max. Carrying Weight: {customer.maxCarringWeight}
-                    </span>
-                  )}
-                  {customer.minCarringWeight && (
-                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
-                      Exercise Min. Carrying Weight: {customer.minCarringWeight}
-                    </span>
-                  )}
-                  {customer.timeSpend && (
-                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
-                      Exercise Time Spent: {customer.timeSpend}
-                    </span>
-                  )}
-                  {currentUser?.role === "customer" && (
-                    <div className="flex mt-4 md:mt-6">
-                      <a
-                        href={`/ExerciseUpdate/${currentUser._id}/${formData._id}`}
-                        className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                      >
-                        Edit
-                      </a>
-                      <a
-                        onClick={() => {
-                          setShowModal(true);
-                          setPostIdToDelete(customer._id);
-                        }}
-                        className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700"
-                      >
-                        Delete
-                      </a>
-                    </div>
-                  )}
-                </div>{" "}
-                <br />
+                <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5 rounded-lg">
+                  <div className="w-full max-w max-h bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <div className="flex flex-col items-center pb-10">
+                      {" "}
+                      {/* Ensure key is added to React.Fragment */}
+                      {customer.date && (
+                        <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
+                          Exercise Date: {customer.date}
+                        </span>
+                      )}
+                      {customer.time && (
+                        <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
+                          Exercise Time: {customer.time}
+                        </span>
+                      )}
+                      {customer.maxCarringWeight && (
+                        <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
+                          Exercise Max. Carrying Weight:{" "}
+                          {customer.maxCarringWeight}
+                        </span>
+                      )}
+                      {customer.minCarringWeight && (
+                        <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
+                          Exercise Min. Carrying Weight:{" "}
+                          {customer.minCarringWeight}
+                        </span>
+                      )}
+                      {customer.timeSpend && (
+                        <span className="text-lg text-gray-500 dark:text-gray-400 mr-10 ml-10 mt-10 mb-10">
+                          Exercise Time Spent: {customer.timeSpend}
+                        </span>
+                      )}
+                      {currentUser?.role === "customer" && (
+                        <div className="flex mt-4 md:mt-6">
+                          <a
+                            href={`/UpdateExResult/${currentUser._id}/${customer._id}`}
+                            className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                          >
+                            Edit
+                          </a>
+                          <a
+                            onClick={() => {
+                              setShowModal(true);
+                              setPostIdToDelete(customer._id);
+                            }}
+                            className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700"
+                          >
+                            Delete
+                          </a>
+                        </div>
+                      )}
+                    </div>{" "}
+                    <br />
+                  </div>
+                </div>
               </React.Fragment>
             ))}
-        </div>
-      </div>
+        </>
+      ) : (
+        <>
+          <p>No Results</p>
+        </>
+      )}
+
       {formData && (
         <Modal
           show={showModal}
