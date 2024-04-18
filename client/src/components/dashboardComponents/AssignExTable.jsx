@@ -9,6 +9,9 @@ export default function AssignExTable() {
   const [customers, setCustomers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
+  //search
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -64,39 +67,57 @@ export default function AssignExTable() {
     }
   };
 
+  useEffect(() => {
+    setFilteredCustomers(customers.filter(customer =>
+      customer.customerId.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customer.exerciseId.exerciseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customer.date.includes(searchQuery)
+    ));
+  }, [customers, searchQuery]);
+
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      <Table hoverable className="shadow-md">
+    <div className="mb-2 mt-4 text-black">
+        <input
+          type="text"
+          placeholder="Search by Name, Exercise, or Date"
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          className="input input-bordered w-1/4 rounded-xl"
+        />
+      </div>
+      
+      <Table hoverable className="Success">
         <Table.Head>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Customer Name
           </Table.HeadCell>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Exercise Name
           </Table.HeadCell>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Date
           </Table.HeadCell>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Updates
           </Table.HeadCell>
         </Table.Head>
         {customers && customers.length > 0 ? ( // Check if customers array exists and is not empty
-          customers.map((customer) => (
+          filteredCustomers.map((customer) => (
             <Table.Body className="divide-y bg-slate-200" key={customer._id}>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 {customer && customer.customerId && (
                   <>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-slate-50">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
                       {customer.customerId.customerName}
                     </Table.Cell>
-                    <Table.Cell className="bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50">
                       {customer.exerciseId.exerciseName}
                     </Table.Cell>
-                    <Table.Cell className="bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50">
                       {customer.date}
                     </Table.Cell>
-                    <Table.Cell className="bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50">
                       <Link
                         to={`/ViewAssignExercise/${currentUser._id}/${customer._id}`}
                         className="text-teal-500 hover:underline"

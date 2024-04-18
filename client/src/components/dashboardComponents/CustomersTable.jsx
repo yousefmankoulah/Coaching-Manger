@@ -67,16 +67,16 @@ export default function CustomersTable() {
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       <Table hoverable className="shadow-md">
         <Table.Head>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Customer Name
           </Table.HeadCell>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Customer Email
           </Table.HeadCell>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Customer Phone Number
           </Table.HeadCell>
-          <Table.HeadCell className="bg-slate-700 text-white">
+          <Table.HeadCell className="light:bg-slate-700 light:text-white">
             Updates
           </Table.HeadCell>
         </Table.Head>
@@ -84,16 +84,16 @@ export default function CustomersTable() {
           customers.map((customer) => (
             <Table.Body className="divide-y" key={customer._id}>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-slate-50">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
                   {customer.customerName}
                 </Table.Cell>
-                <Table.Cell className="bg-slate-50">
+                <Table.Cell className="light:bg-slate-50">
                   {customer.customerEmail}
                 </Table.Cell>
-                <Table.Cell className="bg-slate-50">
+                <Table.Cell className="light:bg-slate-50">
                   {customer.customerPhone}
                 </Table.Cell>
-                <Table.Cell className="bg-slate-50">
+                <Table.Cell className="light:bg-slate-50">
                   <Link
                     to={`/detail-customer-login-info/${currentUser._id}/${customer._id}`}
                     className="text-teal-500 hover:underline"

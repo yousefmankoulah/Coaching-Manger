@@ -96,13 +96,13 @@ export default function ExercisesTable() {
         <>
           <Table hoverable className="shadow-md">
             <Table.Head>
-              <Table.HeadCell className="bg-slate-700 text-white">
+              <Table.HeadCell className="light:bg-slate-700 light:text-white">
                 Exercises Name
               </Table.HeadCell>
-              <Table.HeadCell className="bg-slate-700 text-white">
+              <Table.HeadCell className="light:bg-slate-700 light:text-white">
                 Exercises Description
               </Table.HeadCell>
-              <Table.HeadCell className="bg-slate-700 text-white">
+              <Table.HeadCell className="light:bg-slate-700 light:text-white">
                 Updates
               </Table.HeadCell>
             </Table.Head>
@@ -110,13 +110,13 @@ export default function ExercisesTable() {
               exercise.map((customer) => (
                 <Table.Body className="divide-y" key={customer._id}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-slate-50">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
                       {customer.exerciseName}
                     </Table.Cell>
-                    <Table.Cell className="bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50">
                       {customer.exerciseDescription}
                     </Table.Cell>
-                    <Table.Cell className="bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50">
                       <Link
                         to={`/ExerciseDetail/${currentUser._id}/${customer._id}`}
                         className="text-teal-500 hover:underline"
@@ -162,13 +162,13 @@ export default function ExercisesTable() {
           </h3>
           <Table hoverable className="shadow-md">
             <Table.Head>
-              <Table.HeadCell className="bg-slate-700 text-white">
+              <Table.HeadCell className="light:bg-slate-700 light:text-white">
                 Exercises Name
               </Table.HeadCell>
-              <Table.HeadCell className="bg-slate-700 text-white">
+              <Table.HeadCell className="light:bg-slate-700 light:text-white">
                 Exercises Description
               </Table.HeadCell>
-              <Table.HeadCell className="bg-slate-700 text-white">
+              <Table.HeadCell className="light:bg-slate-700 light:text-white">
                 Updates
               </Table.HeadCell>
             </Table.Head>
@@ -176,13 +176,13 @@ export default function ExercisesTable() {
               adminExercise.map((customer) => (
                 <Table.Body className="divide-y" key={customer._id}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white bg-slate-50">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
                       {customer.exerciseName}
                     </Table.Cell>
-                    <Table.Cell className="bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50">
                       {customer.exerciseDescription}
                     </Table.Cell>
-                    <Table.Cell className="bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50">
                       <Link
                         to={`/ExerciseDetail/${currentUser._id}/${customer._id}`}
                         className="text-teal-500 hover:underline"
