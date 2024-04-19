@@ -29,11 +29,33 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "coach",
     },
+    plan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' },
   },
 
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const planSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  validityDays: {
+    type: Number,
+    default: 30,
+  },
+});
 
-export default User;
+
+const subscriptionSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  plan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan', required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
+  isActive: { type: Boolean, default: true },
+});
+
+
+const Plan = mongoose.model("Plan", planSchema);
+const User = mongoose.model("User", userSchema);
+const Subscribe = mongoose.model("Subscribe", subscriptionSchema)
+
+export { User, Plan, Subscribe };
