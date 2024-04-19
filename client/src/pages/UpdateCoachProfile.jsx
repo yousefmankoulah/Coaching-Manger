@@ -273,6 +273,9 @@ export function UpdateCoachProfile() {
             </Button>
           </form>
 
+          <span className="bg-red-600 text-white mt-10">
+            To delete your account
+          </span>
           {publishError && (
             <Alert className="mt-5" color="failure">
               {publishError}
