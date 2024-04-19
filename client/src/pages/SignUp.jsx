@@ -8,6 +8,13 @@ export function SignUp() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
@@ -82,11 +89,18 @@ export function SignUp() {
             <div>
               <Label value="Your password" />
               <TextInput
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 id="password"
                 onChange={handleChange}
               />
+               <input
+                type="checkbox"
+                onChange={handleShowPassword}
+                id="showPassword"
+                checked={showPassword}
+              />
+              <Label value=" Show The Password" />
             </div>
             <Button
               gradientDuoTone="purpleToPink"

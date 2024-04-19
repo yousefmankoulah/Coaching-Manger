@@ -164,7 +164,7 @@ export function CustomerDetailCoachSide() {
 
   return (
     <div className="min-h-screen mt-20">
-      <h1 className="text-4xl text-center mt-10 mb-10">
+      <h1 className="text-4xl text-center mt-10 mb-10 font-bold">
         Customer Profile Information
       </h1>
       <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -198,15 +198,9 @@ export function CustomerDetailCoachSide() {
                       onClick={() => {
                         setShowModal(true);
                       }}
-                      className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700"
+                      className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-red-700 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700"
                     >
                       Delete
-                    </a>
-                    <a
-                      href="#"
-                      className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                    >
-                      Message
                     </a>
                   </div>
                 </>
@@ -216,11 +210,11 @@ export function CustomerDetailCoachSide() {
         </div>
         <div className="flex-1">
           <Card className="max-w-sm">
-            {formData && (
+            <h2 className="text-2xl text-center mt-5 mb-5">
+              Personal Information
+            </h2>
+            {customerData && (
               <>
-                <h2 className="text-2xl text-center mt-10 mb-10">
-                  {formData.customerName}
-                </h2>
                 {customerData.customerCurrentWeight && (
                   <p className="font-normal text-gray-700 dark:text-gray-400">
                     Current Weight: {customerData.customerCurrentWeight}
@@ -246,13 +240,16 @@ export function CustomerDetailCoachSide() {
           </Card>
         </div>
       </div>
+      <hr className="mt-5 mb-5" />
 
-      <h3>Assigned Exercise</h3>
-      <div className="flex">
+      <h3 className="text-3xl font-bold text-center mt-10 mb-10">
+        Assigned Exercise
+      </h3>
+      <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5 mt-10 mb-10">
         {exData && exData.length > 0 ? (
           exData.map((dietData) => (
             <>
-              <Card className="max-w-sm">
+              <Card className="flex-1">
                 <h2 className="text-2xl text-center mt-10 mb-10">
                   {dietData.exerciseId.exerciseName}
                 </h2>
@@ -275,16 +272,20 @@ export function CustomerDetailCoachSide() {
             </>
           ))
         ) : (
-          <span>No Diet Assigned</span>
+          <p className="text-lg text-center font-bold">No Exercise Assigned</p>
         )}
       </div>
 
-      <h3>Assigned Diet</h3>
-      <div className="flex">
+      <hr className="mt-5 mb-5" />
+
+      <h3 className="text-3xl font-bold text-center mt-10 mb-10">
+        Assigned Diet
+      </h3>
+      <div className="flex p-3 max-w-6xl mx-auto flex-col md:flex-row md:items-center gap-5 mt-10 mb-10">
         {dietData && dietData.length > 0 ? (
           dietData.map((dietData) => (
             <>
-              <Card className="max-w-sm">
+              <Card className="flex-1">
                 <h2 className="text-2xl text-center mt-10 mb-10">
                   {dietData.meal}
                 </h2>
@@ -307,7 +308,9 @@ export function CustomerDetailCoachSide() {
             </>
           ))
         ) : (
-          <span>No Diet Assigned</span>
+          <span className="text-lg text-center font-bold">
+            No Diet Assigned
+          </span>
         )}
       </div>
       <Modal
@@ -321,7 +324,7 @@ export function CustomerDetailCoachSide() {
           <div className="text-center">
             <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this post?
+              Are you sure you want to delete this Customer?
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={handleDeletePost}>

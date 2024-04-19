@@ -23,8 +23,13 @@ export function UpdateCoachProfile() {
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
-  const [showPasswordField, setShowPasswordField] = useState(false);
   const filePickerRef = useRef();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const navigate = useNavigate();
 
@@ -250,10 +255,17 @@ export function UpdateCoachProfile() {
               <Label value="Your New Password" />
               <TextInput
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your new Password"
                 onChange={handleChange}
               />
+              <input
+                type="checkbox"
+                onChange={handleShowPassword}
+                id="showPassword"
+                checked={showPassword}
+              />
+              <Label value=" Show The Password" />
             </div>
 
             <Button gradientDuoTone="purpleToPink" type="submit">

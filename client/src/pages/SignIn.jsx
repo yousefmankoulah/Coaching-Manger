@@ -17,6 +17,12 @@ export function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const coachlogin = () => {
     setIsCoach(true);
   };
@@ -144,10 +150,16 @@ export function SignIn() {
                 <div>
                   <Label value="Your password" />
                   <TextInput
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="**********"
                     id="password"
                     onChange={handleChange}
+                  />
+                  <input
+                    type="checkbox"
+                    onChange={handleShowPassword}
+                    id="showPassword"
+                    checked={showPassword}
                   />
                 </div>
                 <Button

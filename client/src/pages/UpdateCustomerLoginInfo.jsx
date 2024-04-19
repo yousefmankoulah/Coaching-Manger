@@ -26,6 +26,12 @@ export function UpdateCustomerLoginInfo() {
   const [updateUserError, setUpdateUserError] = useState(null);
   const filePickerRef = useRef();
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -222,7 +228,7 @@ export function UpdateCustomerLoginInfo() {
                   )}
 
                   <img
-                    src={imageFileUrl || currentUser.profilePicture}
+                    src={currentUser.profilePicture || imageFileUrl}
                     alt="user"
                     className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
                       imageFileUploadProgress &&
@@ -262,10 +268,17 @@ export function UpdateCustomerLoginInfo() {
               <Label value="Customer Temporary Password" />
               <TextInput
                 id="customerPassword"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Customer Temporary Password"
                 onChange={handleChange}
               />
+              <input
+                type="checkbox"
+                onChange={handleShowPassword}
+                id="showPassword"
+                checked={showPassword}
+              />
+              <Label value=" Show The Password" />
             </div>
 
             <div>
