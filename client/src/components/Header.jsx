@@ -117,7 +117,7 @@ export default function Header() {
 
         {currentUser?.role === "coach" && (
           <Navbar.Link active={path === "/plans"}>
-            <Link className="text-white" to="/">
+            <Link className="text-white" to="/plans">
               Plans
             </Link>
           </Navbar.Link>
@@ -131,13 +131,13 @@ export default function Header() {
         ) : (
           <>
             <Navbar.Link active={path === "/plans"}>
-              <Link className="text-white" to="/">
+              <Link className="text-white" to="/plans">
                 Plans
               </Link>
             </Navbar.Link>
 
-            <Navbar.Link active={path === "/about"}>
-              <Link className="text-white" to="/">
+            <Navbar.Link active={path === "/aboutus"}>
+              <Link className="text-white" to="/aboutus">
                 About Us
               </Link>
             </Navbar.Link>
@@ -151,7 +151,7 @@ export default function Header() {
           </Navbar.Link>
         )}
         <Navbar.Link active={path === "/contactus"} as={"div"}>
-          <Link className="text-white" to="/">
+          <Link className="text-white" to="/contactus">
             Contact Us
           </Link>
         </Navbar.Link>

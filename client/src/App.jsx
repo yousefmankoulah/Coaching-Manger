@@ -25,6 +25,9 @@ import AddExResult from "./pages/Exercises/AddExResult.jsx";
 import UpdateEXResult from "./pages/Exercises/UpdateEXResult.jsx";
 import AddCustomerInformation from "./pages/AddCustomerInformation.jsx";
 import UpdateCustomerInformation from "./pages/UpdateCustomerInformation.jsx";
+import Plans from "./pages/Plans.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
+import AboutUs from "./pages/AboutUs.jsx";
 
 export default function App() {
   return (
@@ -35,6 +38,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/plans" element={<Plans />} />
+        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/aboutus" element={<AboutUs />} />
 
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/add-customer/:id" element={<AddCustomers />} />
