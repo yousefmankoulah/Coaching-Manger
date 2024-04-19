@@ -11,7 +11,7 @@ export default function CustomersTable() {
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
   const [filteredCustomers, setFilteredCustomers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -67,13 +67,19 @@ export default function CustomersTable() {
   };
 
   useEffect(() => {
-    setFilteredCustomers(customers.filter(customer =>
-        customer.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        customer.customerEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        customer.customerPhone?.includes(searchQuery)
-    ));
-}, [customers, searchQuery]);
-
+    setFilteredCustomers(
+      customers.filter(
+        (customer) =>
+          customer.customerName
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          customer.customerEmail
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          customer.customerPhone?.includes(searchQuery)
+      )
+    );
+  }, [customers, searchQuery]);
 
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
@@ -82,23 +88,23 @@ export default function CustomersTable() {
           type="text"
           placeholder="Search by Customer Name, Phone, or Email"
           value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="input input-bordered w-1/4 rounded-xl"
         />
       </div>
-      
+
       <Table hoverable className="shadow-md">
         <Table.Head>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Customer Name
           </Table.HeadCell>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Customer Email
           </Table.HeadCell>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Customer Phone Number
           </Table.HeadCell>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Updates
           </Table.HeadCell>
         </Table.Head>

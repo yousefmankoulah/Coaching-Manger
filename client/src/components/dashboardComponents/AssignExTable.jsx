@@ -11,7 +11,7 @@ export default function AssignExTable() {
   const [postIdToDelete, setPostIdToDelete] = useState("");
   //search
   const [filteredCustomers, setFilteredCustomers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -68,37 +68,44 @@ export default function AssignExTable() {
   };
 
   useEffect(() => {
-    setFilteredCustomers(customers.filter(customer =>
-      customer.customerId.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.exerciseId.exerciseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.date.includes(searchQuery)
-    ));
+    setFilteredCustomers(
+      customers.filter(
+        (customer) =>
+          customer.customerId.customerName
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          customer.exerciseId.exerciseName
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          customer.date.includes(searchQuery)
+      )
+    );
   }, [customers, searchQuery]);
 
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-    <div className="mb-2 mt-4 text-black">
+      <div className="mb-2 mt-4 text-black">
         <input
           type="text"
           placeholder="Search by Name, Exercise, or Date"
           value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="input input-bordered w-1/4 rounded-xl"
         />
       </div>
-      
+
       <Table hoverable className="shadow-md">
         <Table.Head>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Customer Name
           </Table.HeadCell>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Exercise Name
           </Table.HeadCell>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Date
           </Table.HeadCell>
-          <Table.HeadCell className="light:bg-slate-700 light:text-white">
+          <Table.HeadCell className="bg-slate-700 text-white">
             Updates
           </Table.HeadCell>
         </Table.Head>

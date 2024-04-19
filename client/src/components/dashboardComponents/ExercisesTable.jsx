@@ -11,6 +11,14 @@ export default function ExercisesTable() {
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
+  //search
+
+  const [filteredEx, setFilteredEx] = useState([]);
+  const [searchQueryEX, setSearchQueryEX] = useState("");
+
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -90,24 +98,61 @@ export default function ExercisesTable() {
     }
   };
 
+  useEffect(() => {
+    setFilteredCustomers(
+      exercise.filter(
+        (customer) =>
+          customer.exerciseName
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          customer.exerciseDescription
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [exercise, searchQuery]);
+
+  useEffect(() => {
+    setFilteredEx(
+      adminExercise.filter(
+        (customer) =>
+          customer.exerciseName
+            ?.toLowerCase()
+            .includes(searchQueryEX.toLowerCase()) ||
+          customer.exerciseDescription
+            ?.toLowerCase()
+            .includes(searchQueryEX.toLowerCase())
+      )
+    );
+  }, [adminExercise, searchQueryEX]);
+
   return (
     <div className="container mr-auto ml-auto table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser?.role === "coach" ? (
         <>
+          <div className="mb-2 mt-4 text-black">
+            <input
+              type="text"
+              placeholder="Search by Customer Name, Phone, or Email"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="input input-bordered w-1/4 rounded-xl"
+            />
+          </div>
           <Table hoverable className="shadow-md">
             <Table.Head>
-              <Table.HeadCell className="light:bg-slate-700 light:text-white">
+              <Table.HeadCell className="bg-slate-700 text-white">
                 Exercises Name
               </Table.HeadCell>
-              <Table.HeadCell className="light:bg-slate-700 light:text-white">
+              <Table.HeadCell className="bg-slate-700 text-white">
                 Exercises Description
               </Table.HeadCell>
-              <Table.HeadCell className="light:bg-slate-700 light:text-white">
+              <Table.HeadCell className="bg-slate-700 text-white">
                 Updates
               </Table.HeadCell>
             </Table.Head>
             {exercise && exercise.length > 0 ? ( // Check if customers array exists and is not empty
-              exercise.map((customer) => (
+              filteredCustomers.map((customer) => (
                 <Table.Body className="divide-y" key={customer._id}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
@@ -160,20 +205,29 @@ export default function ExercisesTable() {
           <h3 className="mt-10 mb-10 text-center font-bold text-2xl">
             All Admin Exercies
           </h3>
+          <div className="mb-2 mt-4 text-black">
+            <input
+              type="text"
+              placeholder="Search by Customer Name, Phone, or Email"
+              value={searchQueryEX}
+              onChange={(e) => setSearchQueryEX(e.target.value)}
+              className="input input-bordered w-1/4 rounded-xl"
+            />
+          </div>
           <Table hoverable className="shadow-md">
             <Table.Head>
-              <Table.HeadCell className="light:bg-slate-700 light:text-white">
+              <Table.HeadCell className="bg-slate-700 text-white">
                 Exercises Name
               </Table.HeadCell>
-              <Table.HeadCell className="light:bg-slate-700 light:text-white">
+              <Table.HeadCell className="bg-slate-700 text-white">
                 Exercises Description
               </Table.HeadCell>
-              <Table.HeadCell className="light:bg-slate-700 light:text-white">
+              <Table.HeadCell className="bg-slate-700 text-white">
                 Updates
               </Table.HeadCell>
             </Table.Head>
             {adminExercise && adminExercise.length > 0 ? ( // Check if customers array exists and is not empty
-              adminExercise.map((customer) => (
+              filteredEx.map((customer) => (
                 <Table.Body className="divide-y" key={customer._id}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">

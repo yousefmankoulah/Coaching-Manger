@@ -38,7 +38,7 @@ export default function Header() {
   };
 
   return (
-    <Navbar className="border-b-2">
+    <Navbar className="border-b-2 bg-slate-800 text-white">
       <Link
         to="/"
         className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
@@ -109,29 +109,36 @@ export default function Header() {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link active={path === "/"} as={"div"}>
-          <Link to="/">Home</Link>
-        </Navbar.Link>
-        <Navbar.Link active={path === "/aboutus"} as={"div"}>
-          <Link to="/">About Us</Link>
+        <Navbar.Link active={path === "/"}>
+          <Link className="text-white" to="/">
+            Home
+          </Link>
         </Navbar.Link>
 
         {currentUser?.role === "coach" && (
-          <Navbar.Link active={path === "/plans"} as={"div"}>
-            <Link to="/">Plans</Link>
+          <Navbar.Link active={path === "/plans"}>
+            <Link className="text-white" to="/">
+              Plans
+            </Link>
           </Navbar.Link>
         )}
 
-        <Navbar.Link active={path === `/dashboard/${userId}`} as={"div"}>
-          <Link to={`/dashboard/${userId}`}>Dashboard</Link>
+        <Navbar.Link active={path === `/dashboard/${userId}`}>
+          <Link className="text-white" to={`/dashboard/${userId}`}>
+            Dashboard
+          </Link>
         </Navbar.Link>
         {currentUser?.role === "coach" && (
           <Navbar.Link active={path === `/add-customer/${userId}`} as={"div"}>
-            <Link to={`/add-customer/${userId}`}>Add a Client</Link>
+            <Link className="text-white" to={`/add-customer/${userId}`}>
+              Add a Client
+            </Link>
           </Navbar.Link>
         )}
         <Navbar.Link active={path === "/contactus"} as={"div"}>
-          <Link to="/">Contact Us</Link>
+          <Link className="text-white" to="/">
+            Contact Us
+          </Link>
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
