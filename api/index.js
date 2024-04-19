@@ -11,6 +11,7 @@ import { CustomerExercies } from "./models/customerModel.js";
 import { SetExerciesToCustomer } from "./models/exerciesModel.js";
 import exerciesRoute from "./routes/exerciesRoute.js";
 import customerInfoRoute from "./routes/customerInfoRoute.js";
+import planRoute from "./routes/planRoute.js";
 import bodyParser from "body-parser";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -79,6 +80,7 @@ app.use("/api/userCustomer", addCustomer);
 app.use("/api/diet", dietRoute);
 app.use("/api/exercise", exerciesRoute);
 app.use("/api/customerInfo", customerInfoRoute);
+app.use("/api/plans", planRoute);
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
