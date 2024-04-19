@@ -1,4 +1,4 @@
-import User from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 import { AddCustomerInfo } from "../models/customerModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -138,7 +138,7 @@ export const signinGoogle = async (req, res, next) => {
           httpOnly: true,
         })
         .json({ token, rest });
-        res.setHeader("Authorization", `Bearer ${token}`);
+      res.setHeader("Authorization", `Bearer ${token}`);
     }
   } catch (error) {
     next(error);
@@ -176,7 +176,7 @@ export const customerSignin = async (req, res, next) => {
         httpOnly: true,
       })
       .json({ token, rest });
-      res.setHeader("Authorization", `Bearer ${token}`);
+    res.setHeader("Authorization", `Bearer ${token}`);
   } catch (error) {
     next(error);
   }
@@ -197,7 +197,6 @@ export const updateUser = async (req, res, next) => {
   const { fullName, email, password, profilePicture } = req.body;
   const user = await User.findById(req.user.id);
 
-
   if (req.user.id === req.params._id) {
     if (!user) {
       return next(errorHandler(404, "User not found"));
@@ -216,7 +215,7 @@ export const updateUser = async (req, res, next) => {
       }
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
-    
+
     try {
       const updatedUser = await User.findByIdAndUpdate(
         {
@@ -243,7 +242,6 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
-
 export const getCoachProfile = async (req, res, next) => {
   try {
     const coach = await User.findOne({
@@ -253,4 +251,4 @@ export const getCoachProfile = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};

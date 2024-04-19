@@ -1,7 +1,7 @@
 import { Customer } from "../models/customerModel.js";
 import Diet from "../models/dietModel.js";
 import { errorHandler } from "../utils/error.js";
-import User from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 
 export const createDiet = async (req, res, next) => {
   const { date, time, meal, foodDescription, calorie } = req.body;

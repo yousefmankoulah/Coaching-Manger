@@ -1,6 +1,6 @@
 import { Exercies, SetExerciesToCustomer } from "../models/exerciesModel.js";
 import { errorHandler } from "../utils/error.js";
-import User from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 
 export const getAllExercies = async (req, res, next) => {
   try {

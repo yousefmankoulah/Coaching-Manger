@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 import { Exercies, SetExerciesToCustomer } from "../models/exerciesModel.js";
 
 const addCustomerInfoSchema = new mongoose.Schema(
