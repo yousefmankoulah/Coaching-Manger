@@ -19,6 +19,9 @@ export default function ExercisesTable() {
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [filteredCustomer, setFilteredCustomer] = useState([]);
+  const [searchQueryC, setSearchQueryC] = useState("");
+
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -99,18 +102,32 @@ export default function ExercisesTable() {
   };
 
   useEffect(() => {
-    setFilteredCustomers(
-      exercise.filter(
-        (customer) =>
-          customer.exerciseName
-            ?.toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          customer.exerciseDescription
-            ?.toLowerCase()
-            .includes(searchQuery.toLowerCase())
-      )
-    );
-  }, [exercise, searchQuery]);
+    if (currentUser.role === "coach") {
+      setFilteredCustomers(
+        exercise.filter(
+          (customer) =>
+            customer.exerciseName
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            customer.exerciseDescription
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+
+    if (currentUser.role === "customer") {
+      setFilteredCustomer(
+        exercise.filter(
+          (customer) =>
+            customer.exerciseId.exerciseName
+              ?.toLowerCase()
+              .includes(searchQueryC.toLowerCase()) ||
+            customer.date?.includes(searchQueryC)
+        )
+      );
+    }
+  }, [exercise, searchQuery, searchQueryC]);
 
   useEffect(() => {
     setFilteredEx(
@@ -285,43 +302,60 @@ export default function ExercisesTable() {
           </Modal>
         </>
       ) : (
-        <Table hoverable className="shadow-md">
-          <Table.Head>
-            <Table.HeadCell>Exercises Date</Table.HeadCell>
-            <Table.HeadCell>Exercises Name</Table.HeadCell>
-            <Table.HeadCell>Updates</Table.HeadCell>
-          </Table.Head>
-          {exercise && exercise.length > 0 ? ( // Check if customers array exists and is not empty
-            exercise.map((customer) => (
-              <Table.Body className="divide-y" key={customer._id}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {customer.date}
-                  </Table.Cell>
-                  <Table.Cell>{customer.exerciseId.exerciseName}</Table.Cell>
-                  <Table.Cell>
-                    <Link
-                      to={`/ViewAssignExerciseCustomer/${currentUser._id}/${customer._id}`}
-                      className="text-teal-500 hover:underline"
-                    >
-                      <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
-                        Details
-                      </span>
-                    </Link>
+        <>
+          <div className="mb-2 mt-4 text-black">
+            <input
+              type="text"
+              placeholder="Search by Customer Name, Phone, or Email"
+              value={searchQueryC}
+              onChange={(e) => setSearchQueryC(e.target.value)}
+              className="input input-bordered w-1/4 rounded-xl"
+            />
+          </div>
+          <Table hoverable className="shadow-md">
+            <Table.Head>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Exercises Date
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Exercises Name
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-slate-700 text-white">
+                Updates
+              </Table.HeadCell>
+            </Table.Head>
+            {exercise && exercise.length > 0 ? ( // Check if customers array exists and is not empty
+              filteredCustomer.map((customer) => (
+                <Table.Body className="divide-y" key={customer._id}>
+                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {customer.date}
+                    </Table.Cell>
+                    <Table.Cell>{customer.exerciseId.exerciseName}</Table.Cell>
+                    <Table.Cell>
+                      <Link
+                        to={`/ViewAssignExerciseCustomer/${currentUser._id}/${customer._id}`}
+                        className="text-teal-500 hover:underline"
+                      >
+                        <span className="whitespace-nowrap font-medium text-gray-900 dark:text-white mr-2">
+                          Details
+                        </span>
+                      </Link>
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              ))
+            ) : (
+              <Table.Body className="divide-y">
+                <Table.Row>
+                  <Table.Cell colSpan={4} className="text-center">
+                    No Exercises to display
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
-            ))
-          ) : (
-            <Table.Body className="divide-y">
-              <Table.Row>
-                <Table.Cell colSpan={4} className="text-center">
-                  No Exercises to display
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          )}
-        </Table>
+            )}
+          </Table>
+        </>
       )}
     </div>
   );
