@@ -161,6 +161,7 @@ export function SignIn() {
                     id="showPassword"
                     checked={showPassword}
                   />
+                  <Label value=" Show the password" />
                 </div>
                 <Button
                   gradientDuoTone="purpleToPink"
@@ -208,6 +209,13 @@ export function SignIn() {
                     id="password"
                     onChange={handleChange}
                   />
+                  <input
+                    type="checkbox"
+                    onChange={handleShowPassword}
+                    id="showPassword"
+                    checked={showPassword}
+                  />
+                  <Label value=" Show the password" />
                 </div>
                 <Button
                   gradientDuoTone="purpleToPink"

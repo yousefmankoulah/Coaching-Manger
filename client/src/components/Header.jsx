@@ -102,7 +102,7 @@ export default function Header() {
         ) : (
           <Link to="/sign-in">
             <Button gradientDuoTone="purpleToBlue" outline>
-              Sign In
+              Try For Free
             </Button>
           </Link>
         )}
@@ -122,12 +122,27 @@ export default function Header() {
             </Link>
           </Navbar.Link>
         )}
+        {currentUser ? (
+          <Navbar.Link active={path === `/dashboard/${userId}`}>
+            <Link className="text-white" to={`/dashboard/${userId}`}>
+              Dashboard
+            </Link>
+          </Navbar.Link>
+        ) : (
+          <>
+            <Navbar.Link active={path === "/plans"}>
+              <Link className="text-white" to="/">
+                Plans
+              </Link>
+            </Navbar.Link>
 
-        <Navbar.Link active={path === `/dashboard/${userId}`}>
-          <Link className="text-white" to={`/dashboard/${userId}`}>
-            Dashboard
-          </Link>
-        </Navbar.Link>
+            <Navbar.Link active={path === "/about"}>
+              <Link className="text-white" to="/">
+                About Us
+              </Link>
+            </Navbar.Link>
+          </>
+        )}
         {currentUser?.role === "coach" && (
           <Navbar.Link active={path === `/add-customer/${userId}`} as={"div"}>
             <Link className="text-white" to={`/add-customer/${userId}`}>
