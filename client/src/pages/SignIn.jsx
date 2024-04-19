@@ -18,9 +18,14 @@ export function SignIn() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordCustomer, setShowPasswordCustomer] = useState(false);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleShowPasswordCustomer = () => {
+    setShowPasswordCustomer(!showPasswordCustomer);
   };
 
   const coachlogin = () => {
@@ -204,16 +209,16 @@ export function SignIn() {
                 <div>
                   <Label value="Your password" />
                   <TextInput
-                    type="password"
+                    type={showPasswordCustomer ? "text" : "password"}
                     placeholder="**********"
                     id="password"
                     onChange={handleChange}
                   />
                   <input
                     type="checkbox"
-                    onChange={handleShowPassword}
-                    id="showPassword"
-                    checked={showPassword}
+                    onChange={handleShowPasswordCustomer}
+                    id="showPasswordCustomer"
+                    checked={showPasswordCustomer}
                   />
                   <Label value=" Show the password" />
                 </div>
