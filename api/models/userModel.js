@@ -42,6 +42,9 @@ const planSchema = new mongoose.Schema({
     type: Number,
     default: 30,
   },
+  customersNumber: {
+    type: Number
+  },
 });
 
 
