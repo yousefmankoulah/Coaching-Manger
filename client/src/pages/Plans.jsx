@@ -40,6 +40,7 @@ export default function Plans() {
             </div>
           ))}
       </div>
+      
     </div>
   );
 }
