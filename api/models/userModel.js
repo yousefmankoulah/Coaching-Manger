@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "coach",
     },
-    plan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' },
+    plan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan', default: "662415cabf573af430262dcb" },
   },
 
   { timestamps: true }

@@ -34,13 +34,12 @@ export default function Plans() {
               <p>The Plan Price: ${plan.price}</p>
               <p>Valid For: {plan.validityDays}</p>
               <p>Number of Customers: {plan.customersNumber}</p>
-              <Link to={`/plans/${plan._id}`}>
-                <Button>View Details</Button>
+              <Link to={`/subscribe/${plan._id}`}>
+                <Button>Checkout</Button>
               </Link>
             </div>
           ))}
       </div>
-      
     </div>
   );
 }

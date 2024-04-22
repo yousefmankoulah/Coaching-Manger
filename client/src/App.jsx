@@ -28,6 +28,8 @@ import UpdateCustomerInformation from "./pages/UpdateCustomerInformation.jsx";
 import Plans from "./pages/Plans.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
+import SuccessComponent from "./pages/SuccessComponent.jsx";
+import SubscribeComponent from "./pages/SubscribeComponent.jsx";
 
 export default function App() {
   return (
@@ -102,39 +104,9 @@ export default function App() {
             path="/UpdateCustomerInformation/:customerId/:id"
             element={<UpdateCustomerInformation />}
           />
+          <Route path="/subscribe/:planId" element={<SubscribeComponent />} />
+          <Route path="/success" element={<SuccessComponent />} />
         </Route>
-
-        {/* <Route path='/about' element={<About />} />
-        
-        <Route path='/search' element={<Search />} />
-        <Route element={<PrivateRoute />}>
-          <Route path='/dashboard' element={<Dashboard />} />
-        </Route>
-        <Route element={<OnlyAdminPrivateRoute />}>
-          <Route path='/create-post' element={<CreatePost />} />
-          <Route path='/update-post/:postId' element={<UpdatePost />} />
-        </Route>
-
-        <Route path="/" element={<Home />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/add-customer" element={<AddCustomers />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-
-
-       
-        
-      //   <Route path='/search' element={<Search />} />
-      //   <Route element={<PrivateRoute />}>
-      //     <Route path='/dashboard' element={<Dashboard />} />
-      //   </Route>
-      //   <Route element={<OnlyAdminPrivateRoute />}>
-      //     <Route path='/create-post' element={<CreatePost />} />
-      //     <Route path='/update-post/:postId' element={<UpdatePost />} />
-      //   </Route>
-
-      //   <Route path='/projects' element={<Projects />} />
-      //   <Route path='/post/:postSlug' element={<PostPage />} />  */}
       </Routes>
       <Footer />
     </BrowserRouter>
