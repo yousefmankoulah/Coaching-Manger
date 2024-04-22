@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import { Alert, Label, TextInput, Button } from "flowbite-react";
+import { Alert, Label, TextInput, Button, Modal } from "flowbite-react";
 import {
   getDownloadURL,
   getStorage,
@@ -11,6 +11,7 @@ import {
 } from "firebase/storage";
 import app from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export function UpdateCoachProfile() {
   const [formData, setFormData] = useState({});
@@ -24,6 +25,7 @@ export function UpdateCoachProfile() {
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
   const filePickerRef = useRef();
+  const [showModal, setShowModal] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -163,6 +165,29 @@ export function UpdateCoachProfile() {
     }
   };
 
+  const handleDeletePost = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/deleteCoach/${currentUser._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        navigate(`/dashboard/${currentUser._id}`);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen mt-20">
       <h1 className="text-4xl text-center mt-10 mb-10">Update Your Profile</h1>
@@ -176,8 +201,10 @@ export function UpdateCoachProfile() {
             Coaching
           </Link>
           <p className="text-sm mt-5">
-            This is a demo project. You can sign in with your email and password
-            or with Google.
+            If you need to delete your account, please click her <br />
+            <Button color="red" onClick={() => setShowModal(true)}>
+              Delete Your Account
+            </Button>
           </p>
         </div>
         {/* right */}
@@ -273,9 +300,6 @@ export function UpdateCoachProfile() {
             </Button>
           </form>
 
-          <span className="bg-red-600 text-white mt-10">
-            To delete your account
-          </span>
           {publishError && (
             <Alert className="mt-5" color="failure">
               {publishError}
@@ -283,6 +307,32 @@ export function UpdateCoachProfile() {
           )}
         </div>
       </div>
+
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete Your account? If you delete your
+              account, you will delete all the data related.
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeletePost}>
+                Yes, I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { User } from "../models/userModel.js";
+import { Subscribe, User } from "../models/userModel.js";
 import {
   AddCustomerInfo,
   Customer,
@@ -272,7 +272,7 @@ export const deleteCoach = async (req, res, next) => {
       const customer = await AddCustomerInfo.deleteMany({
         userId: req.params._id,
       });
-
+      const subscribe = await Subscribe.findByIdAndDelete(req.user.id);
       const diet = await Diet.deleteMany({
         userId: req.params._id,
       });
