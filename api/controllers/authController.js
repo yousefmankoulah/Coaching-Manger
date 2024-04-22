@@ -1,9 +1,15 @@
 import { User } from "../models/userModel.js";
-import { AddCustomerInfo } from "../models/customerModel.js";
+import {
+  AddCustomerInfo,
+  Customer,
+  CustomerExercies,
+} from "../models/customerModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import passwordValidator from "password-validator";
+import { Exercies, SetExerciesToCustomer } from "../models/exerciesModel.js";
+import Diet from "../models/dietModel.js";
 
 const schema = new passwordValidator();
 
@@ -250,5 +256,47 @@ export const getCoachProfile = async (req, res, next) => {
     res.status(200).json(coach);
   } catch (error) {
     next(error);
+  }
+};
+
+export const deleteCoach = async (req, res, next) => {
+  if (req.user.id === req.params._id) {
+    try {
+      const coachAccount = await User.findByIdAndDelete(req.user.id);
+
+      const customer = await AddCustomerInfo.deleteMany({
+        userId: req.params._id,
+      });
+
+      const diet = await Diet.deleteMany({
+        userId: req.params._id,
+      });
+
+      const customerInfo = await Customer.deleteMany({
+        userId: req.params._id,
+      });
+
+      const customerEx = await CustomerExercies.deleteMany({
+        userId: req.params._id,
+      });
+
+      const setEx = await SetExerciesToCustomer.deleteMany({
+        userId: req.params._id,
+      });
+
+      const exercies = await Exercies.deleteMany({
+        userId: req.params._id,
+      });
+
+      const coach = await User.findById(req.user.id);
+      if (coach.role !== "coach") {
+        next(errorHandler(400, "You are not allowed to perform this action"));
+      }
+      res.status(200).json(coachAccount);
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    next(errorHandler(401, "You are not allowed to perform this action"));
   }
 };

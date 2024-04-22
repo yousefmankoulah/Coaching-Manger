@@ -7,6 +7,7 @@ import {
   updateUser,
   signinGoogle,
   getCoachProfile,
+  deleteCoach,
 } from "../controllers/authController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -19,5 +20,6 @@ router.post("/signout", signout);
 router.put("/updateUser/:_id", verifyToken, updateUser);
 router.post("/google", signinGoogle);
 router.get("/coachProfile/:_id", getCoachProfile);
+router.delete("/deleteCoach/:_id", deleteCoach);
 
 export default router;
