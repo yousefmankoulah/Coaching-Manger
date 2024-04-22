@@ -1,8 +1,14 @@
-import { AddCustomerInfo } from "../models/customerModel.js";
+import {
+  AddCustomerInfo,
+  Customer,
+  CustomerExercies,
+} from "../models/customerModel.js";
 import { User } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import passwordValidator from "password-validator";
+import Diet from "../models/dietModel.js";
+import { SetExerciesToCustomer } from "../models/exerciesModel.js";
 
 const schema = new passwordValidator();
 
@@ -145,6 +151,26 @@ export const deleteCustomer = async (req, res, next) => {
       const customer = await AddCustomerInfo.findOneAndDelete({
         userId: req.params.userId,
         _id: req.params._id,
+      });
+
+      const diet = await Diet.deleteMany({
+        userId: req.params.userId,
+        customerId: req.params._id,
+      });
+
+      const customerInfo = await Customer.findOneAndDelete({
+        userId: req.params.userId,
+        customerId: req.params._id,
+      });
+
+      const customerEx = await CustomerExercies.deleteMany({
+        userId: req.params.userId,
+        customerId: req.params._id,
+      });
+
+      const setEx = await SetExerciesToCustomer.deleteMany({
+        userId: req.params.userId,
+        customerId: req.params._id,
       });
 
       const coach = await User.findById(req.user.id);
