@@ -10,6 +10,8 @@ import { errorHandler } from "../utils/error.js";
 import passwordValidator from "password-validator";
 import { Exercies, SetExerciesToCustomer } from "../models/exerciesModel.js";
 import Diet from "../models/dietModel.js";
+import { deleteFileFromStorage } from "../utils/firebaseConfig.js";
+
 
 const schema = new passwordValidator();
 
@@ -261,7 +263,10 @@ export const getCoachProfile = async (req, res, next) => {
 
 export const deleteCoach = async (req, res, next) => {
   if (req.user.id === req.params._id) {
+    const cust = await User.findById(req.user.id);
+    const filename = cust.profilePicture;
     try {
+      await deleteFileFromStorage(filename);
       const coachAccount = await User.findByIdAndDelete(req.user.id);
 
       const customer = await AddCustomerInfo.deleteMany({

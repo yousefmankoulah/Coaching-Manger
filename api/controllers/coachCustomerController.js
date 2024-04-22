@@ -9,6 +9,7 @@ import { errorHandler } from "../utils/error.js";
 import passwordValidator from "password-validator";
 import Diet from "../models/dietModel.js";
 import { SetExerciesToCustomer } from "../models/exerciesModel.js";
+import { deleteFileFromStorage } from "../utils/firebaseConfig.js";
 
 const schema = new passwordValidator();
 
@@ -147,7 +148,10 @@ export const updateCustomer = async (req, res, next) => {
 
 export const deleteCustomer = async (req, res, next) => {
   if (req.user.id === req.params._id || req.user.id === req.params.userId) {
+    const cust = await AddCustomerInfo.findById(req.params._id);
+    const filename = cust.profilePicture;
     try {
+      await deleteFileFromStorage(filename);
       const customer = await AddCustomerInfo.findOneAndDelete({
         userId: req.params.userId,
         _id: req.params._id,
