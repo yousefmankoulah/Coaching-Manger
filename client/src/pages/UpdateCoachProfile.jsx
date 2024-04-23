@@ -181,7 +181,7 @@ export function UpdateCoachProfile() {
       if (!res.ok) {
         console.log(data.message);
       } else {
-        navigate(`/dashboard/${currentUser._id}`);
+        navigate(`/sign-up`);
       }
     } catch (error) {
       console.log(error.message);
