@@ -143,13 +143,7 @@ export default function Header() {
             </Navbar.Link>
           </>
         )}
-        {currentUser?.role === "coach" && (
-          <Navbar.Link active={path === `/add-customer/${userId}`} as={"div"}>
-            <Link className="text-white" to={`/add-customer/${userId}`}>
-              Add a Client
-            </Link>
-          </Navbar.Link>
-        )}
+       
         <Navbar.Link active={path === "/contactus"} as={"div"}>
           <Link className="text-white" to="/contactus">
             Contact Us
