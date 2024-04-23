@@ -112,9 +112,20 @@ export default function CustomersTable() {
           filteredCustomers.map((customer) => (
             <Table.Body className="divide-y" key={customer._id}>
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
-                  {customer.customerName}
+                <Table.Cell
+                  className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <img
+                    src={customer.profilePicture}
+                    className="rounded-3xl w-10 h-10 float-left"
+                    alt="Customer Profile Picture"
+                  />
+                  <span className="text-center ml-4">
+                    {customer.customerName}
+                  </span>
                 </Table.Cell>
+
                 <Table.Cell className="light:bg-slate-50">
                   {customer.customerEmail}
                 </Table.Cell>
