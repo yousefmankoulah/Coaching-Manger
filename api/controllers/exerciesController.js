@@ -1,6 +1,7 @@
 import { Exercies, SetExerciesToCustomer } from "../models/exerciesModel.js";
 import { errorHandler } from "../utils/error.js";
 import { User } from "../models/userModel.js";
+import { deleteFileFromStorage } from "../utils/firebaseConfig.js";
 
 export const getAllExercies = async (req, res, next) => {
   try {
@@ -116,13 +117,19 @@ export const updateExercies = async (req, res, next) => {
 };
 
 export const deleteExercies = async (req, res, next) => {
+  const exFile = await Exercies.findById(req.params._id);
+  const exfilename = exFile.exerciseVideo;
   try {
+    await deleteFileFromStorage(exfilename);
     const coach = await User.findById(req.user.id);
     if (coach.role !== "coach") {
       next(errorHandler(400, "You are not allowed to perform this action"));
     }
     if (req.user.id === req.params.userId || req.user.isAdmin === true) {
       const deletedExercies = await Exercies.findByIdAndDelete(req.params._id);
+      const deleteSet = await SetExerciesToCustomer.deleteMany({
+        exerciseId: req.params._id,
+      });
       res.status(200).json("deletedExercies");
     } else {
       next(errorHandler(401, "You are not allowed to perform this action"));

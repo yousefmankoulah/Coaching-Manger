@@ -22,7 +22,13 @@ export default function Plans() {
   return (
     <div className="min-h-screen mt-20">
       <h1 className="text-5xl font-extrabold mt-10 mb-10 text-center">Plans</h1>
-      <div className="grid grid-flow-col lg:grid-rows-2 md:grid-rows-3 sm:grid-rows-3 xs:grid-rows-6 gap-2 justify-center mt-10">
+      <div className="border-dashed border-2 border-white mt-10 p-10 container mr-auto ml-auto rounded-2xl">
+        <stripe-pricing-table
+          pricing-table-id="prctbl_1P8pUfJbnMJW8yX9U4eimD0J"
+          publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
+        ></stripe-pricing-table>
+      </div>
+      {/* <div className="grid grid-flow-col lg:grid-rows-2 md:grid-rows-3 sm:grid-rows-3 xs:grid-rows-6 gap-2 justify-center mt-10">
         {formData &&
           formData.length > 0 &&
           formData.map((plan) => (
@@ -39,7 +45,7 @@ export default function Plans() {
               </Link>
             </div>
           ))}
-      </div>
+      </div> */}
     </div>
   );
 }
