@@ -12,6 +12,8 @@ import {
 import app from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { signoutSuccess } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
 
 export function UpdateCoachProfile() {
   const [formData, setFormData] = useState({});
@@ -26,6 +28,8 @@ export function UpdateCoachProfile() {
   const [updateUserError, setUpdateUserError] = useState(null);
   const filePickerRef = useRef();
   const [showModal, setShowModal] = useState(false);
+
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -181,7 +185,23 @@ export function UpdateCoachProfile() {
       if (!res.ok) {
         console.log(data.message);
       } else {
-        navigate(`/sign-up`);
+        try {
+          const res = await fetch(
+            "https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/signout",
+            {
+              method: "POST",
+            }
+          );
+          const data = await res.json();
+
+          if (!res.ok) {
+            console.log(data.message);
+          } else {
+            dispatch(signoutSuccess());
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
       }
     } catch (error) {
       console.log(error.message);

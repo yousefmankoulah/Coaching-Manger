@@ -33,14 +33,16 @@ const deleteFileFromStorage = async (filePath) => {
 
 const deleteManyFilesFromStorage = async (filePaths) => {
   try {
-    const storageRef = storage.ref(); // Reference to the root of your storage bucket
-
     // Loop through each file path and delete the corresponding file
     await Promise.all(
       filePaths.map(async (filePath) => {
-        const fileRef = storageRef.child(filePath); // Reference to each file
-        await fileRef.delete(); // Delete the file
-        console.log(`File ${filePath} deleted successfully.`);
+        try {
+          const storageRef = ref(storage, filePath);
+          await deleteObject(storageRef);
+          console.log(`File ${filePath} deleted successfully.`);
+        } catch (deleteError) {
+          console.error(`Error deleting file ${filePath}:`, deleteError);
+        }
       })
     );
   } catch (error) {

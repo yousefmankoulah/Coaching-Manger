@@ -264,49 +264,33 @@ export const getCoachProfile = async (req, res, next) => {
 };
 
 export const deleteCoach = async (req, res, next) => {
-  if (req.user.id === req.params._id) {
-    const cust = await User.findById(req.user.id);
-    const exFile = await Exercies.find({ userId: req.user.id });
-    const exfilename = exFile.exerciseVideo;
-    const filename = cust.profilePicture;
-    try {
-      await deleteFileFromStorage(filename);
-      await deleteManyFilesFromStorage(exfilename);
-      const coachAccount = await User.findByIdAndDelete(req.user.id);
+  try {
+    const cust = await User.findById(req.params._id);
 
-      const customer = await AddCustomerInfo.deleteMany({
-        userId: req.params._id,
-      });
-      const subscribe = await Subscribe.findByIdAndDelete(req.user.id);
-      const diet = await Diet.deleteMany({
-        userId: req.params._id,
-      });
-
-      const customerInfo = await Customer.deleteMany({
-        userId: req.params._id,
-      });
-
-      const customerEx = await CustomerExercies.deleteMany({
-        userId: req.params._id,
-      });
-
-      const setEx = await SetExerciesToCustomer.deleteMany({
-        userId: req.params._id,
-      });
-
-      const exercies = await Exercies.deleteMany({
-        userId: req.params._id,
-      });
-
-      const coach = await User.findById(req.user.id);
-      if (coach.role !== "coach") {
-        next(errorHandler(400, "You are not allowed to perform this action"));
-      }
-      res.status(200).json(coachAccount);
-    } catch (error) {
-      next(error);
+    if (!cust) {
+      return res.status(404).json({ error: "User not found" });
     }
-  } else {
-    next(errorHandler(401, "You are not allowed to perform this action"));
+    const exFile = await Exercies.find({ userId: req.params._id });
+    const exfilenames = exFile.map((ex) => ex.exerciseVideo);
+    const filename = cust.profilePicture;
+    // Delete files from storage
+    if (filename.startsWith("https://firebasestorage.googleapis.com")) {
+      await deleteFileFromStorage(filename);
+    }
+    await deleteManyFilesFromStorage(exfilenames);
+
+    // Delete documents from database
+    await User.findByIdAndDelete(req.params._id);
+    await AddCustomerInfo.deleteMany({ userId: req.params._id });
+    await Subscribe.findByIdAndDelete(req.params._id);
+    await Diet.deleteMany({ userId: req.params._id });
+    await Customer.deleteMany({ userId: req.params._id });
+    await CustomerExercies.deleteMany({ userId: req.params._id });
+    await SetExerciesToCustomer.deleteMany({ userId: req.params._id });
+    await Exercies.deleteMany({ userId: req.params._id });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
   }
 };
