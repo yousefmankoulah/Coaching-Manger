@@ -28,7 +28,7 @@ export default function Plans() {
           publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
         ></stripe-pricing-table>
       </div>
-      {/* <div className="grid grid-flow-col lg:grid-rows-2 md:grid-rows-3 sm:grid-rows-3 xs:grid-rows-6 gap-2 justify-center mt-10">
+      <div className="grid grid-cols-3 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-2 mt-10 max-w-6xl mr-auto ml-auto">
         {formData &&
           formData.length > 0 &&
           formData.map((plan) => (
@@ -36,16 +36,35 @@ export default function Plans() {
               key={plan._id}
               className="bg-white shadow-md rounded-lg p-6 xl:w-96 lg:w-90 md-80" // Increased padding and width
             >
-              <h3 className="text-xl font-bold text-center">{plan.name}</h3>
-              <p>The Plan Price: ${plan.price}</p>
-              <p>Valid For: {plan.validityDays}</p>
-              <p>Number of Customers: {plan.customersNumber}</p>
-              <Link to={`/subscribe/${plan._id}`}>
-                <Button>Checkout</Button>
-              </Link>
+              <h3 className="text-xl font-bold text-left mb-7 mt-5">
+                {plan.name}
+              </h3>
+              <p className="font-thin font-mono">
+                Valid For: {plan.validityDays} days
+              </p>
+              <p className="font-thin font-mono">
+                You can create up to{" "}
+                <span className="font-bold">{plan.customersNumber}</span>{" "}
+                customers accounts
+              </p>
+              <div
+                className="whitespace-nowrap font-medium text-gray-900 mt-6 mb-4"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <span className="text-4xl font-bold font-mono">
+                  ${plan.price}
+                </span>
+                <span className="ml-3 font-thin">
+                  per
+                  <br /> months
+                </span>
+              </div>
+              <Button className="w-full">
+                <Link to={`/subscribe/${plan._id}`}>Checkout</Link>
+              </Button>
             </div>
           ))}
-      </div> */}
+      </div>
     </div>
   );
 }
