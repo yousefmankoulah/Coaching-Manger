@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Alert, Button } from "flowbite-react";
+import { Link } from "react-router-dom";
+import { Button } from "flowbite-react";
 import { HiOutlineCheck } from "react-icons/hi";
 
 export default function Plans() {
@@ -138,7 +138,12 @@ export default function Plans() {
                 )}
               </div>
               <Button className="w-full">
-                <Link to={`/subscribe/${plan._id}`}>Checkout</Link>
+                <Link
+                  className="w-full font-bold text-lg"
+                  to={`/subscribe/${plan._id}`}
+                >
+                  Subscribe Now
+                </Link>
               </Button>
             </div>
           ))}

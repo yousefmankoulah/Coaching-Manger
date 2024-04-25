@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { Alert, Label, TextInput, Button, Modal } from "flowbite-react";

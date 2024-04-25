@@ -46,3 +46,5 @@ const SubscribeComponent = ({ plan }) => {
 };
 
 export default SubscribeComponent;
+
+

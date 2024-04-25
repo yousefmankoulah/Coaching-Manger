@@ -21,6 +21,15 @@ export const plansYearly = async (req, res, next) => {
   }
 };
 
+export const getAPlan = async (req, res, next) => {
+  try {
+    const plans = await Plan.findById(req.params._id);
+    res.json(plans);
+  } catch (err) {
+    next(err);
+  }
+};
+
 /*********** create subscription ************/
 
 const stripeSession = async (plan) => {
