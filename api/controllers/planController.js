@@ -3,9 +3,18 @@ import Stripe from "stripe";
 
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
-export const plans = async (req, res, next) => {
+export const plansMonthly = async (req, res, next) => {
   try {
-    const plans = await Plan.find().sort({ price: 1 });
+    const plans = await Plan.find({ validityDays: 30 }).sort({ price: 1 });
+    res.json(plans);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const plansYearly = async (req, res, next) => {
+  try {
+    const plans = await Plan.find({ validityDays: 365 }).sort({ price: 1 });
     res.json(plans);
   } catch (err) {
     next(err);
