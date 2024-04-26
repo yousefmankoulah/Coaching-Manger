@@ -14,7 +14,7 @@ router.get("/plans", plansMonthly);
 router.get("/plansYearly", plansYearly);
 router.get("/getAPlan/:_id", getAPlan);
 
-router.post("/create-subscription", createSubscription);
+router.post("/create-subscription/:_id", createSubscription);
 router.post("/payment-success", paymentSuccess);
 
 export default router;

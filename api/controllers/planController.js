@@ -56,13 +56,7 @@ const stripeSession = async (plan) => {
 
 export const createSubscription = async (req, res, next) => {
   const { plan } = req.body;
-  let planId = null;
-  if (plan === 10) planId = "66241631bf573af430262dcc";
-  // Assuming 'basic' is an ID from your Plan model
-  else if (plan === 50) planId = "6624164ebf573af430262dcd";
-  else if (plan === 100) planId = "66241684bf573af430262dce";
-  else if (plan === 500) planId = "6624169fbf573af430262dcf";
-  else if (plan === 1000) planId = "662416b8bf573af430262dd0";
+  let planId = req.params._id;
 
   try {
     const session = await stripeSession(planId);
