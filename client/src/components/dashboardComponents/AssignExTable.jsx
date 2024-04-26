@@ -115,8 +115,18 @@ export default function AssignExTable() {
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 {customer && customer.customerId && (
                   <>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
-                      {customer.customerId.customerName}
+                    <Table.Cell
+                      className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50"
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <img
+                        src={customer.customerId.profilePicture}
+                        className="rounded-3xl w-10 h-10 float-left"
+                        alt="Customer Profile Picture"
+                      />
+                      <span className="text-center ml-4">
+                        {customer.customerId.customerName}
+                      </span>
                     </Table.Cell>
                     <Table.Cell className="light:bg-slate-50">
                       {customer.exerciseId.exerciseName}

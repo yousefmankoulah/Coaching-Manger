@@ -175,7 +175,7 @@ export default function ExercisesTable() {
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white light:bg-slate-50">
                       {customer.exerciseName}
                     </Table.Cell>
-                    <Table.Cell className="light:bg-slate-50">
+                    <Table.Cell className="light:bg-slate-50 overflow-hidden">
                       {customer.exerciseDescription}
                     </Table.Cell>
                     <Table.Cell className="light:bg-slate-50">
