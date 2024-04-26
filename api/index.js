@@ -15,10 +15,28 @@ import planRoute from "./routes/planRoute.js";
 import bodyParser from "body-parser";
 import helmet from "helmet";
 import morgan from "morgan";
+import { Subscribe } from "./models/userModel.js";
 
 dotenv.config();
 
-//firebase storage
+//subscribe activity
+const updateSubscribe = async (req, res, next) => {
+  const subscribe = await Subscribe.find();
+  const today = new Date();
+  try {
+    subscribe.map(async (sub) => {
+      if (today > sub.endDate) {
+        sub.isActive = false;
+        await sub.save();
+      } else {
+        sub.isActive = true;
+        await sub.save();
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 //Connect with database
 
@@ -30,35 +48,6 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
-//Delete Data after 45 days
-// const deleteData = async () => {
-//   const diet = await Diet.find();
-//   for (let i = 0; i < diet.length; i++) {
-//     const date = new Date(diet[i].createdAt);
-//     if (date.getDate() === new Date().getDate() - 120) {
-//       await Diet.findByIdAndDelete(diet[i]._id);
-//     }
-//   }
-
-//   const customerExercies = await CustomerExercies.find();
-//   for (let i = 0; i < customerExercies.length; i++) {
-//     const date = new Date(customerExercies[i].createdAt);
-//     if (date.getDate() === new Date().getDate() - 120) {
-//       await CustomerExercies.findByIdAndDelete(customerExercies[i]._id);
-//     }
-//   }
-
-//   const setExerciesToCustomer = await SetExerciesToCustomer.find();
-//   for (let i = 0; i < setExerciesToCustomer.length; i++) {
-//     const date = new Date(setExerciesToCustomer[i].createdAt);
-//     if (date.getDate() === new Date().getDate() - 120) {
-//       await SetExerciesToCustomer.findByIdAndDelete(
-//         setExerciesToCustomer[i]._id
-//       );
-//     }
-//   }
-// };
 
 //API
 const app = express();
@@ -73,7 +62,8 @@ app.use(cookieParser());
 //start server
 app.listen(3000, () => {
   console.log(`Server running at 3000`);
-  // deleteData();
+  // update the subscribe activity
+  updateSubscribe();
 });
 
 //Routes

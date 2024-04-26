@@ -2,10 +2,10 @@ import express from "express";
 import { verifyToken } from "../utils/verifyUser.js";
 import {
   createSubscription,
-  paymentSuccess,
   plansMonthly,
   plansYearly,
   getAPlan,
+  getTheSubscriptions,
 } from "../controllers/planController.js";
 
 const router = express.Router();
@@ -13,8 +13,8 @@ const router = express.Router();
 router.get("/plans", plansMonthly);
 router.get("/plansYearly", plansYearly);
 router.get("/getAPlan/:_id", getAPlan);
+router.get("/getTheSubscriptions/:_id", verifyToken, getTheSubscriptions);
 
-router.post("/create-subscription/:_id", createSubscription);
-router.post("/payment-success", paymentSuccess);
+router.post("/create-subscription/:_id", verifyToken, createSubscription);
 
 export default router;

@@ -1,5 +1,6 @@
 import { User, Plan, Subscribe } from "../models/userModel.js";
 import Stripe from "stripe";
+import { errorHandler } from "../utils/error.js";
 
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
@@ -30,90 +31,84 @@ export const getAPlan = async (req, res, next) => {
   }
 };
 
+export const getTheSubscriptions = async (req, res, next) => {
+  try {
+    const plans = await Subscribe.find({ user: req.params._id });
+    res.json(plans);
+  } catch (err) {
+    next(err);
+  }
+};
+
 /*********** create subscription ************/
 
-const stripeSession = async (plan) => {
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price: plan,
-          quantity: 1,
-        },
-      ],
-      success_url:
-        "https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/success",
-      cancel_url:
-        "https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/cancel",
-    });
-    return session;
-  } catch (e) {
-    return e;
-  }
-};
-
 export const createSubscription = async (req, res, next) => {
-  const { plan } = req.body;
-  let planId = req.params._id;
-
   try {
-    const session = await stripeSession(planId);
+    if (!req.user || !req.user.id) {
+      return next(errorHandler(401, "Please sign in."));
+    }
+
     const user = await User.findById(req.user.id);
-
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return next(errorHandler(404, "User not found."));
     }
 
-    const subscription = new Subscribe({
-      user: user,
-      plan: planId,
-      startDate: new Date(),
-      endDate: moment().add(30, "days").toDate(), // Defaulting to 30 days for example
-      isActive: true,
-    });
+    let existingSubscription = await Subscribe.findOne({ user: req.user.id });
+    const today = new Date();
+    const planId = req.params._id;
+    const plan = await Plan.findById(planId);
 
-    await subscription.save();
+    if (!plan) {
+      return res.status(404).json({ error: "Plan not found" });
+    }
 
-    return res.json({ session });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
+    if (typeof plan.validityDays !== "number") {
+      return res
+        .status(400)
+        .json({ error: "Invalid validation days in the plan" });
+    }
 
-/************ payment success ********/
+    const endDate = new Date(
+      today.getTime() + plan.validityDays * 24 * 60 * 60 * 1000
+    );
 
-export const paymentSuccess = async (req, res, next) => {
-  const { sessionId } = req.body;
+    if (isNaN(endDate.getTime())) {
+      return res
+        .status(500)
+        .json({ error: "Failed to calculate the end date" });
+    }
 
-  try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-    if (session.payment_status === "paid") {
-      const subscriptionId = session.subscription;
-      try {
-        const stripeSubscription = await stripe.subscriptions.retrieve(
-          subscriptionId
-        );
-        const subscription = await Subscribe.findOne({
-          stripeSubscriptionId: subscriptionId, // Assuming this field exists in your schema
-        });
-
-        subscription.endDate = moment
-          .unix(stripeSubscription.current_period_end)
-          .toDate();
-        await subscription.save();
-
-        return res.json({ message: "Payment successful" });
-      } catch (error) {
-        console.error("Error retrieving subscription:", error);
-        return res.status(500).json({ error: "Error retrieving subscription" });
+    if (existingSubscription) {
+      if (
+        existingSubscription.isActive &&
+        today < existingSubscription.endDate
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Active subscription already exists." });
       }
+
+      existingSubscription.plan = planId;
+      existingSubscription.startDate = today;
+      existingSubscription.endDate = endDate;
+      existingSubscription.isActive = true;
+      await existingSubscription.save();
+
+      return res.status(200).json(existingSubscription);
     } else {
-      return res.json({ message: "Payment failed" });
+      const newSubscription = new Subscribe({
+        user: req.user.id,
+        plan: planId,
+        startDate: today,
+        endDate: endDate,
+        isActive: today < endDate,
+      });
+
+      await newSubscription.save();
+      return res.status(201).json(newSubscription);
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Internal server error:", error);
+    next(errorHandler(500, "Internal server error"));
   }
 };
