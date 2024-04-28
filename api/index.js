@@ -16,7 +16,9 @@ import bodyParser from "body-parser";
 import helmet from "helmet";
 import morgan from "morgan";
 import { Subscribe } from "./models/userModel.js";
+import Stripe from "stripe";
 
+const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 dotenv.config();
 
 //subscribe activity

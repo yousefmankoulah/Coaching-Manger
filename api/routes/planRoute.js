@@ -6,7 +6,9 @@ import {
   plansYearly,
   getAPlan,
   getTheSubscriptions,
+  paySubscription,
 } from "../controllers/planController.js";
+
 
 const router = express.Router();
 
@@ -15,6 +17,8 @@ router.get("/plansYearly", plansYearly);
 router.get("/getAPlan/:_id", getAPlan);
 router.get("/getTheSubscriptions/:_id", verifyToken, getTheSubscriptions);
 
-router.post("/create-subscription/:_id", verifyToken, createSubscription);
+router.post("/create-subscription/:_id", paySubscription);
+
+
 
 export default router;

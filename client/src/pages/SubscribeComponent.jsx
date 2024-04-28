@@ -1,78 +1,78 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { CardElement, Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout,
+} from "@stripe/react-stripe-js";
+import { useState, useEffect, useCallback } from "react";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
 
 const SubscribeComponent = () => {
-  const [status, setStatus] = useState("");
-  const { currentUser } = useSelector((state) => state.user);
-  const { id } = useParams();
+  const [error, setError] = useState(null);
+
+  const { planId } = useParams();
   const [formData, setFormData] = useState({});
+  const [clientSecret, setClientSecret] = useState(null);
 
   useEffect(() => {
-    try {
-      const fetchCustomerInfo = async () => {
-        try {
-          const res = await fetch(
-            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/getAPlan/${id}`
-          );
-          const data = await res.json();
-          if (res.ok) {
-            setFormData(data);
-          } else {
-            // Handle unauthorized access or other errors
-            console.error("Error fetching customers:", data.message);
-          }
-        } catch (error) {
-          console.log(error.message);
+    const fetchCustomerInfo = async () => {
+      try {
+        const response = await fetch(
+          `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/getAPlan/${planId}`
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setFormData(data);
+        } else {
+          throw new Error("Error fetching plan details: " + data.message);
         }
-      };
-      fetchCustomerInfo();
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-
-  const handleSubscribe = async () => {
-    try {
-      const requestData = {
-        plan: id,
-        userId: currentUser._id,
-      };
-
-      const response = await fetch(
-        "https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/create-subscription/${id}",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        window.location.href = data.session.url;
-      } else {
-        throw new Error(data.message || "Failed to create subscription.");
+      } catch (error) {
+        setError(error.message);
+        console.error("Fetch error:", error.message);
       }
-    } catch (error) {
-      setStatus("Failed to create subscription.");
-      console.error("Error:", error);
-    }
-  };
+    };
+    fetchCustomerInfo();
+  }, [planId]);
 
+  const fetchClientSecret = useCallback(() => {
+    fetch(
+      `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/create-subscription/${planId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP status ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data.clientSecret) {
+          throw new Error("Client secret is missing in the response");
+        }
+        console.log("Client secret:", data.clientSecret);
+        setClientSecret(data.clientSecret);
+        setError(null); // Clear any previous errors
+      })
+      .catch((error) => {
+        console.error("Error fetching client secret:", error);
+        setError(error.message);
+      });
+  }, [planId]); // Make sure to include token in the dependency array
+
+  const options = { fetchClientSecret };
   return (
-    <div>
-      <h1>Subscribe to {formData.name}</h1>
-      <Elements>
-        <CardElement />
-      </Elements>
-
-      <button onClick={handleSubscribe}>Subscribe</button>
-      {status && <p>{status}</p>}
+    <div id="checkout">
+      <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
+        <EmbeddedCheckout />
+      </EmbeddedCheckoutProvider>
     </div>
   );
 };

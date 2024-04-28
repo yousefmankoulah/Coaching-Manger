@@ -57,6 +57,7 @@ const subscriptionSchema = new mongoose.Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   isActive: { type: Boolean, default: true },
+  paymentIntentId: { type: String },
 });
 
 const Plan = mongoose.model("Plan", planSchema);
