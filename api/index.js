@@ -6,9 +6,6 @@ import mongoose from "mongoose";
 import authRoute from "./routes/authRoute.js";
 import addCustomer from "./routes/customerRoute.js";
 import dietRoute from "./routes/dietRoute.js";
-import Diet from "./models/dietModel.js";
-import { CustomerExercies } from "./models/customerModel.js";
-import { SetExerciesToCustomer } from "./models/exerciesModel.js";
 import exerciesRoute from "./routes/exerciesRoute.js";
 import customerInfoRoute from "./routes/customerInfoRoute.js";
 import planRoute from "./routes/planRoute.js";
@@ -17,6 +14,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { Subscribe } from "./models/userModel.js";
 import Stripe from "stripe";
+import { Plan } from "./models/userModel.js";
 
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 dotenv.config();
@@ -96,3 +94,45 @@ app.use((err, req, res, next) => {
     message,
   });
 });
+
+
+app.post('/pay/:planId', async (req, res) => {
+  const {email} = req.body;
+  const plan = await Plan.findbyId(req.params.planId);
+
+  
+  const paymentIntent = await stripe.paymentIntents.create({
+      amount: plan.price * 100,
+      currency: 'usd',
+      // Verify your integration in this guide by including this parameter
+      metadata: {integration_check: 'accept_a_payment'},
+      receipt_email: email,
+    });
+
+    res.json({'client_secret': paymentIntent['client_secret']})
+})
+
+app.post('/sub/:_id', async (req, res) => {
+const {email, payment_method} = req.body;
+const plan = await Plan.findbyId(req.params._id);
+
+
+const customer = await stripe.customers.create({
+  payment_method: payment_method,
+  email: email,
+  invoice_settings: {
+    default_payment_method: payment_method,
+  },
+});
+
+const subscription = await stripe.subscriptions.create({
+  customer: customer.id,
+  items: [{ plan: plan._id }],
+  expand: ['latest_invoice.payment_intent']
+});
+
+const status = subscription['latest_invoice']['payment_intent']['status'] 
+const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
+
+res.json({'client_secret': client_secret, 'status': status});
+})

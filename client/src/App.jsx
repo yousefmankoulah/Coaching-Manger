@@ -31,11 +31,18 @@ import AboutUs from "./pages/AboutUs.jsx";
 import SuccessComponent from "./pages/SuccessComponent.jsx";
 import SubscribeComponent from "./pages/SubscribeComponent.jsx";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
+
 export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Header />
+      <Elements stripe={stripePromise}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
@@ -105,10 +112,17 @@ export default function App() {
             element={<UpdateCustomerInformation />}
           />
           <Route path="/subscribe/:planId" element={<SubscribeComponent />} />
+
+          
           <Route path="/success" element={<SuccessComponent />} />
         </Route>
+       
       </Routes>
+    
+     
+    </Elements>
       <Footer />
+      
     </BrowserRouter>
   );
 }

@@ -35,13 +35,17 @@ export default function Plans() {
   return (
     <div className="min-h-screen mt-20">
       <h1 className="text-5xl font-extrabold mt-10 mb-10 text-center">Plans</h1>
-      <div className="w-85 p-10 rounded-2xl">
+      {/* <div className="w-85 p-10 rounded-2xl">
+        <stripe-pricing-table
+          pricing-table-id="prctbl_1PAM6JJbnMJW8yX92d6P5GDZ"
+          publishable-key="pk_test_51P7igQJbnMJW8yX9hu4HWUyHH2kKWbVgpQ7mquxHGL2DSi4opZP7quqtKeRQocgjBu4etTTCohx5XD4ruXBUwFlL00FY1ryB00"
+        ></stripe-pricing-table>
         <stripe-pricing-table
           pricing-table-id="prctbl_1P8pUfJbnMJW8yX9U4eimD0J"
           publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
-        ></stripe-pricing-table>
-      </div>
-      {/* <div className="flex justify-center items-center h-full">
+        ></stripe-pricing-table> 
+      </div> */}
+      <div className="flex justify-center items-center h-full">
         <div className="inline-flex rounded-md shadow-sm mt-10" role="group">
           <button
             type="button"
@@ -79,7 +83,6 @@ export default function Plans() {
               key={plan._id}
               className="bg-white shadow-md rounded-lg p-6 xl:w-96 lg:w-90 md-80" // Increased padding and width
             >
-              
               <h3 className="text-2xl font-bold text-left mb-7 mt-5">
                 {plan.name}
               </h3>
@@ -138,17 +141,17 @@ export default function Plans() {
                 )}
               </div>
 
-           <Button className="w-full">
+              <Button className="w-full">
                 <Link
                   className="w-full font-bold text-lg"
                   to={`/subscribe/${plan._id}`}
                 >
                   Subscribe Now
                 </Link>
-              </Button> 
+              </Button>
             </div>
           ))}
-      </div> */}
+      </div>
     </div>
   );
 }
