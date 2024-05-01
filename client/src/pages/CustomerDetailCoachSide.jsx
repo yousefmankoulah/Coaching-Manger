@@ -139,7 +139,30 @@ export function CustomerDetailCoachSide() {
     }
   }, [currentUser._id]);
 
-  v
+  const handleDeletePost = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/userCustomer/deleteCustomer/${currentUser._id}/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setCustomers((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen mt-20">
