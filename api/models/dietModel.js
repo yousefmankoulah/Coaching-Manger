@@ -30,6 +30,10 @@ const dietSchema = new mongoose.Schema(
     calorie: {
       type: Number,
     },
+    done: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );

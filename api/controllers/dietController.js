@@ -2,6 +2,7 @@ import { Customer } from "../models/customerModel.js";
 import Diet from "../models/dietModel.js";
 import { errorHandler } from "../utils/error.js";
 import { User } from "../models/userModel.js";
+import { SetExerciesToCustomer } from "../models/exerciesModel.js";
 
 export const createDiet = async (req, res, next) => {
   const { date, time, meal, foodDescription, calorie } = req.body;
@@ -111,5 +112,40 @@ export const deleteDiet = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+};
+
+export const todoList = async (req, res, next) => {
+  try {
+    const now = new Date();
+
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+    const year = now.getFullYear();
+
+    const formattedDate = `${year}-${month}-${day}`;
+    console.log(formattedDate);
+
+    // Fetching the data
+    const diet = await Diet.find({
+      date: formattedDate,
+      customerId: req.params.customerId,
+    });
+    const assigned = await SetExerciesToCustomer.find({
+      date: formattedDate,
+      customerId: req.params.customerId,
+    });
+
+    // Combining both datasets into a single object
+    const response = {
+      diet,
+      assigned,
+    };
+
+    // Correct way to set status and send JSON response
+    res.status(200).json(response);
+  } catch (err) {
+    // Passing errors to the error-handling middleware
+    next(err);
   }
 };
