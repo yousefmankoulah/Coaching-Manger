@@ -2,7 +2,7 @@ import { User, Plan, Subscribe } from "../models/userModel.js";
 import Stripe from "stripe";
 import { errorHandler } from "../utils/error.js";
 
-const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const plansMonthly = async (req, res, next) => {
   try {
@@ -45,11 +45,7 @@ export const getTheSubscriptions = async (req, res, next) => {
 // Main function to create or update a subscription
 export const createSubscription = async (req, res, next) => {
   try {
-    if (!req.user || !req.user.id) {
-      return next(new Error("Please sign in."));
-    }
-
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.params.userId);
     if (!user) {
       return next(new Error("User not found."));
     }
@@ -61,36 +57,31 @@ export const createSubscription = async (req, res, next) => {
       return res.status(404).json({ error: "Plan not found" });
     }
 
-    // const customer = await stripe.customers.create({
-    //   metadata: {
-    //     userId: req.user.id,
-    //     planId: JSON.stringify(planId),
-    //   },
-    // });
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: plan.name,
+            },
+            unit_amount: plan.price * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url:
+        "https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev?success=true",
+      cancel_url:
+        "https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev?canceled=true",
+    });
 
-    // const session = await stripe.checkout.sessions.create({
-    //     line_items: [
-    //       {
-    //         price_data: {
-    //           currency: 'usd',
-    //           product_data: {
-    //             name: plan.name,
-    //           },
-    //           unit_amount: plan.price * 100,
-    //         },
-    //         quantity: 1,
-    //       },
-    //     ],
-    //     mode: 'payment',
-    //   customer: customer.id,
-    //   success_url: `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/checkout-success`,
-    //   cancel_url: `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/cancel`,
-    // });
+    res.json({ url: session.url });
 
-    // // res.redirect(303, session.url);
-    // res.send({ url: session.url });
-
-    let existingSubscription = await Subscribe.findOne({ user: req.user.id });
+    let existingSubscription = await Subscribe.findOne({
+      user: req.params.userId,
+    });
     const today = new Date();
 
     if (typeof plan.validityDays !== "number") {
@@ -107,6 +98,26 @@ export const createSubscription = async (req, res, next) => {
         .status(500)
         .json({ error: "Failed to calculate the end date" });
     }
+
+    // const session = await stripe.checkout.sessions.create({
+    //   line_items: [
+    //     {
+    //       price_data: {
+    //         currency: "usd", // Specify the currency
+    //         product_data: {
+    //           name: plan.name, // Optionally include the product name
+    //         },
+    //         unit_amount: plan.price * 100, // Stripe expects the price in cents, so multiply by 100
+    //       },
+    //       quantity: 1,
+    //     },
+    //   ],
+    //   mode: "payment",
+    //   success_url: `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev?success=true`,
+    //   cancel_url: `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev?canceled=true`,
+    // });
+
+    // res.redirect(303, session.url);
 
     if (existingSubscription) {
       if (
@@ -125,8 +136,29 @@ export const createSubscription = async (req, res, next) => {
       // existingSubscription.paymentIntentId = paymentIntent.id;
       await existingSubscription.save();
     } else {
+      // const session = await stripe.checkout.sessions.create({
+      //   line_items: [
+      //     {
+      //       price_data: {
+      //         currency: "usd", // Specify the currency
+      //         product_data: {
+      //           name: plan.name, // Optionally include the product name
+      //           // You can also add other product details here if necessary
+      //         },
+      //         unit_amount: plan.price * 100, // Stripe expects the price in cents, so multiply by 100
+      //       },
+      //       quantity: 1,
+      //     },
+      //   ],
+      //   mode: "payment",
+      //   success_url: `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev?success=true`,
+      //   cancel_url: `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev?canceled=true`,
+      // });
+
+      // res.redirect(303, session.url);
+
       existingSubscription = new Subscribe({
-        user: req.user.id,
+        user: req.params.userId,
         plan: planId,
         startDate: today,
         endDate: endDate,
@@ -146,37 +178,4 @@ export const createSubscription = async (req, res, next) => {
     console.error("Internal server error:", error);
     next(new Error("Internal server error"));
   }
-};
-
-export const paySubscription = async (req, res, next) => {
-  const planId = req.params._id;
-  const plan = await Plan.findById(planId);
-
-
-  const customer = await stripe.customers.create({
-    metadata: {
-      userId: req.body.userId,
-      planId: JSON.stringify(planId),
-    },
-  });
-
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: plan.name,
-          },
-          unit_amount: plan.price * 100,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    ui_mode: "embedded",
-    return_url: "https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev",
-  });
-
-  res.send({ clientSecret: session.client_secret });
 };

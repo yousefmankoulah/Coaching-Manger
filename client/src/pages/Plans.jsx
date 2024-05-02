@@ -1,11 +1,67 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "flowbite-react";
+import { Alert, Button } from "flowbite-react";
 import { HiOutlineCheck } from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
+import { signInFailure } from "../redux/user/userSlice";
 
 export default function Plans() {
   const [formData, setFormData] = useState({});
   const [month, setMonth] = useState(true);
+
+  const {
+    error: errorMessage,
+    currentUser,
+    token,
+  } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search);
+
+    if (query.get("success")) {
+      setMessage("Order placed! You will receive an email confirmation.");
+    }
+
+    if (query.get("canceled")) {
+      setMessage(
+        "Order canceled -- continue to shop around and checkout when you're ready."
+      );
+    }
+  }, []);
+
+  const Message = ({ message }) => (
+    <section>
+      <p>{message}</p>
+    </section>
+  );
+
+  const createSubscription = async (planId) => {
+    try {
+      if (!currentUser) {
+        console.error("User not authenticated");
+        return;
+      }
+
+      const res = await fetch(
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/create-subscription/${currentUser._id}/${planId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      await res.json();
+    } catch (error) {
+      dispatch(signInFailure(error.message)); // Dispatch signInFailure on error
+    }
+  };
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -141,16 +197,24 @@ export default function Plans() {
                 )}
               </div>
 
-              <Button className="w-full">
-                <Link
-                  className="w-full font-bold text-lg"
-                  to={`/subscribe/${plan._id}`}
+              <div key={plan._id}>
+                <Button
+                  className="w-full"
+                  onClick={() => createSubscription(plan._id)}
+                  type="submit"
                 >
                   Subscribe Now
-                </Link>
-              </Button>
+                </Button>
+              </div>
             </div>
           ))}
+        {errorMessage && (
+          <Alert className="mt-5" color="failure">
+            {errorMessage}
+          </Alert>
+        )}
+
+        {message && <Message message={message} />}
       </div>
     </div>
   );
