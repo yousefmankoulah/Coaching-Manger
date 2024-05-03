@@ -16,6 +16,7 @@ export function Dashboard() {
   const [diet, setDiet] = useState([]);
   const [assignEX, setAssignEX] = useState([]);
   const [customerInfo, setCustomerInfo] = useState({});
+  const [todo, setTodo] = useState({});
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -139,6 +140,30 @@ export function Dashboard() {
       }
     };
 
+    const fetchTodoList = async () => {
+      try {
+        if (currentUser && currentUser._id) {
+          const res = await fetch(
+            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/diet/todoList/${currentUser._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setTodo(data);
+          } else {
+            // Handle unauthorized access or other errors
+            console.error("Error fetching customers:", data.message);
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     if (currentUser?.role === "coach") {
       fetchCustomers();
       fetchExercise();
@@ -148,12 +173,14 @@ export function Dashboard() {
       fetchAssignEx();
       fetchDiet();
       fetchCustomerInfo();
+      fetchTodoList();
     }
   }, [currentUser]);
 
   const handleCardClick = (cardName) => {
     setSelectedCard(cardName);
   };
+ 
 
   return (
     <div className="min-h-screen mt-20">
@@ -305,6 +332,19 @@ export function Dashboard() {
               )}
             </Card>
           </div>
+
+
+              <>
+                {todo && todo.length > 0 && 
+                 
+                    todo.map((todo) => (
+                      <li>{todo.diet.meal}</li>
+                    ))
+                   
+                 
+                }
+              </>
+
           <div className="grid grid-flow-col grid-rows-1 h-90 gap-2 justify-center">
             <Card
               className="max-w-sm"

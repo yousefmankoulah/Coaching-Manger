@@ -6,6 +6,7 @@ import {
   plansYearly,
   getAPlan,
   getTheSubscriptions,
+  webhook,
 } from "../controllers/planController.js";
 
 const router = express.Router();
@@ -16,5 +17,7 @@ router.get("/getAPlan/:_id", getAPlan);
 router.get("/getTheSubscriptions/:_id", verifyToken, getTheSubscriptions);
 
 router.post("/create-subscription/:userId/:_id", createSubscription);
+
+router.post("/webhook", express.raw({ type: "application/json" }), webhook);
 
 export default router;

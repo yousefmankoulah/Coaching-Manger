@@ -124,7 +124,6 @@ export const todoList = async (req, res, next) => {
     const year = now.getFullYear();
 
     const formattedDate = `${year}-${month}-${day}`;
-    console.log(formattedDate);
 
     // Fetching the data
     const diet = await Diet.find({

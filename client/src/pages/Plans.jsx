@@ -4,6 +4,10 @@ import { Alert, Button } from "flowbite-react";
 import { HiOutlineCheck } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { signInFailure } from "../redux/user/userSlice";
+import { loadStripe } from "@stripe/stripe-js";
+import { useStripe } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
 
 export default function Plans() {
   const [formData, setFormData] = useState({});
@@ -18,6 +22,58 @@ export default function Plans() {
   const dispatch = useDispatch();
 
   const [message, setMessage] = useState("");
+
+  const stripe = useStripe();
+
+  useEffect(() => {
+    const handleCheckoutSessionCompleted = async (event) => {
+      const { status, start_date, expiration_date } = event.detail;
+      const customerEmail = currentUser.email; // Assuming you have access to the customer's email
+
+      try {
+        if (!stripe) {
+          throw new Error("Stripe.js has not loaded yet.");
+        }
+
+        // Send data to your server endpoint
+        const response = await fetch(
+          "https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/webhook",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              status,
+              start_date,
+              expiration_date,
+              customerEmail,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          console.log("Checkout session data sent to server");
+        } else {
+          console.error("Failed to send data to server");
+        }
+      } catch (error) {
+        console.error("Error sending data to server:", error);
+      }
+    };
+
+    document.addEventListener(
+      "checkout.session.completed",
+      handleCheckoutSessionCompleted
+    );
+
+    return () => {
+      document.removeEventListener(
+        "checkout.session.completed",
+        handleCheckoutSessionCompleted
+      );
+    };
+  }, [currentUser, stripe]);
 
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
@@ -52,7 +108,7 @@ export default function Plans() {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
+            // Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
             "Content-Type": "application/json",
           },
         }
@@ -91,14 +147,29 @@ export default function Plans() {
   return (
     <div className="min-h-screen mt-20">
       <h1 className="text-5xl font-extrabold mt-10 mb-10 text-center">Plans</h1>
+
+      {currentUser ? (
+        <stripe-pricing-table
+          pricing-table-id="prctbl_1PAM6JJbnMJW8yX92d6P5GDZ"
+          publishable-key="pk_test_51P7igQJbnMJW8yX9hu4HWUyHH2kKWbVgpQ7mquxHGL2DSi4opZP7quqtKeRQocgjBu4etTTCohx5XD4ruXBUwFlL00FY1ryB00"
+          customer-email={currentUser.email}
+        ></stripe-pricing-table>
+      ) : (
+        <>
+          <h3>Please Log in First</h3>
+        </>
+      )}
+
       {/* <div className="w-85 p-10 rounded-2xl">
         <stripe-pricing-table
           pricing-table-id="prctbl_1PAM6JJbnMJW8yX92d6P5GDZ"
           publishable-key="pk_test_51P7igQJbnMJW8yX9hu4HWUyHH2kKWbVgpQ7mquxHGL2DSi4opZP7quqtKeRQocgjBu4etTTCohx5XD4ruXBUwFlL00FY1ryB00"
+          customer-email="{{CUSTOMER_EMAIL}}"
         ></stripe-pricing-table>
         <stripe-pricing-table
           pricing-table-id="prctbl_1P8pUfJbnMJW8yX9U4eimD0J"
           publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
+          customer-email="{{CUSTOMER_EMAIL}}"
         ></stripe-pricing-table> 
       </div> */}
       <div className="flex justify-center items-center h-full">
