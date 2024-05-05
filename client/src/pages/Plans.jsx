@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Button } from "flowbite-react";
 import { HiOutlineCheck } from "react-icons/hi";
-import { useDispatch, useSelector } from "react-redux";
-import { signInFailure } from "../redux/user/userSlice";
+import { useSelector } from "react-redux";
+
 import { loadStripe } from "@stripe/stripe-js";
 import { useStripe } from "@stripe/react-stripe-js";
 
@@ -13,111 +13,60 @@ export default function Plans() {
   const [formData, setFormData] = useState({});
   const [month, setMonth] = useState(true);
 
-  const {
-    error: errorMessage,
-    currentUser,
-    token,
-  } = useSelector((state) => state.user);
-
-  const dispatch = useDispatch();
-
-  const [message, setMessage] = useState("");
-
-  const stripe = useStripe();
-
-  useEffect(() => {
-    const handleCheckoutSessionCompleted = async (event) => {
-      const { status, start_date, expiration_date } = event.detail;
-      const customerEmail = currentUser.email; // Assuming you have access to the customer's email
-
-      try {
-        if (!stripe) {
-          throw new Error("Stripe.js has not loaded yet.");
-        }
-
-        // Send data to your server endpoint
-        const response = await fetch(
-          "https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/webhook",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              status,
-              start_date,
-              expiration_date,
-              customerEmail,
-            }),
-          }
-        );
-
-        if (response.ok) {
-          console.log("Checkout session data sent to server");
-        } else {
-          console.error("Failed to send data to server");
-        }
-      } catch (error) {
-        console.error("Error sending data to server:", error);
-      }
-    };
-
-    document.addEventListener(
-      "checkout.session.completed",
-      handleCheckoutSessionCompleted
-    );
-
-    return () => {
-      document.removeEventListener(
-        "checkout.session.completed",
-        handleCheckoutSessionCompleted
-      );
-    };
-  }, [currentUser, stripe]);
-
-  useEffect(() => {
-    // Check to see if this is a redirect back from Checkout
-    const query = new URLSearchParams(window.location.search);
-
-    if (query.get("success")) {
-      setMessage("Order placed! You will receive an email confirmation.");
-    }
-
-    if (query.get("canceled")) {
-      setMessage(
-        "Order canceled -- continue to shop around and checkout when you're ready."
-      );
-    }
-  }, []);
-
-  const Message = ({ message }) => (
-    <section>
-      <p>{message}</p>
-    </section>
+  const { error: errorMessage, currentUser } = useSelector(
+    (state) => state.user
   );
 
-  const createSubscription = async (planId) => {
-    try {
-      if (!currentUser) {
-        console.error("User not authenticated");
-        return;
-      }
+  // const stripe = useStripe();
 
-      const res = await fetch(
-        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/plans/create-subscription/${currentUser._id}/${planId}`,
-        {
-          method: "POST",
-          headers: {
-            // Authorization: `Bearer ${import.meta.env.VITE_STRIPE_SECRET_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      await res.json();
-    } catch (error) {
-      dispatch(signInFailure(error.message)); // Dispatch signInFailure on error
-    }
-  };
+  // useEffect(() => {
+  //   const handleCheckoutSessionCompleted = async (event) => {
+  //     const { status, start_date, expiration_date } = event.detail;
+  //     const customerEmail = currentUser ? currentUser.email : null;
+
+  //     try {
+  //       if (!stripe) {
+  //         throw new Error("Stripe.js has not loaded yet.");
+  //       }
+
+  //       // Send data to your server endpoint
+  //       const response = await fetch("/api/plans/webhook", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           status,
+  //           start_date,
+  //           expiration_date,
+  //           customerEmail,
+  //         }),
+  //       });
+
+  //       if (response.ok) {
+  //         console.log("Checkout session data sent to server");
+  //         // Add any frontend actions here, e.g., redirect to a thank you page
+  //         window.location.href = "/thank-you";
+  //       } else {
+  //         console.error("Failed to send data to server");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error sending data to server:", error);
+  //     }
+  //   };
+
+  //   window.addEventListener(
+  //     "checkout.session.completed",
+  //     handleCheckoutSessionCompleted
+  //   );
+
+  //   return () => {
+  //     window.removeEventListener(
+  //       "checkout.session.completed",
+  //       handleCheckoutSessionCompleted
+  //     );
+  //   };
+  // }, [currentUser, stripe]);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -155,138 +104,131 @@ export default function Plans() {
           customer-email={currentUser.email}
         ></stripe-pricing-table>
       ) : (
+        //  <div className="w-85 p-10 rounded-2xl">
+        //
+        //     <stripe-pricing-table
+        //       pricing-table-id="prctbl_1P8pUfJbnMJW8yX9U4eimD0J"
+        //       publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
+        //       customer-email={currentUser.email}
+        //     ></stripe-pricing-table>
+        //   </div>
         <>
-          <h3>Please Log in First</h3>
-        </>
-      )}
-
-      {/* <div className="w-85 p-10 rounded-2xl">
-        <stripe-pricing-table
-          pricing-table-id="prctbl_1PAM6JJbnMJW8yX92d6P5GDZ"
-          publishable-key="pk_test_51P7igQJbnMJW8yX9hu4HWUyHH2kKWbVgpQ7mquxHGL2DSi4opZP7quqtKeRQocgjBu4etTTCohx5XD4ruXBUwFlL00FY1ryB00"
-          customer-email="{{CUSTOMER_EMAIL}}"
-        ></stripe-pricing-table>
-        <stripe-pricing-table
-          pricing-table-id="prctbl_1P8pUfJbnMJW8yX9U4eimD0J"
-          publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
-          customer-email="{{CUSTOMER_EMAIL}}"
-        ></stripe-pricing-table> 
-      </div> */}
-      <div className="flex justify-center items-center h-full">
-        <div className="inline-flex rounded-md shadow-sm mt-10" role="group">
-          <button
-            type="button"
-            className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg 
+          <div className="flex justify-center items-center h-full">
+            <div
+              className="inline-flex rounded-md shadow-sm mt-10"
+              role="group"
+            >
+              <button
+                type="button"
+                className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg 
       ${
         month
           ? "hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
           : "dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
       }`}
-            onClick={handleMonthClick} // Call handleMonthClick when Monthly button is clicked
-          >
-            Monthly
-          </button>
+                onClick={handleMonthClick} // Call handleMonthClick when Monthly button is clicked
+              >
+                Monthly
+              </button>
 
-          <button
-            type="button"
-            className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-lg 
+              <button
+                type="button"
+                className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-lg 
       ${
         !month
           ? "hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
           : "dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
       }`}
-            onClick={handleYearClick} // Call handleYearClick when Yearly button is clicked
-          >
-            Yearly
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-2 mb-10 mt-10 max-w-6xl mr-auto ml-auto">
-        {formData &&
-          formData.length > 0 &&
-          formData.map((plan) => (
-            <div
-              key={plan._id}
-              className="bg-white shadow-md rounded-lg p-6 xl:w-96 lg:w-90 md-80" // Increased padding and width
-            >
-              <h3 className="text-2xl font-bold text-left mb-7 mt-5">
-                {plan.name}
-              </h3>
-              <p className="font-thin font-mono">
-                Valid For: {plan.validityDays} days
-              </p>
-              <p className="font-thin font-mono">
-                You can create up to{" "}
-                <span className="font-bold">{plan.customersNumber}</span>{" "}
-                customers accounts
-              </p>
-              <br />
-              <div className="flex items-center">
-                <HiOutlineCheck className="text-green-500 mr-2" />
-                <span>Create any Exercise needed</span>
-              </div>
-              <div className="flex items-center">
-                <HiOutlineCheck className="text-green-500 mr-2" />
-                <span>Create any Diet Plan</span>
-              </div>
-              <div className="flex items-center">
-                <HiOutlineCheck className="text-green-500 mr-2" />
-                <span>
-                  Create up to {plan.customersNumber} Customers account
-                </span>
-              </div>
-              <div className="flex items-center">
-                <HiOutlineCheck className="text-green-500 mr-2" />
-                <span>Full control and management tools</span>
-              </div>
-              <div className="flex items-center">
-                <HiOutlineCheck className="text-green-500 mr-2" />
-                <span>Update and Delete your Information</span>
-              </div>
-              <div className="flex items-center">
-                <HiOutlineCheck className="text-green-500 mr-2" />
-                <span>Cancel subscription anytime</span>
-              </div>
-              <div
-                className="whitespace-nowrap font-medium text-gray-900 mt-6 mb-4"
-                style={{ display: "flex", alignItems: "center" }}
+                onClick={handleYearClick} // Call handleYearClick when Yearly button is clicked
               >
-                <span className="text-4xl font-bold font-mono">
-                  ${plan.price}
-                </span>
-                {month === true ? (
-                  <span className="ml-3 font-thin">
-                    per
-                    <br /> Months
-                  </span>
-                ) : (
-                  <span className="ml-3 font-thin">
-                    per
-                    <br /> Year
-                  </span>
-                )}
-              </div>
-
-              <div key={plan._id}>
-                <Button
-                  className="w-full"
-                  onClick={() => createSubscription(plan._id)}
-                  type="submit"
-                >
-                  Subscribe Now
-                </Button>
-              </div>
+                Yearly
+              </button>
             </div>
-          ))}
-        {errorMessage && (
-          <Alert className="mt-5" color="failure">
-            {errorMessage}
-          </Alert>
-        )}
+          </div>
 
-        {message && <Message message={message} />}
-      </div>
+          <div className="grid grid-cols-3 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-2 mb-10 mt-10 max-w-6xl mr-auto ml-auto">
+            {formData &&
+              formData.length > 0 &&
+              formData.map((plan) => (
+                <div
+                  key={plan._id}
+                  className="bg-white shadow-md rounded-lg p-6 xl:w-96 lg:w-90 md-80" // Increased padding and width
+                >
+                  <h3 className="text-2xl font-bold text-left mb-7 mt-5">
+                    {plan.name}
+                  </h3>
+                  <p className="font-thin font-mono">
+                    Valid For: {plan.validityDays} days
+                  </p>
+                  <p className="font-thin font-mono">
+                    You can create up to{" "}
+                    <span className="font-bold">{plan.customersNumber}</span>{" "}
+                    customers accounts
+                  </p>
+                  <br />
+                  <div className="flex items-center">
+                    <HiOutlineCheck className="text-green-500 mr-2" />
+                    <span>Create any Exercise needed</span>
+                  </div>
+                  <div className="flex items-center">
+                    <HiOutlineCheck className="text-green-500 mr-2" />
+                    <span>Create any Diet Plan</span>
+                  </div>
+                  <div className="flex items-center">
+                    <HiOutlineCheck className="text-green-500 mr-2" />
+                    <span>
+                      Create up to {plan.customersNumber} Customers account
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <HiOutlineCheck className="text-green-500 mr-2" />
+                    <span>Full control and management tools</span>
+                  </div>
+                  <div className="flex items-center">
+                    <HiOutlineCheck className="text-green-500 mr-2" />
+                    <span>Update and Delete your Information</span>
+                  </div>
+                  <div className="flex items-center">
+                    <HiOutlineCheck className="text-green-500 mr-2" />
+                    <span>Cancel subscription anytime</span>
+                  </div>
+                  <div
+                    className="whitespace-nowrap font-medium text-gray-900 mt-6 mb-4"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <span className="text-4xl font-bold font-mono">
+                      ${plan.price}
+                    </span>
+                    {month === true ? (
+                      <span className="ml-3 font-thin">
+                        per
+                        <br /> Months
+                      </span>
+                    ) : (
+                      <span className="ml-3 font-thin">
+                        per
+                        <br /> Year
+                      </span>
+                    )}
+                  </div>
+
+                  <div key={plan._id}>
+                    <Button className="w-full" type="submit">
+                      <Link to="/sign-up" className="text-blue-500">
+                        Subscribe Now
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            {errorMessage && (
+              <Alert className="mt-5" color="failure">
+                {errorMessage}
+              </Alert>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

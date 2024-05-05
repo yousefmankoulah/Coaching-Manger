@@ -30,9 +30,15 @@ const userSchema = new mongoose.Schema(
       default: "coach",
     },
     plan: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Plan",
-      default: "662415cabf573af430262dcb",
+      type: String,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    validCustomers: {
+      type: Number,
+      default: 10,
     },
   },
 
@@ -53,10 +59,10 @@ const planSchema = new mongoose.Schema({
 
 const subscriptionSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  plan: { type: mongoose.Schema.Types.ObjectId, ref: "Plan", required: true },
+  plan: { type: String },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
-  isActive: { type: Boolean, default: true },
+  isActive: { type: String },
 });
 
 const Plan = mongoose.model("Plan", planSchema);

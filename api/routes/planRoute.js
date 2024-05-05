@@ -8,6 +8,7 @@ import {
   getTheSubscriptions,
   webhook,
 } from "../controllers/planController.js";
+import bodyParser from "body-parser";
 
 const router = express.Router();
 
@@ -16,8 +17,11 @@ router.get("/plansYearly", plansYearly);
 router.get("/getAPlan/:_id", getAPlan);
 router.get("/getTheSubscriptions/:_id", verifyToken, getTheSubscriptions);
 
-router.post("/create-subscription/:userId/:_id", createSubscription);
+router.post("/create-subscription", verifyToken, createSubscription);
+router.use(bodyParser.raw({ type: "application/json" }));
 
-router.post("/webhook", express.raw({ type: "application/json" }), webhook);
+router.post("/webhook", webhook);
+
+// express.raw({ type: "application/json" })
 
 export default router;
