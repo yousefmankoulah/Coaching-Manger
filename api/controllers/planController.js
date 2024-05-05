@@ -261,36 +261,15 @@ export const createSubscription = async (email, customerId, planId) => {
 export const webhook = async (req, res) => {
   const body = req.body;
   console.log("Raw Request Body:", body.type);
-  console.log(body.data.object.customer);
-
-  // const endpointSecret = "whsec_8CGX3Ol4Tl8LVzaZL6BBG6NCC4HkbCdF";
-  // const sig = req.headers["stripe-signature"];
-  // const rawBody = JSON.stringify(req.body);
-
-  // try {
-  //   // Log raw request body, signature, and endpoint secret for debugging
-
-  //   let event = stripeInstance.webhooks.constructEvent(
-  //     rawBody,
-  //     sig,
-  //     endpointSecret
-  //   );
-
-  switch (body.type) {
-    case "checkout.session.completed":
-      // Handle checkout session completed event
-
-      // Do something with the data received from the front end
-      console.log("Checkout session completed:", body.id);
-      break;
-    case "customer.subscription.created":
-      // Handle customer subscription created event
-      console.log("Customer subscription created:");
-      break;
-    // Add more cases for other event types as needed
-    default:
-      console.log(`Unhandled event type:`);
+  const customerId = body.data.object.customer;
+  const planId = "";
+  const email = "";
+  if (
+    body.type === "checkout.session.completed" ||
+    "customer.subscription.created" ||
+    "customer.subscription.updated"
+  ) {
+    createSubscription(email, customerId, planId);
   }
-
-  res.status(200).end(); // Respond to Stripe with a 200 status code
+  res.status(200).end();
 };
