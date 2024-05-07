@@ -133,7 +133,7 @@ export const todoList = async (req, res, next) => {
     const assigned = await SetExerciesToCustomer.find({
       date: formattedDate,
       customerId: req.params.customerId,
-    });
+    }).populate("exerciseId");
 
     // Combining both datasets into a single object
     const response = {

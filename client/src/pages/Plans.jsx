@@ -98,20 +98,19 @@ export default function Plans() {
       <h1 className="text-5xl font-extrabold mt-10 mb-10 text-center">Plans</h1>
 
       {currentUser ? (
-        <stripe-pricing-table
-          pricing-table-id="prctbl_1PAM6JJbnMJW8yX92d6P5GDZ"
-          publishable-key="pk_test_51P7igQJbnMJW8yX9hu4HWUyHH2kKWbVgpQ7mquxHGL2DSi4opZP7quqtKeRQocgjBu4etTTCohx5XD4ruXBUwFlL00FY1ryB00"
-          customer-email={currentUser.email}
-        ></stripe-pricing-table>
+        // <stripe-pricing-table
+        //   pricing-table-id="prctbl_1PAM6JJbnMJW8yX92d6P5GDZ"
+        //   publishable-key="pk_test_51P7igQJbnMJW8yX9hu4HWUyHH2kKWbVgpQ7mquxHGL2DSi4opZP7quqtKeRQocgjBu4etTTCohx5XD4ruXBUwFlL00FY1ryB00"
+        //   customer-email={currentUser.email}
+        // ></stripe-pricing-table>
+        <div className="w-85 p-10 rounded-3xl">
+          <stripe-pricing-table
+            pricing-table-id="prctbl_1P8pUfJbnMJW8yX9U4eimD0J"
+            publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
+            customer-email={currentUser.email}
+          ></stripe-pricing-table>
+        </div>
       ) : (
-        //  <div className="w-85 p-10 rounded-2xl">
-        //
-        //     <stripe-pricing-table
-        //       pricing-table-id="prctbl_1P8pUfJbnMJW8yX9U4eimD0J"
-        //       publishable-key="pk_live_51P7igQJbnMJW8yX9puQNf6PUpHs1OmHTu9QC0RO7nw8tNtjGHp7ILltrUXeJkLiP6zPpHTqh0mKXdr3KbmiNfSSE00xWKBzKZH"
-        //       customer-email={currentUser.email}
-        //     ></stripe-pricing-table>
-        //   </div>
         <>
           <div className="flex justify-center items-center h-full">
             <div

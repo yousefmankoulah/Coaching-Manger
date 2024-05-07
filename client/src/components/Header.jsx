@@ -1,16 +1,13 @@
-import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AiOutlineSearch } from "react-icons/ai";
+import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
+import { Link, useLocation } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { signoutSuccess } from "../redux/user/userSlice";
-import { useEffect, useState } from "react";
 
 export default function Header() {
   const path = useLocation().pathname;
-  const location = useLocation();
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
@@ -74,8 +71,11 @@ export default function Header() {
                     {currentUser.email}
                   </span>
                 </Dropdown.Header>
+                <Link to={`/profile/${currentUser._id}`}>
+                  <Dropdown.Item>Profile</Dropdown.Item>
+                </Link>
                 <Link to={`/update-coach/${currentUser._id}`}>
-                  <Dropdown.Item>The Coach Profile</Dropdown.Item>
+                  <Dropdown.Item>Update Your Profile</Dropdown.Item>
                 </Link>
               </>
             ) : (
@@ -88,10 +88,13 @@ export default function Header() {
                     {currentUser.customerEmail}
                   </span>
                 </Dropdown.Header>
+                <Link to={`/profile/${currentUser._id}`}>
+                  <Dropdown.Item>Profile</Dropdown.Item>
+                </Link>
                 <Link
                   to={`/update-customer/${currentUser.userId}/${currentUser._id}`}
                 >
-                  <Dropdown.Item>Profile</Dropdown.Item>
+                  <Dropdown.Item>Update Your Profile</Dropdown.Item>
                 </Link>
               </>
             )}
@@ -143,7 +146,7 @@ export default function Header() {
             </Navbar.Link>
           </>
         )}
-       
+
         <Navbar.Link active={path === "/contactus"} as={"div"}>
           <Link className="text-white" to="/contactus">
             Contact Us

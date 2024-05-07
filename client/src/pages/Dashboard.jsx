@@ -193,6 +193,7 @@ export function Dashboard() {
       <h1 className="text-3xl font-bold text-center mb-20">
         Welcome to the Dashboard
       </h1>
+
       {currentUser?.role === "coach" ? (
         <>
           {currentUser.isActive ? (
@@ -402,11 +403,30 @@ export function Dashboard() {
             </Card>
           </div>
 
-          <>
-            {todo &&
-              todo.length > 0 &&
-              todo.map((todo) => <li>{todo.diet.meal}</li>)}
-          </>
+          <ul>
+            {todo.diet.length !== 0 && todo.assigned.length !== 0 ? (
+              <>
+                <h4>Diet Plan</h4>
+                {todo.diet.map((todoItem, index) => (
+                  <li key={index}>
+                    <span>{todoItem.meal}</span>
+                    <hr />
+                  </li>
+                ))}
+                <h4>Assigned Exercises</h4>
+                {todo.assigned.map((todoItem, index) => (
+                  <li key={index}>
+                    <span>{todoItem.exerciseId.exerciseName}</span>
+                    <hr />
+                  </li>
+                ))}
+              </>
+            ) : (
+              <li>
+                <span>No todo list</span>
+              </li>
+            )}
+          </ul>
 
           <div className="grid grid-flow-col grid-rows-1 h-90 gap-2 justify-center">
             <Card

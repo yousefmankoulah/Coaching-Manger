@@ -31,6 +31,7 @@ import AboutUs from "./pages/AboutUs.jsx";
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import Profile from "./pages/Profile.jsx";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
 
@@ -76,6 +77,7 @@ export default function App() {
 
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard/:id" element={<Dashboard />} />
+            <Route path="/profile/:id" element={<Profile />} />
             <Route
               path="/update-customer/:userId/:id"
               element={<UpdateCustomerLoginInfo />}
