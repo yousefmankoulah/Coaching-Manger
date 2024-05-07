@@ -244,7 +244,8 @@ export const webhook = async (req, res, next) => {
     // Check if the event type is relevant for subscription creation or update
     if (
       eventType === "customer.subscription.created" ||
-      eventType === "customer.subscription.updated"
+      eventType === "customer.subscription.updated" ||
+      eventType === "subscription_schedule.completed"
     ) {
       const customerId = body.data.object.customer;
 
@@ -255,11 +256,34 @@ export const webhook = async (req, res, next) => {
         });
         const planId = body.data.object.plan.id;
         const email = customer.email;
-        console.log(email, planId, customerId);
         // Call createSubscription function
         await createSubscription(email, customerId, planId);
+      } else {
+        throw new Error("Invalid customerId");
+      }
+    } else if (
+      eventType === "subscription_schedule.canceled" ||
+      eventType === "customer.subscription.deleted" ||
+      eventType === "customer.deleted"
+    ) {
+      const customerId = body.data.object.customer;
 
-        console.log("Subscription created or updated successfully.");
+      // Check if customerId is valid
+      if (customerId) {
+        const customer = await stripeInstance.customers.retrieve(customerId, {
+          apiKey: process.env.STRIPE_SECRET_KEY,
+        });
+        const email = customer.email;
+
+        const user = await User.findOne({ email: email });
+        user.isActive = false;
+        await user.save();
+
+        const sub = await Subscribe.findOne({
+          user: user._id,
+        });
+        sub.isActive = false;
+        await sub.save();
       } else {
         throw new Error("Invalid customerId");
       }

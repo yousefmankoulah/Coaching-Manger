@@ -23,8 +23,18 @@ export const addCustomer = async (req, res, next) => {
       throw errorHandler(400, "All fields are required");
     }
 
+    const createCustomer = await AddCustomerInfo.find({ userId: req.user.id });
+
     // Check if the current user is a coach
     const coach = await User.findById(req.user.id);
+
+    if (coach.validCustomers < createCustomer.length) {
+      throw errorHandler(
+        400,
+        "You have reached the maximum number of customers"
+      );
+    }
+
     if (!coach || coach.role !== "coach") {
       throw errorHandler(400, "You are not allowed to perform this action");
     }

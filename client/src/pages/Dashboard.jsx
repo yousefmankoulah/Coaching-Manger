@@ -1,4 +1,4 @@
-import { Card, Button } from "flowbite-react";
+import { Card, Button, Modal } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import CustomersTable from "../components/dashboardComponents/CustomersTable";
 import ExercisesTable from "../components/dashboardComponents/ExercisesTable";
 import DietPlansTable from "../components/dashboardComponents/DietPlansTable";
 import AssignExTable from "../components/dashboardComponents/AssignExTable";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export function Dashboard() {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -17,6 +18,12 @@ export function Dashboard() {
   const [assignEX, setAssignEX] = useState([]);
   const [customerInfo, setCustomerInfo] = useState({});
   const [todo, setTodo] = useState({});
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleModalOpen = () => {
+    setOpenModal(true);
+  };
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -180,7 +187,6 @@ export function Dashboard() {
   const handleCardClick = (cardName) => {
     setSelectedCard(cardName);
   };
- 
 
   return (
     <div className="min-h-screen mt-20">
@@ -205,11 +211,46 @@ export function Dashboard() {
                   <>0 customers created</>
                 )}
               </p>
-              <Button>
-                <Link to={`/add-customer/${currentUser._id}`}>
-                  <span>Add a Client</span>
-                </Link>
-              </Button>
+              {customers.length > currentUser.validCustomers ? (
+                <>
+                  <Button onClick={handleModalOpen}>Add a Client</Button>
+                  <Modal
+                    show={openModal}
+                    onClose={() => setOpenModal(false)}
+                    popup
+                    size="md"
+                  >
+                    <Modal.Header />
+                    <Modal.Body>
+                      <div className="text-center">
+                        <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+                        <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+                          You have reached the maximum number of customers
+                        </h3>
+                        <div className="flex justify-center gap-4">
+                          <Button color="success">
+                            <Link to={`/plans`}>
+                              <span>Upgrade your Plan</span>
+                            </Link>
+                          </Button>
+                          <Button
+                            color="failure"
+                            onClick={() => setOpenModal(false)}
+                          >
+                            Delete some customers
+                          </Button>
+                        </div>
+                      </div>
+                    </Modal.Body>
+                  </Modal>
+                </>
+              ) : (
+                <Button>
+                  <Link to={`/add-customer/${currentUser._id}`}>
+                    <span>Add a Client</span>
+                  </Link>
+                </Button>
+              )}
             </Card>
 
             <Card className="" onClick={() => handleCardClick("assignEx")}>
@@ -333,17 +374,11 @@ export function Dashboard() {
             </Card>
           </div>
 
-
-              <>
-                {todo && todo.length > 0 && 
-                 
-                    todo.map((todo) => (
-                      <li>{todo.diet.meal}</li>
-                    ))
-                   
-                 
-                }
-              </>
+          <>
+            {todo &&
+              todo.length > 0 &&
+              todo.map((todo) => <li>{todo.diet.meal}</li>)}
+          </>
 
           <div className="grid grid-flow-col grid-rows-1 h-90 gap-2 justify-center">
             <Card
