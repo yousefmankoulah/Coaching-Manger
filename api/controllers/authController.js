@@ -89,7 +89,7 @@ export const signin = async (req, res, next) => {
     const token = jwt.sign(
       { id: validUser._id, email: validUser.email },
       process.env.JWT_SECRET,
-      { expiresIn: "90d" }
+      { expiresIn: "1h" }
     );
 
     const { password: pass, ...rest } = validUser._doc;
@@ -115,7 +115,7 @@ export const signinGoogle = async (req, res, next) => {
       const token = jwt.sign(
         { id: user._id, email: user.email },
         process.env.JWT_SECRET,
-        { expiresIn: "90d" }
+        { expiresIn: "1h" }
       );
       const { password, ...rest } = user._doc;
       res
@@ -139,7 +139,7 @@ export const signinGoogle = async (req, res, next) => {
       const token = jwt.sign(
         { id: user._id, email: user.email },
         process.env.JWT_SECRET,
-        { expiresIn: "90d" }
+        { expiresIn: "1h" }
       );
       const { password, ...rest } = newUser._doc;
       res
@@ -177,7 +177,7 @@ export const customerSignin = async (req, res, next) => {
     const token = jwt.sign(
       { id: validUser._id, email: validUser.email },
       process.env.JWT_SECRET,
-      { expiresIn: "90d" }
+      { expiresIn: "1h" }
     );
     const { password: pass, ...rest } = validUser._doc;
     res
