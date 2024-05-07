@@ -20,7 +20,7 @@ router.get("/getTheSubscriptions/:_id", verifyToken, getTheSubscriptions);
 router.post("/create-subscription", verifyToken, createSubscription);
 router.use(bodyParser.raw({ type: "application/json" }));
 
-router.post("/webhook", webhook);
+router.post("/webhook", express.raw({ type: "application/json" }), webhook);
 
 // express.raw({ type: "application/json" })
 

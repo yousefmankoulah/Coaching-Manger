@@ -214,7 +214,7 @@ export default function Plans() {
 
                   <div key={plan._id}>
                     <Button className="w-full" type="submit">
-                      <Link to="/sign-up" className="text-blue-500">
+                      <Link to="/sign-up" className="text-white">
                         Subscribe Now
                       </Link>
                     </Button>

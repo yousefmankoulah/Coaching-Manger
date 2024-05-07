@@ -156,23 +156,6 @@ export const getTheSubscriptions = async (req, res, next) => {
 
 export const createSubscription = async (email, customerId, planId) => {
   try {
-    // const customers = await stripeInstance.customers.list(
-    //   {
-    //     email: email,
-    //     limit: 1,
-    //   },
-    //   {
-    //     apiKey: process.env.STRIPE_SECRET_KEY,
-    //   }
-    // );
-    // if (customers.data.length === 0) {
-    //   console.log("No customer found with that email.");
-    //   return [];
-    // }
-    // // Get customer ID
-    // const customerId = customers.data[0].id;
-
-    // Retrieve subscriptions for the customer ID
     const subscriptions = await stripeInstance.subscriptions.list(
       { customer: customerId },
       { apiKey: process.env.STRIPE_SECRET_KEY }
@@ -183,24 +166,20 @@ export const createSubscription = async (email, customerId, planId) => {
     await Promise.all(
       subscriptions.data.map(async (subscription) => {
         const user = await User.findOne({ email: email });
-        userId = user._id.toString();
         if (!user) {
-          return next(new Error("User not found."));
+          throw new Error("User not found.");
         }
-        let existingSubscription = await Subscribe.findOne({
-          user: userId,
-        });
+        const userId = user._id.toString();
 
-        let isActive;
-        if (subscription.status === "active") {
-          isActive = true;
-        } else {
+        let isActive = subscription.status === "active";
+        if (
+          !isActive &&
+          today > new Date(subscription.current_period_end * 1000)
+        ) {
           isActive = false;
-          if (today > new Date(subscription.current_period_end * 1000)) {
-            isActive = false;
-          }
         }
-        //saving the subscription  in database
+
+        let existingSubscription = await Subscribe.findOne({ user: userId });
         if (existingSubscription) {
           existingSubscription.plan = subscription.plan.product;
           existingSubscription.startDate = new Date(
@@ -213,7 +192,7 @@ export const createSubscription = async (email, customerId, planId) => {
           await existingSubscription.save();
         } else {
           existingSubscription = new Subscribe({
-            user: req.user.id,
+            user: userId,
             plan: subscription.plan.product,
             startDate: new Date(subscription.current_period_start * 1000),
             endDate: new Date(subscription.current_period_end * 1000),
@@ -221,29 +200,30 @@ export const createSubscription = async (email, customerId, planId) => {
           });
           await existingSubscription.save();
         }
+
         user.plan = subscription.plan.product;
         user.isActive = isActive;
         if (
           planId === "price_1PAM62JbnMJW8yX9GhDx90nE" ||
-          "price_1P8pNeJbnMJW8yX9ykWAsEE0" ||
-          "price_1P7j5sJbnMJW8yX9LWItDC1d"
+          planId === "price_1P8pNeJbnMJW8yX9ykWAsEE0" ||
+          planId === "price_1P7j5sJbnMJW8yX9LWItDC1d"
         ) {
           user.validCustomers = 100;
         } else if (
           planId === "price_1PAM5pJbnMJW8yX9LUrmdPn2" ||
-          "price_1P8pOmJbnMJW8yX9ilerUtrX" ||
-          "price_1P7j6MJbnMJW8yX93F8AVccU"
+          planId === "price_1P8pOmJbnMJW8yX9ilerUtrX" ||
+          planId === "price_1P7j6MJbnMJW8yX93F8AVccU"
         ) {
           user.validCustomers = 500;
         } else if (
           planId === "price_1PAM5bJbnMJW8yX9USVmrvhw" ||
-          "price_1P8pR5JbnMJW8yX9Avsgyctd" ||
-          "price_1P7j7HJbnMJW8yX93JaWmQDV"
+          planId === "price_1P8pR5JbnMJW8yX9Avsgyctd" ||
+          planId === "price_1P7j7HJbnMJW8yX93JaWmQDV"
         ) {
           user.validCustomers = 1000;
         } else if (
           planId === "price_1P7j8vJbnMJW8yX9qd2lUqmI" ||
-          "price_1P8pRYJbnMJW8yX9W6Qvhvmq"
+          planId === "price_1P8pRYJbnMJW8yX9W6Qvhvmq"
         ) {
           user.validCustomers = 5000;
         }
@@ -251,25 +231,44 @@ export const createSubscription = async (email, customerId, planId) => {
         res.status(existingSubscription ? 200 : 201).json(existingSubscription);
       })
     );
-    res.status(200).end();
   } catch (error) {
-    res.status(400).send(error.message);
-    next(error);
+    throw new Error(`Subscription Creation Error: ${error.message}`);
   }
 };
 
-export const webhook = async (req, res) => {
-  const body = req.body;
-  console.log("Raw Request Body:", body.type);
-  const customerId = body.data.object.customer;
-  const planId = "";
-  const email = "";
-  if (
-    body.type === "checkout.session.completed" ||
-    "customer.subscription.created" ||
-    "customer.subscription.updated"
-  ) {
-    createSubscription(email, customerId, planId);
+export const webhook = async (req, res, next) => {
+  try {
+    const body = req.body;
+    const eventType = body.type;
+
+    // Check if the event type is relevant for subscription creation or update
+    if (
+      eventType === "customer.subscription.created" ||
+      eventType === "customer.subscription.updated"
+    ) {
+      const customerId = body.data.object.customer;
+
+      // Check if customerId is valid
+      if (customerId) {
+        const customer = await stripeInstance.customers.retrieve(customerId, {
+          apiKey: process.env.STRIPE_SECRET_KEY,
+        });
+        const planId = body.data.object.plan.id;
+        const email = customer.email;
+        console.log(email, planId, customerId);
+        // Call createSubscription function
+        await createSubscription(email, customerId, planId);
+
+        console.log("Subscription created or updated successfully.");
+      } else {
+        throw new Error("Invalid customerId");
+      }
+    }
+
+    res.status(200).end();
+  } catch (error) {
+    console.error(`Webhook Error: ${error.message}`);
+    res.status(400).send(`Webhook Error: ${error.message}`);
+    next(error);
   }
-  res.status(200).end();
 };
