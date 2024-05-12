@@ -1,4 +1,4 @@
-import { Card, Button, Modal } from "flowbite-react";
+import { Card, Button, Modal, Timeline } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import CustomersTable from "../components/dashboardComponents/CustomersTable";
 import ExercisesTable from "../components/dashboardComponents/ExercisesTable";
 import DietPlansTable from "../components/dashboardComponents/DietPlansTable";
 import AssignExTable from "../components/dashboardComponents/AssignExTable";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { HiOutlineExclamationCircle, HiCalendar } from "react-icons/hi";
 
 export function Dashboard() {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -403,30 +403,60 @@ export function Dashboard() {
             </Card>
           </div>
 
-          <ul>
-            {todo.diet.length !== 0 && todo.assigned.length !== 0 ? (
-              <>
-                <h4>Diet Plan</h4>
-                {todo.diet.map((todoItem, index) => (
-                  <li key={index}>
-                    <span>{todoItem.meal}</span>
-                    <hr />
-                  </li>
+          <div className="flex flex-col items-center justify-center h-screen">
+            <h2 className="mb-10 mt-10 font-bold text-3xl">
+              Your Timeline for today
+            </h2>
+
+            {Array.isArray(todo) && todo.length !== 0 ? (
+              <div className="w-full max-w-xl mt-10">
+                {todo.map((todoItem, index) => (
+                  <Timeline
+                    key={index}
+                    mode="alternate"
+                    className="custom-timeline border-white mb-4"
+                  >
+                    <Timeline.Item>
+                      <Timeline.Point icon={HiCalendar} />
+                      <Timeline.Content>
+                        <Timeline.Time>
+                          {todoItem.date}, {todoItem.time}
+                        </Timeline.Time>
+
+                        {todoItem.meal && (
+                          <Timeline.Title className="mb-1">
+                            {todoItem.meal}
+                          </Timeline.Title>
+                        )}
+
+                        {todoItem.exerciseId &&
+                          todoItem.exerciseId.exerciseName && (
+                            <Timeline.Title className="mb-1">
+                              {todoItem.exerciseId.exerciseName}
+                            </Timeline.Title>
+                          )}
+
+                        {todoItem.foodDescription && (
+                          <Timeline.Body className="mb-2">
+                            {todoItem.foodDescription}
+                          </Timeline.Body>
+                        )}
+
+                        {todoItem.exerciseId &&
+                          todoItem.exerciseId.exerciseDescription && (
+                            <Timeline.Body className="mb-2">
+                              {todoItem.exerciseId.exerciseDescription}
+                            </Timeline.Body>
+                          )}
+                      </Timeline.Content>
+                    </Timeline.Item>
+                  </Timeline>
                 ))}
-                <h4>Assigned Exercises</h4>
-                {todo.assigned.map((todoItem, index) => (
-                  <li key={index}>
-                    <span>{todoItem.exerciseId.exerciseName}</span>
-                    <hr />
-                  </li>
-                ))}
-              </>
+              </div>
             ) : (
-              <li>
-                <span>No todo list</span>
-              </li>
+              <span>No Diet Plan today</span>
             )}
-          </ul>
+          </div>
 
           <div className="grid grid-flow-col grid-rows-1 h-90 gap-2 justify-center">
             <Card

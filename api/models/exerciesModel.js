@@ -46,10 +46,6 @@ const setExerciesToCustomerSchema = new mongoose.Schema(
     setNumbers: {
       type: String,
     },
-    done: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,

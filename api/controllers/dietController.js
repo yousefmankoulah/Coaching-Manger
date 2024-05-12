@@ -130,19 +130,27 @@ export const todoList = async (req, res, next) => {
       date: formattedDate,
       customerId: req.params.customerId,
     });
+
     const assigned = await SetExerciesToCustomer.find({
       date: formattedDate,
       customerId: req.params.customerId,
     }).populate("exerciseId");
 
-    // Combining both datasets into a single object
-    const response = {
-      diet,
-      assigned,
-    };
+    // Merge both arrays into one
+    const combinedArray = diet.concat(assigned);
 
+    // Sort the combined array by time (assuming 'time' is the property to sort by)
+    combinedArray.sort((a, b) => {
+      // Assuming 'time' is in Date format
+      const timeA = new Date(a.time).getTime();
+      const timeB = new Date(b.time).getTime();
+      return timeA - timeB; // Ascending order, modify as needed for descending order
+    });
+
+    // Combining both datasets into a single object
+   
     // Correct way to set status and send JSON response
-    res.status(200).json(response);
+    res.status(200).json(combinedArray);
   } catch (err) {
     // Passing errors to the error-handling middleware
     next(err);
