@@ -157,7 +157,16 @@ export const coachSetExerciesToCustomer = async (req, res, next) => {
       _id: savedExercies._id,
     });
     const exerciesById = await Exercies.findById({ _id: exerciseId });
+    const notify = new Notification({
+      user: req.user.id,
+      customer: customerId,
+      message: `The Coach has Assigned a new Exercies for you ${getTheExercies.exerciseName}`,
+      postId: savedExercies._id,
+      classification: "assign",
+    });
+    await notify.save();
     res.status(200).json({ getTheExercies, exerciesById });
+    
   } catch (error) {
     next(error);
   }

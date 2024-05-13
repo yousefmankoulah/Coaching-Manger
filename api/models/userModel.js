@@ -65,8 +65,26 @@ const subscriptionSchema = new mongoose.Schema({
   isActive: { type: String },
 });
 
+const notificationsSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  customer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AddCustomerInfo",
+    required: true,
+  },
+  message: { type: String, required: true },
+  postId: { type: String },
+  status: { type: Boolean, default: false },
+  date: { type: Date, default: Date.now },
+  classification: {
+    type: String,
+    enum: ["coach", "assign", "diet"],
+  },
+});
+
 const Plan = mongoose.model("Plan", planSchema);
 const User = mongoose.model("User", userSchema);
 const Subscribe = mongoose.model("Subscribe", subscriptionSchema);
+const Notification = mongoose.model("Notification", notificationsSchema);
 
-export { User, Plan, Subscribe };
+export { User, Plan, Subscribe, Notification };

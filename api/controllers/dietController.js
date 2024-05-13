@@ -1,7 +1,7 @@
 import { Customer } from "../models/customerModel.js";
 import Diet from "../models/dietModel.js";
 import { errorHandler } from "../utils/error.js";
-import { User } from "../models/userModel.js";
+import { Notification, User } from "../models/userModel.js";
 import { SetExerciesToCustomer } from "../models/exerciesModel.js";
 
 export const createDiet = async (req, res, next) => {
@@ -32,9 +32,18 @@ export const createDiet = async (req, res, next) => {
     foodDescription,
     calorie,
   });
+
   try {
     const savedDiet = await newDiet.save();
     res.status(200).json(savedDiet);
+    const notify = new Notification({
+      user: userId,
+      customer: customerId,
+      message: `Coach ${coach.fullName} has created a new diet for you, ${savedDiet.meal}`,
+      postId: savedDiet._id,
+      classification: "diet",
+    });
+    await notify.save();
   } catch (error) {
     next(error);
   }
@@ -148,7 +157,7 @@ export const todoList = async (req, res, next) => {
     });
 
     // Combining both datasets into a single object
-   
+
     // Correct way to set status and send JSON response
     res.status(200).json(combinedArray);
   } catch (err) {
