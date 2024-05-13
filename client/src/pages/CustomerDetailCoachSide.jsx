@@ -154,11 +154,7 @@ export function CustomerDetailCoachSide() {
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
-      } else {
-        setCustomers((prev) =>
-          prev.filter((post) => post._id !== postIdToDelete)
-        );
-      }
+      } 
     } catch (error) {
       console.log(error.message);
     }

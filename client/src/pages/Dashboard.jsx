@@ -16,7 +16,6 @@ export function Dashboard() {
   const [exercise, setExercise] = useState([]);
   const [diet, setDiet] = useState([]);
   const [assignEX, setAssignEX] = useState([]);
-  const [customerInfo, setCustomerInfo] = useState({});
   const [todo, setTodo] = useState({});
 
   const [openModal, setOpenModal] = useState(false);
@@ -123,30 +122,6 @@ export function Dashboard() {
       }
     };
 
-    const fetchCustomerInfo = async () => {
-      try {
-        if (currentUser && currentUser._id) {
-          const res = await fetch(
-            `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/customerInfo/getCustomerInfo/${currentUser._id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await res.json();
-          if (res.ok) {
-            setCustomerInfo(data);
-          } else {
-            // Handle unauthorized access or other errors
-            console.error("Error fetching customers:", data.message);
-          }
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
     const fetchTodoList = async () => {
       try {
         if (currentUser && currentUser._id) {
@@ -179,7 +154,6 @@ export function Dashboard() {
     } else {
       fetchAssignEx();
       fetchDiet();
-      fetchCustomerInfo();
       fetchTodoList();
     }
   }, [currentUser]);
@@ -190,12 +164,11 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen mt-20">
-      <h1 className="text-3xl font-bold text-center mb-20">
-        Welcome to the Dashboard
-      </h1>
-
       {currentUser?.role === "coach" ? (
         <>
+          <h1 className="text-3xl font-bold text-center mb-20">
+            Welcome to the Dashboard
+          </h1>
           {currentUser.isActive ? (
             <>
               <div className="grid grid-flow-col grid-rows-2 sm:grid-rows-2 md:grid-rows-2 lg:grid-rows-1 xl:grid-rows-1 h-90 gap-2 justify-center">
@@ -357,59 +330,13 @@ export function Dashboard() {
         </>
       ) : (
         <>
-          <div className="grid grid-flow-col grid-rows-1 justify-center">
-            <Card className="text-left justify-center items-center mb-10 hover:shadow-md bg-slate-50">
-              <h2 className="text-center font-bold text-2xl">
-                Your Profile Detail
-              </h2>
-              {customerInfo.customerCurrentWeight && (
-                <p className="font-normal text-gray-700 dark:text-gray-400">
-                  Current Weight: {customerInfo.customerCurrentWeight}
-                </p>
-              )}
-              {customerInfo.customerTargetWeight && (
-                <p className="font-normal text-gray-700 dark:text-gray-400">
-                  Target Weight: {customerInfo.customerTargetWeight}
-                </p>
-              )}
-              {customerInfo.customerCurrentHeight && (
-                <p className="font-normal text-gray-700 dark:text-gray-400">
-                  Current Height: {customerInfo.customerCurrentHeight}
-                </p>
-              )}
-              {customerInfo.customerCurrentAge && (
-                <p className="font-normal text-gray-700 dark:text-gray-400">
-                  Current Age: {customerInfo.customerCurrentAge}
-                </p>
-              )}
-
-              {customerInfo ? (
-                <Button className="justify-center">
-                  <Link
-                    to={`/UpdateCustomerInformation/${currentUser._id}/${customerInfo._id}`}
-                  >
-                    <span>Update Your Information</span>
-                  </Link>
-                </Button>
-              ) : (
-                <Button className="justify-center">
-                  <Link
-                    to={`/AddCustomerInformation/${currentUser.userId}/${currentUser._id}`}
-                  >
-                    <span>Add Your Information</span>
-                  </Link>
-                </Button>
-              )}
-            </Card>
-          </div>
-
-          <div className="flex flex-col items-center justify-center h-screen">
+          <div className="flex flex-col items-center justify-center mb-10">
             <h2 className="mb-10 mt-10 font-bold text-3xl">
               Your Timeline for today
             </h2>
 
             {Array.isArray(todo) && todo.length !== 0 ? (
-              <div className="w-full max-w-xl mt-10">
+              <div className="w-full max-w-xl mt-10 mb-10">
                 {todo.map((todoItem, index) => (
                   <Timeline
                     key={index}
@@ -458,7 +385,7 @@ export function Dashboard() {
             )}
           </div>
 
-          <div className="grid grid-flow-col grid-rows-1 h-90 gap-2 justify-center">
+          <div className="grid grid-flow-col grid-rows-1 h-90 gap-2 justify-center mt-10">
             <Card
               className="max-w-sm"
               onClick={() => handleCardClick("exercises")}

@@ -4,10 +4,8 @@ import { Alert, Button } from "flowbite-react";
 import { HiOutlineCheck } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
-import { loadStripe } from "@stripe/stripe-js";
-import { useStripe } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
+
 
 export default function Plans() {
   const [formData, setFormData] = useState({});
@@ -17,56 +15,6 @@ export default function Plans() {
     (state) => state.user
   );
 
-  // const stripe = useStripe();
-
-  // useEffect(() => {
-  //   const handleCheckoutSessionCompleted = async (event) => {
-  //     const { status, start_date, expiration_date } = event.detail;
-  //     const customerEmail = currentUser ? currentUser.email : null;
-
-  //     try {
-  //       if (!stripe) {
-  //         throw new Error("Stripe.js has not loaded yet.");
-  //       }
-
-  //       // Send data to your server endpoint
-  //       const response = await fetch("/api/plans/webhook", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           status,
-  //           start_date,
-  //           expiration_date,
-  //           customerEmail,
-  //         }),
-  //       });
-
-  //       if (response.ok) {
-  //         console.log("Checkout session data sent to server");
-  //         // Add any frontend actions here, e.g., redirect to a thank you page
-  //         window.location.href = "/thank-you";
-  //       } else {
-  //         console.error("Failed to send data to server");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error sending data to server:", error);
-  //     }
-  //   };
-
-  //   window.addEventListener(
-  //     "checkout.session.completed",
-  //     handleCheckoutSessionCompleted
-  //   );
-
-  //   return () => {
-  //     window.removeEventListener(
-  //       "checkout.session.completed",
-  //       handleCheckoutSessionCompleted
-  //     );
-  //   };
-  // }, [currentUser, stripe]);
 
   useEffect(() => {
     const fetchPlans = async () => {
