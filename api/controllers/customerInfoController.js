@@ -4,6 +4,7 @@ import {
   CustomerExercies,
 } from "../models/customerModel.js";
 import { SetExerciesToCustomer } from "../models/exerciesModel.js";
+import { Notification } from "../models/userModel.js";
 import { errorHandler } from "../utils/error.js";
 
 export const addCustomerInfo = async (req, res, next) => {
@@ -125,14 +126,17 @@ export const addCustomerExerciesInfo = async (req, res, next) => {
 
     try {
       const savedCustomerExerciesInfo = await newCustomerExerciesInfo.save();
-      const notify = new Notification({
-        user: req.params.userId,
-        customer: req.params.customerId,
-        message: `Customer ${customer.customerName} has added ${exercise.exerciseId.exerciseName} result for you`,
-        postId: savedCustomerExerciesInfo._id,
-        classification: "coach",
-      });
-      await notify.save();
+      if (exercise.exerciseId) {
+        const notify = new Notification({
+          user: req.params.userId,
+          customer: req.params.customerId,
+          message: `Customer ${customer.customerName} has added ${exercise.exerciseId.exerciseName} result for you`,
+          postId: savedCustomerExerciesInfo._id,
+          classification: "coach",
+        });
+        await notify.save();
+      }
+
       res.status(200).json(savedCustomerExerciesInfo);
     } catch (error) {
       next(error);
