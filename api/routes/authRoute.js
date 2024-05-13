@@ -11,6 +11,11 @@ import {
 } from "../controllers/authController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
+import {
+  getNotificationsCoach,
+  getNotificationsCustomer,
+} from "../controllers/notificationController.js";
+
 const router = express.Router();
 
 router.post("/signup", signup);
@@ -21,5 +26,12 @@ router.put("/updateUser/:_id", verifyToken, updateUser);
 router.post("/google", signinGoogle);
 router.get("/coachProfile/:_id", getCoachProfile);
 router.delete("/deleteCoach/:_id", deleteCoach);
+
+router.get("/notifyCoach/:userId", verifyToken, getNotificationsCoach);
+router.get(
+  "/notifyCustomer/:userId/:customerId",
+  verifyToken,
+  getNotificationsCustomer
+);
 
 export default router;

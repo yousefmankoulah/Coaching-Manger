@@ -1,18 +1,24 @@
 import { Notification } from "../models/userModel.js";
 
-export const getNotifications = async (req, res, next) => {
+export const getNotificationsCoach = async (req, res, next) => {
   try {
-    if (req.user.role === "coach") {
-      const notifications = await Notification.find({
-        user: req.user.id,
-      });
-      res.status(200).json(notifications);
-    } else {
-      const notifications = await Notification.find({
-        customer: req.user.id,
-      });
-      res.status(200).json(notifications);
-    }
+    const notifications = await Notification.find({
+      user: req.user.id,
+      classification: "coach",
+    });
+    res.status(200).json(notifications);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getNotificationsCustomer = async (req, res, next) => {
+  try {
+    const notifications = await Notification.find({
+      user: req.params.userId,
+      customer: req.user.id,
+    });
+    res.status(200).json(notifications);
   } catch (err) {
     next(err);
   }
