@@ -128,7 +128,7 @@ export const addCustomerExerciesInfo = async (req, res, next) => {
         user: req.params.userId,
         customer: req.params.customerId,
         message: `Customer ${customer.customerName} has added an exercise result for you`,
-        postId: savedCustomerExerciesInfo._id,
+        postId: req.params.setExerciesToCustomerId,
         classification: "coach",
       });
       await notify.save();
