@@ -120,22 +120,18 @@ export const addCustomerExerciesInfo = async (req, res, next) => {
     });
 
     const customer = await AddCustomerInfo.findById(req.params.customerId);
-    const exercise = await SetExerciesToCustomer.findById(
-      req.params.setExerciesToCustomerId
-    ).populate("exerciseId");
 
     try {
       const savedCustomerExerciesInfo = await newCustomerExerciesInfo.save();
-      if (exercise.exerciseId) {
-        const notify = new Notification({
-          user: req.params.userId,
-          customer: req.params.customerId,
-          message: `Customer ${customer.customerName} has added ${exercise.exerciseId.exerciseName} result for you`,
-          postId: savedCustomerExerciesInfo._id,
-          classification: "coach",
-        });
-        await notify.save();
-      }
+
+      const notify = new Notification({
+        user: req.params.userId,
+        customer: req.params.customerId,
+        message: `Customer ${customer.customerName} has added an exercise result for you`,
+        postId: savedCustomerExerciesInfo._id,
+        classification: "coach",
+      });
+      await notify.save();
 
       res.status(200).json(savedCustomerExerciesInfo);
     } catch (error) {
