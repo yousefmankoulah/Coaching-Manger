@@ -14,6 +14,7 @@ import { verifyToken } from "../utils/verifyUser.js";
 import {
   getNotificationsCoach,
   getNotificationsCustomer,
+  NotificationRead,
 } from "../controllers/notificationController.js";
 
 const router = express.Router();
@@ -33,5 +34,7 @@ router.get(
   verifyToken,
   getNotificationsCustomer
 );
+
+router.put("/notifyRead/:_id/", verifyToken, NotificationRead);
 
 export default router;

@@ -119,6 +119,7 @@ export default function Header() {
               {theme === "light" ? <FaSun /> : <FaMoon />}
             </span>
           </Button>
+          {currentUser && (
           <Button
             className="w-12 h-10 hidden sm:inline"
             color="gray"
@@ -141,6 +142,7 @@ export default function Header() {
               </div>
             )}
           </Button>
+          )}
 
           {currentUser ? (
             <Dropdown

@@ -35,6 +35,44 @@ export default function Notification() {
     fetchNotifications();
   }, [currentUser]);
 
+  const handleNotificationClick = async (notificationId) => {
+    try {
+      const res = await fetch(
+        `https://cautious-journey-5xx4666q445cvjp5-3000.app.github.dev/api/auth/notifyRead/${notificationId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: true }),
+        }
+      );
+      if (res.ok) {
+        const updatedList = notification.map((notification) =>
+          notification._id === notificationId
+            ? { ...notification, status: true }
+            : notification
+        );
+        setNotification(updatedList);
+      } else {
+        console.error("Error marking notification as read:", res.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating notification status:", error.message);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const formatTime = (dateString) => {
+    const options = { hour: "numeric", minute: "2-digit" };
+    return new Date(dateString).toLocaleTimeString(undefined, options);
+  };
+
   return (
     <div className="fixed right-4 lg:w-1/4 sm:w-3/4 xs:w-4/5 bg-white text-black p-4">
       {notification && notification.length ? (
@@ -45,19 +83,26 @@ export default function Notification() {
                 <Link
                   to={`/ViewAssignExercise/${currentUser._id}/${notify.postId}`}
                   className="flex items-center w-full"
+                  onClick={() => handleNotificationClick(notify._id)}
                 >
                   <div
                     className={`w-3 h-3 rounded-full ${
                       !notify.status ? "bg-green-500" : "bg-gray-500"
                     } mr-2`}
                   ></div>
-                  <div className="flex flex-col">
+
+                  <div className="flex flex-col flex-grow">
                     <span className={!notify.status ? "font-bold" : ""}>
                       {notify.message}
                     </span>
-                    <span className={!notify.status ? "font-bold" : ""}>
-                      {notify.date}
-                    </span>
+                    <div className="flex justify-between">
+                      <span className={!notify.status ? "font-bold" : ""}>
+                        {formatDate(notify.date)}
+                      </span>
+                      <span className={!notify.status ? "font-bold" : ""}>
+                        {formatTime(notify.date)}
+                      </span>
+                    </div>
                     <hr />
                   </div>
                 </Link>
@@ -65,6 +110,7 @@ export default function Notification() {
                 <Link
                   to={`/DietDetail/${currentUser.userId}/${notify.postId}`}
                   className="flex items-center w-full"
+                  onClick={() => handleNotificationClick(notify._id)}
                 >
                   <div
                     className={`w-3 h-3 rounded-full ${
@@ -75,9 +121,14 @@ export default function Notification() {
                     <span className={!notify.status ? "font-bold" : ""}>
                       {notify.message}
                     </span>
-                    <span className={!notify.status ? "font-bold" : ""}>
-                      {notify.date}
-                    </span>
+                    <div className="flex justify-between">
+                      <span className={!notify.status ? "font-bold" : ""}>
+                        {formatDate(notify.date)}
+                      </span>
+                      <span className={!notify.status ? "font-bold" : ""}>
+                        {formatTime(notify.date)}
+                      </span>
+                    </div>
                     <hr />
                   </div>
                 </Link>
@@ -85,6 +136,7 @@ export default function Notification() {
                 <Link
                   to={`/ViewAssignExercise/${currentUser.userId}/${notify.postId}`}
                   className="flex items-center w-full"
+                  onClick={() => handleNotificationClick(notify._id)}
                 >
                   <div
                     className={`w-3 h-3 rounded-full ${
@@ -95,9 +147,14 @@ export default function Notification() {
                     <span className={!notify.status ? "font-bold" : ""}>
                       {notify.message}
                     </span>
-                    <span className={!notify.status ? "font-bold" : ""}>
-                      {notify.date}
-                    </span>
+                    <div className="flex justify-between">
+                      <span className={!notify.status ? "font-bold" : ""}>
+                        {formatDate(notify.date)}
+                      </span>
+                      <span className={!notify.status ? "font-bold" : ""}>
+                        {formatTime(notify.date)}
+                      </span>
+                    </div>
                     <hr />
                   </div>
                 </Link>
