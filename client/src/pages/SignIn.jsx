@@ -160,13 +160,23 @@ export function SignIn() {
                     id="password"
                     onChange={handleChange}
                   />
-                  <input
-                    type="checkbox"
-                    onChange={handleShowPassword}
-                    id="showPassword"
-                    checked={showPassword}
-                  />
-                  <Label value=" Show the password" />
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      onChange={handleShowPassword}
+                      id="showPassword"
+                      checked={showPassword}
+                    />
+                    <Label value=" Show the password" />
+                    <div className="ml-auto">
+                      <Link
+                        to={"/forgetPasswordCoach"}
+                        className="text-blue-700"
+                      >
+                        Reset Your Password
+                      </Link>
+                    </div>
+                  </div>
                 </div>
                 <Button
                   gradientDuoTone="purpleToPink"
@@ -214,13 +224,23 @@ export function SignIn() {
                     id="password"
                     onChange={handleChange}
                   />
-                  <input
-                    type="checkbox"
-                    onChange={handleShowPasswordCustomer}
-                    id="showPasswordCustomer"
-                    checked={showPasswordCustomer}
-                  />
-                  <Label value=" Show the password" />
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      onChange={handleShowPasswordCustomer}
+                      id="showPasswordCustomer"
+                      checked={showPasswordCustomer}
+                    />
+                    <Label value=" Show the password" />
+                    <div className="ml-auto">
+                      <a
+                        href="/forgetPasswordCustomer"
+                        className="text-blue-700"
+                      >
+                        Reset Your Password
+                      </a>
+                    </div>
+                  </div>
                 </div>
                 <Button
                   gradientDuoTone="purpleToPink"

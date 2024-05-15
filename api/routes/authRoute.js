@@ -8,6 +8,8 @@ import {
   signinGoogle,
   getCoachProfile,
   deleteCoach,
+  sendPasswordResetEmailforCustomer,
+  sendPasswordResetEmailforCoach,
 } from "../controllers/authController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -36,5 +38,10 @@ router.get(
 );
 
 router.put("/notifyRead/:_id/", verifyToken, NotificationRead);
+
+//forget password
+router.post("/forgetPasswordCoach", sendPasswordResetEmailforCoach);
+router.post("/forgetPasswordCustomer", sendPasswordResetEmailforCustomer);
+
 
 export default router;

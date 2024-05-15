@@ -32,6 +32,10 @@ import AboutUs from "./pages/AboutUs.jsx";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import Profile from "./pages/Profile.jsx";
+import SendEmailCoach from "./pages/ForgetPassword/SendEmailCoach.jsx";
+import SendEmailCustomer from "./pages/ForgetPassword/SendEmailCustomer.jsx";
+import ResetPassCoach from "./pages/ForgetPassword/ResetPassCoach";
+import ResetPassCustomer from "./pages/ForgetPassword/ResetPassCustomer.jsx";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
 
@@ -49,6 +53,17 @@ export default function App() {
           <Route path="/plans" element={<Plans />} />
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="/aboutus" element={<AboutUs />} />
+
+          <Route path="/forgetPasswordCoach" element={<SendEmailCoach />} />
+          <Route
+            path="/forgetPasswordCustomer"
+            element={<SendEmailCustomer />}
+          />
+          <Route path="/ResetPasswordCoach/:id" element={<ResetPassCoach />} />
+          <Route
+            path="/ResetPasswordCustomer/:id"
+            element={<ResetPassCustomer />}
+          />
 
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path="/add-customer/:id" element={<AddCustomers />} />

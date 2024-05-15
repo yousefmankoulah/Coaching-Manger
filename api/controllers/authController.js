@@ -305,23 +305,40 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 export const sendPasswordResetEmailforCoach = async (req, res, next) => {
   try {
-      const {email} = req.body
-      const customer = await User.findOne({email: email})
-      const resetLink = `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/forgetPassword/${customer._id}`
-      await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: email,
-          subject: "Password Reset",
-          html: `
+    const { email } = req.body;
+    const customer = await User.findOne({ email: email });
+    const resetLink = `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/ResetPasswordCoach/${customer._id}`;
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset",
+      html: `
               <p>You have requested a password reset. Click the link below to reset your password:</p>
               <a href="${resetLink}">Reset Password</a>
           `,
-      });
-      
+    });
   } catch (error) {
-      console.error("Error sending password reset email:", error);
+    console.error("Error sending password reset email:", error);
+  }
+};
+
+export const sendPasswordResetEmailforCustomer = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const customer = await AddCustomerInfo.findOne({ customerEmail: email });
+    const resetLink = `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/ResetPasswordCustomer/${customer._id}`;
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset",
+      html: `
+              <p>You have requested a password reset. Click the link below to reset your password:</p>
+              <a href="${resetLink}">Reset Password</a>
+          `,
+    });
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
   }
 };
