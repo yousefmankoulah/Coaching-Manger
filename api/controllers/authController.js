@@ -14,6 +14,7 @@ import {
   deleteFileFromStorage,
   deleteManyFilesFromStorage,
 } from "../utils/firebaseConfig.js";
+import nodemailer from "nodemailer";
 
 const schema = new passwordValidator();
 
@@ -292,5 +293,35 @@ export const deleteCoach = async (req, res, next) => {
     res.status(200).json({ success: true });
   } catch (error) {
     next(error);
+  }
+};
+
+//forget the password
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.PASSWORD_USER,
+  },
+});
+
+
+export const sendPasswordResetEmailforCoach = async (req, res, next) => {
+  try {
+      const {email} = req.body
+      const customer = await User.findOne({email: email})
+      const resetLink = `https://cautious-journey-5xx4666q445cvjp5-5173.app.github.dev/forgetPassword/${customer._id}`
+      await transporter.sendMail({
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: "Password Reset",
+          html: `
+              <p>You have requested a password reset. Click the link below to reset your password:</p>
+              <a href="${resetLink}">Reset Password</a>
+          `,
+      });
+      
+  } catch (error) {
+      console.error("Error sending password reset email:", error);
   }
 };

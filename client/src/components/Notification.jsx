@@ -33,7 +33,7 @@ export default function Notification() {
     };
 
     fetchNotifications();
-  }, [currentUser]);
+  }, [currentUser, token]);
 
   const handleNotificationClick = async (notificationId) => {
     try {
